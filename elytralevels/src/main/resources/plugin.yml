@@ -1,0 +1,6 @@
+name: ElytraLevels
+version: ${project.version}
+author: Aurium
+main: com.elytraforce.elytralevels.Main
+api-version: 1.15
+softdepend: [PlaceholderAPI]

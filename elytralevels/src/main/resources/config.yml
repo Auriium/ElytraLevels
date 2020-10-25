@@ -1,0 +1,15 @@
+#Database information
+database:
+  host: 127.0.0.1
+  port: 3306
+  database: 'minecraft'
+  username: 'username'
+  password: 'password'
+ 
+database-interval: 2
+is-lobby: false
+is-economy-enabled: true
+replace-essentials: false
+
+server-name: Hub
+max-level: 300
