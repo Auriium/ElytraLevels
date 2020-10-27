@@ -1,4 +1,4 @@
-package com.elytraforce.elytralevels.rewards;
+package com.elytraforce.elytracore.rewards;
 
 import java.io.File;
 
@@ -29,23 +29,25 @@ import org.ipvp.canvas.template.ItemStackTemplate;
 import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
-import com.elytraforce.elytralevels.Main;
-import com.elytraforce.elytralevels.player.LevelPlayer;
-import com.elytraforce.elytralevels.player.PlayerController;
-import com.elytraforce.elytralevels.utils.AuriUtils;
-import com.elytraforce.elytralevels.utils.ItemBuilder;
+import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.player.ElytraPlayer;
+import com.elytraforce.elytracore.player.PlayerController;
+import com.elytraforce.elytracore.utils.AuriUtils;
+import com.elytraforce.elytracore.utils.ItemBuilder;
 
 
 
 public class RewardController {
 	
 	private List<RewardData> rewards;
+	private ArrayList<Integer> rewardIntegers = new ArrayList<>();
 	
 	private static RewardController instance;
 	private final File configFile;
     private final FileConfiguration config;
     
     public List<RewardData> getRewards() { return this.rewards; }
+    public ArrayList<Integer> getInteger() { return this.rewardIntegers; }
     
     public List<Menu> pages;
     public LinkedHashMap<RewardData, SlotSettings> slotSettings;
@@ -78,6 +80,8 @@ public class RewardController {
                 List<String> servers = (List<String>)thisReward.getStringList("Servers");
                 List<String> commands = (List<String>)thisReward.getStringList("Commands");
              
+                this.rewardIntegers.add(level);
+                
                 preRewardData.add(new RewardData(level, name, description, servers, commands)); 
                 
 			}
@@ -129,6 +133,14 @@ public class RewardController {
         	        					.setDisplayName(dataName)
         	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore))
         	        					.setGlow(true).build();
+        	            	} else if (!data.isCorrectServer()) {
+        	            		finalLore.add("&r ");
+        	            		finalLore.add("&c&lCLAIM THIS ON &e&l" + data.getServers().get(0));
+        	        			
+        	        			dataItem = new ItemBuilder(Material.CHEST_MINECART)
+        	        					.setDisplayName(dataName)
+        	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore))
+        	        					.setGlow(true).build();
         	            	} else {
         	            		finalLore.add("&r ");
         	        			finalLore.add("&c&lREACH LEVEL &e&l" + data.getLevel() + "&c&l TO CLAIM");
@@ -145,7 +157,9 @@ public class RewardController {
         	                	
         	                } else if (data.canUnlock(PlayerController.get().getLevelPlayer(p))) {
         	                	data.unlock(PlayerController.get().getLevelPlayer(p));
-        	                	showMenu(PlayerController.get().getLevelPlayer(p));
+        	                	c.getClickedMenu().update(p);
+        	                } else if (!data.isCorrectServer()) {
+        	                	
         	                } else {
         	                	
         	                }
@@ -171,16 +185,17 @@ public class RewardController {
     	
     }
     
-    public void showMenu(LevelPlayer player) {
+    public void showMenu(ElytraPlayer player) {
     	
     	this.pages.get(0).open(player.asBukkitPlayer());
+    	
     }
     
-    public int getHighestUnlockedReward(LevelPlayer player) {
+    public int getHighestUnlockedReward(ElytraPlayer player) {
     	return AuriUtils.closestInteger(Collections.max(player.getUnlockedRewards()), this.getRewardLevels());
     }
     
-    public RewardData getHighestUnlockedRewardData(LevelPlayer player) {
+    public RewardData getHighestUnlockedRewardData(ElytraPlayer player) {
     	int level = AuriUtils.closestInteger(Collections.max(player.getUnlockedRewards()), this.getRewardLevels());
     	for (RewardData data : this.rewards) {
     		if (data.getLevel() == level) {

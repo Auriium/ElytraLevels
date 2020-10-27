@@ -1,9 +1,10 @@
-package com.elytraforce.elytralevels.config;
+package com.elytraforce.elytracore.config;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import com.elytraforce.elytralevels.Main;
+
+import com.elytraforce.elytracore.Main;
 
 public class PluginConfig {
 

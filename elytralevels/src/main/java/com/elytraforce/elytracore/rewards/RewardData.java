@@ -1,4 +1,4 @@
-package com.elytraforce.elytralevels.rewards;
+package com.elytraforce.elytracore.rewards;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,9 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 
-import com.elytraforce.elytralevels.player.LevelPlayer;
-import com.elytraforce.elytralevels.utils.AuriUtils;
+import com.elytraforce.elytracore.config.PluginConfig;
+import com.elytraforce.elytracore.player.ElytraPlayer;
+import com.elytraforce.elytracore.utils.AuriUtils;
 
 public class RewardData {
 	
@@ -32,7 +33,15 @@ public class RewardData {
 		this.commands = commands;
 	}
 	
-	public boolean canUnlock(LevelPlayer player) {
+	public boolean isCorrectServer() {
+		if (this.servers.contains(PluginConfig.getServerName())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean canUnlock(ElytraPlayer player) {
 		if (player.getLevel() >= level) {
 			return true;
 		} else {
@@ -40,13 +49,13 @@ public class RewardData {
 		}
 	}
 	
-	public boolean hasUnlocked(LevelPlayer player) {
+	public boolean hasUnlocked(ElytraPlayer player) {
 		if (player.getUnlockedRewards().contains(this.level)) { return true; }
 		
 		return false;
 	}
 	
-	public void unlock(LevelPlayer player) {
+	public void unlock(ElytraPlayer player) {
 		List<Integer> reward = player.getUnlockedRewards();
 		if (reward.contains(this.level)) {
 			return;

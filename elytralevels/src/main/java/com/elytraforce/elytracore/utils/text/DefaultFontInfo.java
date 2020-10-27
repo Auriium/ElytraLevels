@@ -1,4 +1,4 @@
-package com.elytraforce.elytralevels.utils.text;
+package com.elytraforce.elytracore.utils.text;
 
 public enum DefaultFontInfo{
 	 
@@ -11,10 +11,10 @@ public enum DefaultFontInfo{
 	D('D', 5),
 	d('d', 5),
 	E('E', 5),
-	e('e', 5),
+	e('e', 5), 
 	F('F', 5),
 	f('f', 4),
-	G('G', 5),
+	G('G', 5), 
 	g('g', 5),
 	H('H', 5),
 	h('h', 5),

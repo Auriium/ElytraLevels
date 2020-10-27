@@ -1,4 +1,4 @@
-package com.elytraforce.elytralevels.utils;
+package com.elytraforce.elytracore.utils;
 
 import java.util.ArrayList;
 
@@ -27,8 +27,8 @@ public class ItemBuilder {
 
     public ItemMeta getItemMeta() {
         return stack.getItemMeta();
-    }
-
+    } 
+ 
     public ItemBuilder setColor(Color color) {
             LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
             meta.setColor(color);

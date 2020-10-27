@@ -1,4 +1,4 @@
-package com.elytraforce.elytralevels.player;
+package com.elytraforce.elytracore.player;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,14 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import com.elytraforce.elytralevels.storage.SQLStorage;
+import com.elytraforce.elytracore.storage.SQLStorage;
 
 
 
 public class PlayerController {
 
     private static PlayerController instance;
-    private HashSet<LevelPlayer> players;
+    private HashSet<ElytraPlayer> players;
 
     private PlayerController() {
 
@@ -31,7 +31,7 @@ public class PlayerController {
 
     public void joinCallback(Player player, int level, int experience, int money, List<Integer> unlockedRewards, boolean newPlayer) {
         if (player.isOnline()) {
-            players.add(new LevelPlayer(
+            players.add(new ElytraPlayer(
                     player,
                     level,
                     experience,
@@ -42,7 +42,7 @@ public class PlayerController {
         }
     }
 
-    public void playerQuit(LevelPlayer player) {
+    public void playerQuit(ElytraPlayer player) {
 
 
         if (player.isInDatabase()) {
@@ -54,18 +54,18 @@ public class PlayerController {
         players.remove(player);
     }
 
-    public HashSet<LevelPlayer> getPlayers() {
+    public HashSet<ElytraPlayer> getPlayers() {
         return players;
     }
 
-    public LevelPlayer getLevelPlayer(Player player) {
+    public ElytraPlayer getLevelPlayer(Player player) {
         return getLevelPlayer(player.getUniqueId());
     }
 
-    public LevelPlayer getLevelPlayer(UUID uuid) {
-        for (LevelPlayer levelPlayer : players) {
-            if (levelPlayer.getUUID().equals(uuid))
-                return levelPlayer;
+    public ElytraPlayer getLevelPlayer(UUID uuid) {
+        for (ElytraPlayer elytraPlayer : players) {
+            if (elytraPlayer.getUUID().equals(uuid))
+                return elytraPlayer;
         }
         return null;
     }

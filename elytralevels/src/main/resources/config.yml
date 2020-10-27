@@ -5,11 +5,12 @@ database:
   database: 'minecraft'
   username: 'username'
   password: 'password'
- 
 database-interval: 2
+#Main settings
 is-lobby: false
+is-minigame: false
 is-economy-enabled: true
 replace-essentials: false
-
+#Server info
 server-name: Hub
 max-level: 300

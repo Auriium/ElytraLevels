@@ -2,9 +2,9 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elytraforce</groupId>
-    <artifactId>elytralevels</artifactId>
+    <artifactId>elytracore</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>ElytraLevels</name>
+    <name>ElytraCore</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,6 +27,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        <repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
     </repositories>
 
     <dependencies>
@@ -46,6 +50,12 @@
             <artifactId>acf-paper</artifactId>
             <version>0.5.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+        	<groupId>com.github.MilkBowl</groupId>
+        	<artifactId>VaultAPI</artifactId>
+        	<version>1.7</version>
+        	<scope>provided</scope>
+   		</dependency>
         <dependency>
     		<groupId>org.ipvp</groupId>
     		<artifactId>canvas</artifactId>

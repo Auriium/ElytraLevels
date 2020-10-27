@@ -1,4 +1,4 @@
-package com.elytraforce.elytralevels.storage;
+package com.elytraforce.elytracore.storage;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -8,10 +8,10 @@ import java.util.logging.Level;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import com.elytraforce.elytralevels.Main;
-import com.elytraforce.elytralevels.config.PluginConfig;
-import com.elytraforce.elytralevels.player.LevelPlayer;
-import com.elytraforce.elytralevels.player.PlayerController;
+import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.config.PluginConfig;
+import com.elytraforce.elytracore.player.ElytraPlayer;
+import com.elytraforce.elytracore.player.PlayerController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -46,7 +46,7 @@ public class SQLStorage {
     }
 
     public void shutdown() {
-        for (LevelPlayer player : PlayerController.get().getPlayers()) {
+        for (ElytraPlayer player : PlayerController.get().getPlayers()) {
             if (player.isInDatabase())
                 updatePlayer(player, false);
             else
@@ -73,7 +73,7 @@ public class SQLStorage {
         });
     }
 
-    public void insertPlayer(LevelPlayer player, boolean async) {
+    public void insertPlayer(ElytraPlayer player, boolean async) {
         String sql = "INSERT INTO `levels_player` ";
         sql += "(`player_uuid`, `level`, `experience`, `money`, `unlocked_rewards`) ";
         sql += "VALUES (?, ?, ?, ?, ?);";
@@ -87,7 +87,7 @@ public class SQLStorage {
         executeUpdate(player, sql, toSet, async);
     }
 
-    public void updatePlayer(LevelPlayer player, boolean async) {
+    public void updatePlayer(ElytraPlayer player, boolean async) {
         String sql = "UPDATE `levels_player` SET ";
         sql += "`level` = ?, `experience` = ?, `money` = ?, `unlocked_rewards` = ? ";
         sql += "WHERE `player_uuid` = ?;";
@@ -101,7 +101,7 @@ public class SQLStorage {
         executeUpdate(player, sql, toSet, async);
     }
 
-    private void executeUpdate(LevelPlayer player, String sql, Object[] toSet, boolean async) {
+    private void executeUpdate(ElytraPlayer player, String sql, Object[] toSet, boolean async) {
         if (async)
             database.updateAsync(sql, toSet, integer -> player.setInDatabase(true));
         else {
