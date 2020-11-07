@@ -77,7 +77,11 @@ public class RewardController {
 				int level = thisReward.getInt("Level");
 				String name = AuriUtils.colorString(thisReward.getString("Name"));
 				List<String> description = AuriUtils.colorString(thisReward.getStringList("Description"));
-                List<String> servers = (List<String>)thisReward.getStringList("Servers");
+				List<String> servers = (List<String>)thisReward.getStringList("Servers");
+				if (thisReward.getStringList("Servers").isEmpty()) {
+					servers.add("all");
+				}
+				
                 List<String> commands = (List<String>)thisReward.getStringList("Commands");
              
                 this.rewardIntegers.add(level);
@@ -126,21 +130,23 @@ public class RewardController {
             	    					.setDisplayName(dataName)
             	    					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore)).build();
         	            	} else if (data.canUnlock(PlayerController.get().getLevelPlayer(p))) {
-        	            		finalLore.add("&r ");
-        	        			finalLore.add("&e&lCLICK TO CLAIM");
-        	        			
-        	        			dataItem = new ItemBuilder(Material.CHEST_MINECART)
-        	        					.setDisplayName(dataName)
-        	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore))
-        	        					.setGlow(true).build();
-        	            	} else if (!data.isCorrectServer()) {
-        	            		finalLore.add("&r ");
-        	            		finalLore.add("&c&lCLAIM THIS ON &e&l" + data.getServers().get(0));
-        	        			
-        	        			dataItem = new ItemBuilder(Material.CHEST_MINECART)
-        	        					.setDisplayName(dataName)
-        	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore))
-        	        					.setGlow(true).build();
+        	            		if (!data.isCorrectServer()) {
+            	            		finalLore.add("&r ");
+            	            		finalLore.add("&c&lCLAIM THIS ON &e&l" + data.getServers().get(0));
+            	        			
+            	        			dataItem = new ItemBuilder(Material.CHEST_MINECART)
+            	        					.setDisplayName(dataName)
+            	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore))
+            	        					.setGlow(true).build();
+            	            	} else {
+            	            		finalLore.add("&r ");
+            	        			finalLore.add("&e&lCLICK TO CLAIM");
+            	        			
+            	        			dataItem = new ItemBuilder(Material.CHEST_MINECART)
+            	        					.setDisplayName(dataName)
+            	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore))
+            	        					.setGlow(true).build();
+            	            	}
         	            	} else {
         	            		finalLore.add("&r ");
         	        			finalLore.add("&c&lREACH LEVEL &e&l" + data.getLevel() + "&c&l TO CLAIM");
@@ -156,8 +162,12 @@ public class RewardController {
         	                if (data.hasUnlocked(PlayerController.get().getLevelPlayer(p))) {
         	                	
         	                } else if (data.canUnlock(PlayerController.get().getLevelPlayer(p))) {
-        	                	data.unlock(PlayerController.get().getLevelPlayer(p));
-        	                	c.getClickedMenu().update(p);
+        	                	if (!data.isCorrectServer()) {
+        	                		
+        	                	} else {
+        	                		data.unlock(PlayerController.get().getLevelPlayer(p));
+            	                	c.getClickedMenu().update(p);
+        	                	}	
         	                } else if (!data.isCorrectServer()) {
         	                	
         	                } else {
@@ -195,6 +205,16 @@ public class RewardController {
     	return AuriUtils.closestInteger(Collections.max(player.getUnlockedRewards()), this.getRewardLevels());
     }
     
+    private ArrayList<Integer> getRewardIntsBelowLevel(int level) {
+    	ArrayList<Integer> returnable = new ArrayList<>();
+    	for (Integer reward : this.rewardIntegers) {
+    		if (reward <= level) {
+    			returnable.add(reward);
+    		}
+    	}
+    	return returnable;
+    }
+    
     public RewardData getHighestUnlockedRewardData(ElytraPlayer player) {
     	int level = AuriUtils.closestInteger(Collections.max(player.getUnlockedRewards()), this.getRewardLevels());
     	for (RewardData data : this.rewards) {
@@ -213,6 +233,16 @@ public class RewardController {
     	}
     	
     	return list;
+    }
+    
+    public boolean hasRewards(ElytraPlayer player) {
+    	Bukkit.broadcastMessage(player.getUnlockedRewards().toString());
+    	Bukkit.broadcastMessage(this.getRewardIntsBelowLevel(player.getLevel()).toString());
+    	if (player.getUnlockedRewards().containsAll(this.getRewardIntsBelowLevel(player.getLevel())) ) {
+    		return false;
+    	} else {
+    		return true;
+    	}
     }
 	
     private boolean containsLevel(RewardData input) {

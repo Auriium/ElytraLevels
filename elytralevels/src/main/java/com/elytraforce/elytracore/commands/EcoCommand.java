@@ -14,7 +14,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
 
-@CommandAlias("eco|economy")
+@CommandAlias("eco|economy|elytraeco")
 public class EcoCommand extends BaseCommand{
 	
 	public static final String WILDCARD = "*";

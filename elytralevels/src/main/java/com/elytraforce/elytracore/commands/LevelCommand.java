@@ -1,11 +1,12 @@
 package com.elytraforce.elytracore.commands;
-
 import org.bukkit.Bukkit;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.ElytraPlayer;
+import com.elytraforce.elytracore.player.GUIController;
 import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.rewards.RewardController;
 import com.elytraforce.elytracore.storage.SQLStorage;
@@ -35,6 +36,7 @@ public class LevelCommand extends BaseCommand {
 
     public Main getInstance() { return main; }
     
+    
     @Subcommand("stats")
     @CommandAlias("stats")
     @Default
@@ -49,7 +51,7 @@ public class LevelCommand extends BaseCommand {
     		p = PlayerController.get().getLevelPlayer(player2);
     	}
     	
-    	//PlayerController.get().displayStatsGUI(p)
+    	GUIController.get().showProfile(PlayerController.get().getLevelPlayer(player), p);
     }
     
     @Subcommand("rewards")

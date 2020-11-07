@@ -58,6 +58,10 @@ public class AuriUtils {
 		return stringList;
 	}
 	
+	public static void sendMessage(ElytraPlayer player, String message) {
+		player.asBukkitPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+	}
+	
 	public static void sendCenteredMessage(ElytraPlayer player, String message) {
 		sendCenteredMessage(player.asBukkitPlayer(), message);
 	}

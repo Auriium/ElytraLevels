@@ -3,6 +3,7 @@ package com.elytraforce.elytracore.storage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -53,6 +54,24 @@ public class SQLStorage {
                 insertPlayer(player, false);
         }
         database.close();
+    }
+    
+    public void loadPlayer(UUID uuid) {
+    	String sql = "SELECT * FROM `levels_player` ";
+    	sql += "WHERE `player_uuid` = ?;";
+        database.queryAsync(sql, new Object[]{uuid.toString()}, resultSet -> {
+            if (resultSet.next()) {
+                PlayerController.get().joinCallback(
+                        null,
+                        resultSet.getInt("level"),
+                        resultSet.getInt("experience"),
+                        resultSet.getInt("money"),
+                        gson.fromJson(resultSet.getString("unlocked_rewards"), new TypeToken<ArrayList<Integer>>() {}.getType()),
+                        true);
+            } else {
+                throw new SQLException("Player does not exist or has never joined!");
+            }
+        });
     }
 
     public void loadPlayer(Player player) {

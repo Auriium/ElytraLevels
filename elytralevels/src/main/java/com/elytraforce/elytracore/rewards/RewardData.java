@@ -36,6 +36,8 @@ public class RewardData {
 	public boolean isCorrectServer() {
 		if (this.servers.contains(PluginConfig.getServerName())) {
 			return true;
+		} else if (this.servers.contains("all")) {
+			return true;
 		} else {
 			return false;
 		}

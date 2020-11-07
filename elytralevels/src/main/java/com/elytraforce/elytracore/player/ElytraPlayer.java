@@ -86,7 +86,7 @@ public class ElytraPlayer {
 		
 		if (this.level == PluginConfig.getMaxLevel()) {
 			MessageController.maxLevelMessage(this);
-			TitleController.sendTitle(this, AuriUtils.colorString("&c&lLEVEL UP!"), AuriUtils.colorString("&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel()));
+			TitleController.sendTitle(this, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel()));
 			return;
 		}
 		
@@ -95,7 +95,7 @@ public class ElytraPlayer {
 		}
 		
 		if (title) {
-			TitleController.sendTitle(this, AuriUtils.colorString("&c&lLEVEL UP!"), AuriUtils.colorString("&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel()));
+			TitleController.sendTitle(this, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel()));
 		}
 		
 		Bukkit.getPluginManager().callEvent(new LevelEvent(this, oldLevel, this.level, ChangeEnum.INCREASE));
@@ -115,7 +115,7 @@ public class ElytraPlayer {
 		}
 		
 		if (title) {
-			TitleController.sendTitle(this, "&c&lLEVEL DOWN!", "&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel());
+			TitleController.sendTitle(this, "&9&lLEVEL DOWN!", "&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel());
 		}
 		
 		Bukkit.getPluginManager().callEvent(new LevelEvent(this, oldLevel, this.level, ChangeEnum.DECREASE));
@@ -131,10 +131,14 @@ public class ElytraPlayer {
 			return;
 		}
 		
+		if (isDonator()) {
+			exp = (int) (exp * 1.2);
+		}
+		
 		if (sendMessage) {
 			MessageController.addXPMessage(this, exp);
 		}
-		
+				
 		if (title) {
 			if (this.displayingTitle) {
 
@@ -160,7 +164,7 @@ public class ElytraPlayer {
 		        }.runTaskLater(Main.get(), (long)40L);
 			}
 			
-			TitleController.sendAnimatedSideTitle(this, "", "         &c+" + this.displayedXP + "❂", 10);
+			TitleController.sendAnimatedSideTitle(this, "", "         &b+" + this.displayedXP + "❂", 10);
 		}
 		
 		this.experience = this.experience + exp;
@@ -255,17 +259,17 @@ public class ElytraPlayer {
 		int bars = (int)Math.floor(this.experience * (9 * 1.0) / this.getRequiredXPToNextLevel());
 		StringBuilder stringBuild = new StringBuilder();
 		
-		stringBuild.append(ChatColor.GRAY);
+		stringBuild.append(ChatColor.YELLOW);
         for (int j = 0; j < bars; ++j) {
         	stringBuild.append("░");
         }
-        stringBuild.append(ChatColor.RED);
+        stringBuild.append(ChatColor.GRAY);
         for (int j = 0; j < 9 - bars; ++j) {
         	stringBuild.append("░");
         }
 		
-        return stringBuild.toString();
-	}
+        return stringBuild.toString(); 
+	}   
 	
 	public String getPercent() {
 		double v = this.experience / this.getRequiredXPToNextLevel();
@@ -287,6 +291,14 @@ public class ElytraPlayer {
 	
 	public int getNextLevel() {
 		return this.level + 1;
+	}
+	
+	public boolean isDonator() {
+		if (this.asBukkitPlayer().hasPermission("elytraforce.donator")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 }

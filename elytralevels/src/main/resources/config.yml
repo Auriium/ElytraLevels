@@ -1,16 +1,27 @@
 #Database information
 database:
-  host: 127.0.0.1
+  host: 172.17.0.1
   port: 3306
   database: 'minecraft'
-  username: 'username'
-  password: 'password'
+  username: 'owners'
+  password: 'DX$;xFeuZ7YAyre`'
+  
 database-interval: 2
 #Main settings
-is-lobby: false
+is-hub: true
+is-lobby: true
 is-minigame: false
 is-economy-enabled: true
 replace-essentials: false
 #Server info
 server-name: Hub
 max-level: 300
+
+messages:
+  plugin-prefix: "&9&lCORE &7>> &f"
+  
+  
+redis:
+  ip: 172.17.0.1
+  port: 6379
+  password: ""

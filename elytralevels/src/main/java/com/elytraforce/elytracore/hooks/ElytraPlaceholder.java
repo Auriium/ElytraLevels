@@ -73,11 +73,11 @@ public class ElytraPlaceholder extends PlaceholderExpansion{
             return PlayerController.get().getLevelPlayer(player).getProgressBar();
         }
 
-        //returns unformatted money. Use vault instead!
+        //returns unformatted money. Use vault instead! 
         if(identifier.equals("money")){
         	return PlayerController.get().getLevelPlayer(player).getMoney() + "";
         }
- 
+
         return null;
     }
 

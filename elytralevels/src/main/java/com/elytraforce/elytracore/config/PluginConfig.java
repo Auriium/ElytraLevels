@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.utils.AuriUtils;
 
 public class PluginConfig {
 
@@ -44,6 +45,22 @@ public class PluginConfig {
     
     public static boolean isEconomyEnabled() {
     	return config.getBoolean("is-economy-enabled");
+    }
+    
+    public static String getPrefix() {
+    	return AuriUtils.colorString(config.getString("messages.plugin-prefix"));
+    }
+    
+    public static String getRedisIP() {
+    	return config.getString("redis.ip");
+    }
+    
+    public static int getRedisPort() {
+    	return config.getInt("redis.port");
+    }
+    
+    public static String getRedisPassword() {
+    	return config.getString("redis.password");
     }
 
 }

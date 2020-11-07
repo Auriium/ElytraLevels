@@ -126,4 +126,15 @@ public class ItemBuilder {
         return stack;
     }
 
+	public ItemBuilder setLore(String... string) {
+		ArrayList<String> loreList = new ArrayList<>();
+		for (String str : string) {
+			loreList.add(str);
+		}
+	    ItemMeta meta = getItemMeta();
+	    meta.setLore(loreList);
+	    setItemMeta(meta);
+	    return this;
+	}
+
 }

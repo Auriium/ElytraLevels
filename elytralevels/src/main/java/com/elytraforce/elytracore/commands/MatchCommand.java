@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.matchtracker.TrackerController;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
@@ -22,6 +23,16 @@ import co.aikar.commands.annotation.Syntax;
 @CommandAlias("match")
 @CommandPermission("elytraforce.admin")
 public class MatchCommand extends BaseCommand{
+	
+	public static final String WILDCARD = "*";
+
+    private final Main main;
+
+    public MatchCommand(Main main) {
+        this.main = main;
+    }
+
+    public Main getInstance() { return main; }
 
 	@Subcommand("track")
     @CommandPermission("elyraforce.admin")

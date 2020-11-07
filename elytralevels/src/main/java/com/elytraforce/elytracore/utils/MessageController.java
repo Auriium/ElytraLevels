@@ -1,11 +1,7 @@
 package com.elytraforce.elytracore.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
+import org.bukkit.GameMode;
+import com.elytraforce.elytracore.config.PluginConfig;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.rewards.RewardController;
 
@@ -18,6 +14,50 @@ public class MessageController {
 	
 	private static MessageController instance;
 	
+	public static void godMessage(ElytraPlayer player, Boolean bool) {
+		if (bool) {
+			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet god mode to &aON");
+		} else {
+			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet god mode to &aOFF");
+		}
+	}
+	
+	public static void healMessage(ElytraPlayer player) {
+		AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fYou have been healed!");
+	}
+	
+	public static void feedMessage(ElytraPlayer player) {
+		AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fYou have been fed!");
+	}
+	
+	public static void flyMessage(ElytraPlayer player, boolean on) {
+		if (on) {
+			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet fly mode to &aON");
+		} else {
+			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet fly mode to &aOFF");
+		}
+	}
+	
+	public static void gamemodeMessage(ElytraPlayer player, GameMode mode, boolean already) {
+		if (already) {
+			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fYou already are in gamemode &a" + mode.name().toUpperCase());
+		} else {
+			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet gamemode to &a" + mode.name().toUpperCase());
+		}
+	}
+	
+	public static void discordMessage(ElytraPlayer player) {
+		AuriUtils.sendCenteredMessage(player, "&7Our discord is at &9&ldiscord.elytraforce.com!");
+	}
+	
+	public static void websiteMessage(ElytraPlayer player) {
+		AuriUtils.sendCenteredMessage(player, "&7Our site is at &9&lelytraforce.com!");
+	}
+	
+	public static void storeMessage(ElytraPlayer player) {
+		AuriUtils.sendCenteredMessage(player, "&7Visit our store at &e&lstore.elytraforce.com!");
+	}
+	
 	public static void matchBeginTrackingMessage(ElytraPlayer player, String uuid) {
 		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7Beginning tracking manual match with UUID: &6" + uuid + "!"));
 	}
@@ -27,36 +67,36 @@ public class MessageController {
 	}
 	
 	public static void balanceMessage(ElytraPlayer player) {
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7Your balance: &6" + player.getMoney() + " ⛃"));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7Your balance: &e" + player.getMoney() + " ⛃"));
 	}
 	
 	public static void setMoneyMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7Balance set to &6" + amount + " ⛃"));
+		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7Balance set to &e" + amount + " ⛃"));
 	}
 	
 	public static void addMoneyMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7+ &6" + amount + " ⛃"));
+		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7+ &e" + amount + " ⛃"));
 	}
 	
 	public static void removeMoneyMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7- &6" + amount + " ⛃"));
+		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7- &e" + amount + " ⛃"));
 	}
 	
 	public static void addXPMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7+ &c" + amount + " ❂"));
+		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7+ &b" + amount + " ❂"));
 	}
 	
 	public static void removeXPMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7- &c" + amount + " ❂"));
+		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7- &b" + amount + " ❂"));
 	}
 	
 	public static void removeLevelMessage(ElytraPlayer player) {
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7&m-----------------------------------------------------&r"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7&k&l0&r &c&lLEVEL DOWN! &7&k&l0"));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7&k&l0&r &9&lLEVEL DOWN! &7&k&l0"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7You are now &c&lLevel &e&l" + player.getLevel() + "&7!"));
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7" + player.getExperience() + "/" + player.getRequiredXPToNextLevel() + "&cxp&7 to reach &c&lLevel &e&l" + player.getNextLevel()));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7You are now &b&lLevel &e&l" + player.getLevel() + "&7!"));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&b" + player.getExperience() + "&7/" + player.getRequiredXPToNextLevel() + "&b XP&7 to reach &b&lLevel &e&l" + player.getNextLevel()));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7&m-----------------------------------------------------&r"));
 	}
@@ -66,10 +106,10 @@ public class MessageController {
 	public static void addLevelMessage(ElytraPlayer player) {
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7&m-----------------------------------------------------&r"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7&k&l0&r &c&lLEVEL UP! &7&k&l0"));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7&k&l0&r &9&lLEVEL UP! &7&k&l0"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7You are now &c&lLevel &e&l" + player.getLevel() + "&7!"));
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7" + player.getExperience() + "/" + player.getRequiredXPToNextLevel() + "&cxp&7 to reach &c&lLevel &e&l" + player.getNextLevel()));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7You are now &b&lLevel &e&l" + player.getLevel() + "&7!"));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&b" + player.getExperience() + "&7/" + player.getRequiredXPToNextLevel() + "&b XP&7 to reach &b&lLevel &e&l" + player.getNextLevel()));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
 		
 		if (RewardController.get().getInteger().contains(player.getLevel())) {
@@ -92,9 +132,9 @@ public class MessageController {
 	public static void maxLevelMessage(ElytraPlayer player) {
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7&m-----------------------------------------------------&r"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7&k&l0&r &c&lLEVEL UP! &7&k&l0"));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7&k&l0&r &9&lLEVEL UP! &7&k&l0"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7You are now &c&l MAX LEVEL &e&l(" + player.getLevel() + ")&7!"));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7You are now &b&l MAX LEVEL &e&l(" + player.getLevel() + ")&7!"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
 		
 		if (RewardController.get().getInteger().contains(player.getLevel())) {
