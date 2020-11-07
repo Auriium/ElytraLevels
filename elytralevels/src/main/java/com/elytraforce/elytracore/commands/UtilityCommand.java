@@ -1,5 +1,6 @@
 package com.elytraforce.elytracore.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,13 +38,14 @@ public class UtilityCommand extends BaseCommand{
     @Description("Check a player's inventory") 
     @CommandPermission("elytraforce.mod")
     @CommandCompletion("@players ")
-    public void invsee(CommandSender sender, Player t) {
+    public void invsee(Player sender, String t) {
     	
     	if (sender instanceof Player) {
     		ElytraPlayer player = PlayerController.get().getLevelPlayer((Player) sender);
+
     		if (t == null) { AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&cTarget must be a player!"); return;}
     		
-    		ElytraPlayer target = PlayerController.get().getLevelPlayer(t);
+    		ElytraPlayer target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(t));
     		
     		UtilityController.get().invsee(player, target);
     	}
@@ -54,12 +56,13 @@ public class UtilityCommand extends BaseCommand{
 	@Subcommand("god")
     @Description("Set your godmode") 
     @CommandPermission("elytraforce.admin")
-    public void onGod(CommandSender sender, @Optional Player player2) {
+    @CommandCompletion("@players ")
+    public void onGod(CommandSender sender, @Optional String player2) {
     	ElytraPlayer player;
     	
     	if (sender instanceof Player) {
     		if (player2 != null) {
-    			player = PlayerController.get().getLevelPlayer(player2);
+    			player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
     		} else {
     			player = PlayerController.get().getLevelPlayer((Player) sender);
     		}
@@ -72,12 +75,13 @@ public class UtilityCommand extends BaseCommand{
 	@Subcommand("fly")
     @Description("Set your flymode") 
     @CommandPermission("elytraforce.mod")
-    public void onFly(CommandSender sender, @Optional Player player2) {
+    @CommandCompletion("@players ")
+    public void onFly(CommandSender sender, @Optional String player2) {
     	ElytraPlayer player;
     	
     	if (sender instanceof Player) {
     		if (player2 != null) {
-    			player = PlayerController.get().getLevelPlayer(player2);
+    			player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
     		} else {
     			player = PlayerController.get().getLevelPlayer((Player) sender);
     		}
@@ -90,11 +94,12 @@ public class UtilityCommand extends BaseCommand{
 	@Subcommand("gm")
     @Description("Switch your gamemode") 
     @CommandPermission("elytraforce.admin")
-    public void onGamemode(CommandSender sender, GameMode mode, @Optional Player player2) {
+    @CommandCompletion("@players ")
+    public void onGamemode(CommandSender sender, GameMode mode, @Optional String player2) {
     	ElytraPlayer player;
     	if (sender instanceof Player) {
     		if (player2 != null) {
-    			player = PlayerController.get().getLevelPlayer(player2);
+    			player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
     		} else {
     			player = PlayerController.get().getLevelPlayer((Player) sender);
     		}
@@ -107,11 +112,12 @@ public class UtilityCommand extends BaseCommand{
 	@Subcommand("gms")
     @Description("Switch your gamemode") 
     @CommandPermission("elytraforce.admin")
-    public void onGMS(CommandSender sender, @Optional Player player2) {
+    @CommandCompletion("@players ")
+    public void onGMS(CommandSender sender, @Optional String player2) {
     	ElytraPlayer player;
     	if (sender instanceof Player) {
     		if (player2 != null) {
-    			player = PlayerController.get().getLevelPlayer(player2);
+    			player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
     		} else {
     			player = PlayerController.get().getLevelPlayer((Player) sender);
     		}
@@ -124,11 +130,12 @@ public class UtilityCommand extends BaseCommand{
 	@Subcommand("gmc")
     @Description("Switch your gamemode") 
     @CommandPermission("elytraforce.admin")
-    public void onGMC(CommandSender sender, @Optional Player player2) {
+    @CommandCompletion("@players ")
+    public void onGMC(CommandSender sender, @Optional String player2) {
     	ElytraPlayer player;
     	if (sender instanceof Player) {
     		if (player2 != null) {
-    			player = PlayerController.get().getLevelPlayer(player2);
+    			player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
     		} else {
     			player = PlayerController.get().getLevelPlayer((Player) sender);
     		}
@@ -142,11 +149,12 @@ public class UtilityCommand extends BaseCommand{
 	@Subcommand("gma")
     @Description("Switch your gamemode") 
     @CommandPermission("elytraforce.admin")
-    public void onGMA(CommandSender sender, @Optional Player player2) {
+    @CommandCompletion("@players ")
+    public void onGMA(CommandSender sender, @Optional String player2) {
     	ElytraPlayer player;
     	if (sender instanceof Player) {
     		if (player2 != null) {
-    			player = PlayerController.get().getLevelPlayer(player2);
+    			player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
     		} else {
     			player = PlayerController.get().getLevelPlayer((Player) sender);
     		}
@@ -159,11 +167,12 @@ public class UtilityCommand extends BaseCommand{
 	@Subcommand("gmsp")
     @Description("Switch your gamemode") 
     @CommandPermission("elytraforce.admin")
-    public void onGMSP(CommandSender sender, @Optional Player player2) {
+    @CommandCompletion("@players ")
+    public void onGMSP(CommandSender sender, @Optional String player2) {
     	ElytraPlayer player;
     	if (sender instanceof Player) {
     		if (player2 != null) {
-    			player = PlayerController.get().getLevelPlayer(player2);
+    			player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
     		} else {
     			player = PlayerController.get().getLevelPlayer((Player) sender);
     		}
@@ -176,11 +185,12 @@ public class UtilityCommand extends BaseCommand{
 	@Subcommand("heal")
     @Description("Heal yourself") 
     @CommandPermission("elytraforce.admin")
-    public void onHeal(CommandSender sender, @Optional Player player2) {
+    @CommandCompletion("@players ")
+    public void onHeal(CommandSender sender, @Optional String player2) {
     	ElytraPlayer player;
     	if (sender instanceof Player) {
     		if (player2 != null) {
-    			player = PlayerController.get().getLevelPlayer(player2);
+    			player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
     		} else {
     			player = PlayerController.get().getLevelPlayer((Player) sender);
     		}
@@ -193,11 +203,12 @@ public class UtilityCommand extends BaseCommand{
 	@Subcommand("feed")
     @Description("Feed yourself") 
     @CommandPermission("elytraforce.helper")
-    public void onFeed(CommandSender sender, @Optional Player player2) {
+    @CommandCompletion("@players ")
+    public void onFeed(CommandSender sender, @Optional String player2) {
     	ElytraPlayer player;
     	if (sender instanceof Player) {
     		if (player2 != null) {
-    			player = PlayerController.get().getLevelPlayer(player2);
+    			player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
     		} else {
     			player = PlayerController.get().getLevelPlayer((Player) sender);
     		}

@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.canvas.MenuFunctionListener;
 
 import com.elytraforce.elytracore.commands.BalanceCommand;
-import com.elytraforce.elytracore.bossbar.DamageBossbar;
+import com.elytraforce.elytracore.bossbar.MatchBarController;
 import com.elytraforce.elytracore.commands.*;
 import com.elytraforce.elytracore.config.PluginConfig;
 import com.elytraforce.elytracore.hooks.ElytraEconomy;
@@ -48,7 +48,7 @@ public class Main extends JavaPlugin {
         RewardController.get();
         TrackerController.get();
         GUIController.get();
-        DamageBossbar.get();
+        MatchBarController.get();
         
         for (Player player : this.getServer().getOnlinePlayers()) {
         	if (PlayerController.get().getLevelPlayer(player) == null) {

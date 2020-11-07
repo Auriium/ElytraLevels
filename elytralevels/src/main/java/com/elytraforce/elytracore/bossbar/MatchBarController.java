@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.matchtracker.TrackablePlayer;
@@ -19,14 +20,24 @@ import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.utils.AuriUtils;
 
-public class DamageBossbar {
+public class MatchBarController {
 	
-	private static DamageBossbar instance;
+	private static MatchBarController instance;
 	
 	HashMap<LivingEntity, TrackablePlayer> initiatedBars;
 	
-	private DamageBossbar() {
-		
+	private MatchBarController() {
+		this.initiatedBars = new HashMap<>();
+	}
+	
+	public void onKill(EntityDamageByEntityEvent event) {
+		if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
+			
+			
+			
+			
+			
+		}
 	}
 	
 	public void onHeal(EntityRegainHealthEvent event) {
@@ -118,9 +129,9 @@ public class DamageBossbar {
 		}
 	}
 	
-	public static DamageBossbar get() {
+	public static MatchBarController get() {
 		if (instance == null) {
-			return instance = new DamageBossbar();
+			return instance = new MatchBarController();
 		} else {
 			return instance;
 		}
