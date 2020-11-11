@@ -20,3 +20,4 @@ elytraforce network.
 - Redis messaging util
 - Finish filling out the matchtracker events so they can be called
 - Add the different gamemodes to the EF stat GUI
+- Setup testing branches on Git
