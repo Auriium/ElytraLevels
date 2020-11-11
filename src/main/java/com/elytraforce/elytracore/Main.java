@@ -24,7 +24,10 @@ import com.elytraforce.elytracore.timedrestart.RestartController;
 import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.economy.Economy;
 
+
 public class Main extends JavaPlugin {
+
+    //cum     good
 
 	public static String pluginName;
 	private static Main instance;
