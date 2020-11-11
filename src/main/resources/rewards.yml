@@ -1,0 +1,32 @@
+Rewards:
+  #Make sure you use the same identifier in all servers otherwise players will be able to claim
+  #the same reward because it has a different name.<- IMPORTANT
+  1:
+    Name: "YourNetwork Level Reward %level%"
+    Level: 1
+    #This allows you to restrict this reward to be claimed ONLY in certain servers.
+    #Use [] if it can be claimable in all servers.
+    Servers: []
+    Description:
+    - ""
+    - "&8+&b100 &7Network Experience"
+    - ""
+    - "&8Experience will make you level up"
+    - "&8to unlock perks, features, multipliers"
+    - "&8and more!"
+    Commands:
+    - "level addxp %player% 100 true"
+  2:
+    Name: "YourNetwork Level Reward %level%"
+    Level: 2
+    Servers: ["Survival"]
+    Description:
+    - ""
+    - "&8+&b5 &7Diamond blocks"
+    - ""
+    - "&8Diamond blocks are useful to craft"
+    - "&8strong armor and faster tools."
+    Commands:
+    - "give %player% minecraft:diamond_block 5"
+    
+    
