@@ -1,18 +1,13 @@
 package com.elytraforce.elytracore.bossbar;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.matchtracker.TrackablePlayer;
 import com.elytraforce.elytracore.matchtracker.TrackerController;

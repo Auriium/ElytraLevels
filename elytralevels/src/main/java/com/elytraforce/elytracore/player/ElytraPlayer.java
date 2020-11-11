@@ -16,8 +16,8 @@ import com.elytraforce.elytracore.events.LevelEvent;
 import com.elytraforce.elytracore.events.MoneyEvent;
 import com.elytraforce.elytracore.events.XPEvent;
 import com.elytraforce.elytracore.utils.AuriUtils;
-import com.elytraforce.elytracore.utils.MessageController;
-import com.elytraforce.elytracore.utils.TitleController;
+import com.elytraforce.elytracore.utils.MessageUtils;
+import com.elytraforce.elytracore.utils.TitleUtils;
 
 
 public class ElytraPlayer {
@@ -85,17 +85,17 @@ public class ElytraPlayer {
 		this.level = this.level + amount;
 		
 		if (this.level == PluginConfig.getMaxLevel()) {
-			MessageController.maxLevelMessage(this);
-			TitleController.sendTitle(this, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel()));
+			MessageUtils.maxLevelMessage(this);
+			TitleUtils.sendTitle(this, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel()));
 			return;
 		}
 		
 		if (sendMessage) {
-			MessageController.addLevelMessage(this);
+			MessageUtils.addLevelMessage(this);
 		}
 		
 		if (title) {
-			TitleController.sendTitle(this, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel()));
+			TitleUtils.sendTitle(this, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel()));
 		}
 		
 		Bukkit.getPluginManager().callEvent(new LevelEvent(this, oldLevel, this.level, ChangeEnum.INCREASE));
@@ -111,11 +111,11 @@ public class ElytraPlayer {
 		}
 		
 		if (sendMessage) {
-			MessageController.removeLevelMessage(this);
+			MessageUtils.removeLevelMessage(this);
 		}
 		
 		if (title) {
-			TitleController.sendTitle(this, "&9&lLEVEL DOWN!", "&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel());
+			TitleUtils.sendTitle(this, "&9&lLEVEL DOWN!", "&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel());
 		}
 		
 		Bukkit.getPluginManager().callEvent(new LevelEvent(this, oldLevel, this.level, ChangeEnum.DECREASE));
@@ -136,7 +136,7 @@ public class ElytraPlayer {
 		}
 		
 		if (sendMessage) {
-			MessageController.addXPMessage(this, exp);
+			MessageUtils.addXPMessage(this, exp);
 		}
 				
 		if (title) {
@@ -164,7 +164,7 @@ public class ElytraPlayer {
 		        }.runTaskLater(Main.get(), (long)40L);
 			}
 			
-			TitleController.sendAnimatedSideTitle(this, "", "         &b+" + this.displayedXP + "❂", 10);
+			TitleUtils.sendAnimatedSideTitle(this, "", "         &b+" + this.displayedXP + "❂", 10);
 		}
 		
 		this.experience = this.experience + exp;
@@ -182,7 +182,7 @@ public class ElytraPlayer {
 		int oldXP = this.experience;
 		
 		if (sendMessage) {
-			MessageController.removeXPMessage(this, exp);
+			MessageUtils.removeXPMessage(this, exp);
 		}
 		
 		if (title) {
@@ -203,7 +203,7 @@ public class ElytraPlayer {
 		int oldMoney = this.money;
 		
 		if (sendMessage) {
-			MessageController.addMoneyMessage(this, money);
+			MessageUtils.addMoneyMessage(this, money);
 		}
 		
 		this.money = this.money + money;
@@ -220,7 +220,7 @@ public class ElytraPlayer {
 		int oldMoney = this.money;
 		
 		if (sendMessage) {
-			MessageController.removeMoneyMessage(this, money);
+			MessageUtils.removeMoneyMessage(this, money);
 		}
 		
 		this.money = this.money - money;
@@ -237,7 +237,7 @@ public class ElytraPlayer {
 		int oldMoney = this.money;
 		
 		if (sendMessage) {
-			MessageController.setMoneyMessage(this, money);
+			MessageUtils.setMoneyMessage(this, money);
 		}
 		
 		this.money = money;
@@ -270,6 +270,11 @@ public class ElytraPlayer {
 		
         return stringBuild.toString(); 
 	}   
+	
+	public int getProgressBarInt() {
+		int bars = (int)Math.floor(this.experience * (9 * 1.0) / this.getRequiredXPToNextLevel());
+		return bars;
+	}
 	
 	public String getPercent() {
 		double v = this.experience / this.getRequiredXPToNextLevel();

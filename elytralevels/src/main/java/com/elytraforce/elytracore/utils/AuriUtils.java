@@ -1,10 +1,15 @@
 package com.elytraforce.elytracore.utils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.elytraforce.elytracore.Main;
@@ -14,6 +19,24 @@ import com.elytraforce.elytracore.utils.text.DefaultFontInfo;
 
 public class AuriUtils {
 	     
+	public static FileConfiguration loadFileConfig(String name) {
+		File customConfigFile = new File(Main.get().getDataFolder(), name);
+        if (!customConfigFile.exists()) {
+            customConfigFile.getParentFile().mkdirs();
+            Main.get().saveResource(name, false);
+        }
+        YamlConfiguration customConfig= new YamlConfiguration();
+        
+            try {
+				customConfig.load(customConfigFile);
+			} catch (IOException | InvalidConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+            return customConfig;
+	}
+	
 	//Utils meant to be copied
 	private final static int CENTER_PX = 154;
 	

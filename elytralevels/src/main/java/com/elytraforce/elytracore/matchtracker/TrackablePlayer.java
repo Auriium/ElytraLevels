@@ -45,7 +45,14 @@ public class TrackablePlayer {
 	public void addMatchXP(int i) { this.matchXP = this.matchXP + i; }
 	public void addMatchCoins(int i) { this.matchCoins = this.matchCoins + i; }
 	
-	public void showGUI() {
+	public void showGUI(MatchMenu menu) {
+		menu.showMenu(this);
+		
 		player.asBukkitPlayer().sendMessage(this.matchXP + this.matchCoins + "");
+		//todo: fancy chat message as well as sexy af stats
+	}
+	
+	public void animatedMenu() {
+		
 	}
 }

@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
-import com.elytraforce.elytracore.utils.MessageController;
+import com.elytraforce.elytracore.utils.MessageUtils;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -13,7 +13,6 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.Syntax;
 
 @CommandAlias("bal|balance")
 public class BalanceCommand extends BaseCommand{
@@ -24,7 +23,7 @@ public class BalanceCommand extends BaseCommand{
 
     public BalanceCommand(Main main) {
         this.main = main;
-    }
+    } 
 
     public Main getInstance() { return main; }
     
@@ -40,6 +39,6 @@ public class BalanceCommand extends BaseCommand{
     		p = PlayerController.get().getLevelPlayer(player2);
     	}
     	
-    	MessageController.balanceMessage(p);
+    	MessageUtils.balanceMessage(p);
     }
 }

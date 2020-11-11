@@ -1,11 +1,8 @@
 package com.elytraforce.elytracore.rewards;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
-
 import com.elytraforce.elytracore.config.PluginConfig;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.utils.AuriUtils;

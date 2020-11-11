@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitTask;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 
-public class TitleController {
+public class TitleUtils {
 	
 	public static void sendTitle(ElytraPlayer player, String top, String bottom) {
 		if (player.getDisplayedTitleTask() != null) {

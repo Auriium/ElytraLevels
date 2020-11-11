@@ -1,27 +1,11 @@
 package com.elytraforce.elytracore.player;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.ipvp.canvas.Menu;
-import org.ipvp.canvas.mask.BinaryMask;
-import org.ipvp.canvas.slot.Slot.ClickHandler;
-import org.ipvp.canvas.slot.SlotSettings;
-import org.ipvp.canvas.type.ChestMenu;
-
 import com.elytraforce.elytracore.storage.SQLStorage;
-import com.elytraforce.elytracore.utils.AuriUtils;
-import com.elytraforce.elytracore.utils.ItemBuilder;
-
-import me.clip.placeholderapi.PlaceholderAPI;
 
 
 

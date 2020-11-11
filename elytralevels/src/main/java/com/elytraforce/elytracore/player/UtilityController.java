@@ -1,10 +1,10 @@
 package com.elytraforce.elytracore.player;
 
 import java.util.HashMap;
-
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 
-import com.elytraforce.elytracore.utils.MessageController;
+import com.elytraforce.elytracore.utils.MessageUtils;
 
 public class UtilityController {
 	
@@ -16,49 +16,68 @@ public class UtilityController {
 		this.godModeEnabled = new HashMap<>();
 	}
 	
-	public void setGamemode(ElytraPlayer player, GameMode mode) {
-		if (player.asBukkitPlayer().getGameMode().equals(mode)) {
-			MessageController.gamemodeMessage(player, mode, true);
+	public void teleportHere(ElytraPlayer player, ElytraPlayer target) {
+		target.asBukkitPlayer().teleport(player.asBukkitPlayer());
+		MessageUtils.teleportHere(player, target);
+	}
+	
+	public void teleport(ElytraPlayer player, ElytraPlayer target) {
+		player.asBukkitPlayer().teleport(target.asBukkitPlayer());
+		MessageUtils.teleport(player, target);
+	}
+	
+	public void teleportCoords(ElytraPlayer player, int x, int y, int z) {
+		player.asBukkitPlayer().teleport(new Location(player.asBukkitPlayer().getWorld(),x,y,z));
+	}
+	
+	public void kill(ElytraPlayer player, ElytraPlayer target) {
+		target.asBukkitPlayer().setHealth(0);
+		MessageUtils.killMessage(player, target);
+	}
+	
+	public void setGamemode(ElytraPlayer player, ElytraPlayer target, GameMode mode) {
+		if (target.asBukkitPlayer().getGameMode().equals(mode)) {
+			MessageUtils.gamemodeMessage(player, target, mode, true);
 		} else {
-			player.asBukkitPlayer().setGameMode(mode);
-			MessageController.gamemodeMessage(player, mode, false);
+			target.asBukkitPlayer().setGameMode(mode);
+			MessageUtils.gamemodeMessage(player, target, mode, false);
 		}
 	}
 	
-	public void setFlying(ElytraPlayer player) {
-		if (player.asBukkitPlayer().isFlying()) {
-			MessageController.flyMessage(player, false);
-			player.asBukkitPlayer().setAllowFlight(false);
-			player.asBukkitPlayer().setFlying(false);
+	public void setFlying(ElytraPlayer player, ElytraPlayer target) {
+		if (target.asBukkitPlayer().isFlying()) {
+			MessageUtils.flyMessage(player, target, false);
+			target.asBukkitPlayer().setAllowFlight(false);
+			target.asBukkitPlayer().setFlying(false);
 		} else {
-			MessageController.flyMessage(player, true);
-			player.asBukkitPlayer().setAllowFlight(true);
-			player.asBukkitPlayer().setFlying(true);
+			MessageUtils.flyMessage(player, target, true);
+			target.asBukkitPlayer().setAllowFlight(true);
+			target.asBukkitPlayer().setFlying(true);
 		}
 	}
 	
-	public void heal(ElytraPlayer player) {
-		MessageController.healMessage(player);
-		player.asBukkitPlayer().setHealth(player.asBukkitPlayer().getMaxHealth());
-		player.asBukkitPlayer().setFoodLevel(20);
+	public void heal(ElytraPlayer player, ElytraPlayer target) {
+		MessageUtils.healMessage(player, target);
+		target.asBukkitPlayer().setHealth(player.asBukkitPlayer().getMaxHealth());
+		target.asBukkitPlayer().setFoodLevel(20);
 	}
 	
-	public void feed(ElytraPlayer player) {
-		MessageController.feedMessage(player);
-		player.asBukkitPlayer().setFoodLevel(20);
+	public void feed(ElytraPlayer player, ElytraPlayer target) {
+		MessageUtils.feedMessage(player, target);
+		target.asBukkitPlayer().setFoodLevel(20);
 	}
 	
 	public void invsee(ElytraPlayer player, ElytraPlayer target) {
-		player.asBukkitPlayer().openInventory(target.asBukkitPlayer().getInventory());
+		target.asBukkitPlayer().openInventory(target.asBukkitPlayer().getInventory());
 	}
 	
-	public void toggleGodMode(ElytraPlayer player) {
-		if (isGodMode(player)) {
-			this.godModeEnabled.put(player, false);
-			MessageController.godMessage(player, false);
+	public void toggleGodMode(ElytraPlayer player, ElytraPlayer target) {
+		if (isGodMode(target)) {
+			this.godModeEnabled.put(target, false);
+			MessageUtils.godMessage(player, target, false);
 		} else {
-			this.godModeEnabled.put(player, true);
-			MessageController.godMessage(player, true);
+			this.godModeEnabled.put(target, true);
+			MessageUtils.godMessage(player, target, true);
 		}
 	}
 	

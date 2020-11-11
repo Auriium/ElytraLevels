@@ -3,7 +3,6 @@ package com.elytraforce.elytracore.matchtracker;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import com.elytraforce.elytracore.events.LevelEvent;
 import com.elytraforce.elytracore.events.MoneyEvent;
 import com.elytraforce.elytracore.events.XPEvent;
 

@@ -1,8 +1,6 @@
 package com.elytraforce.elytracore.hooks;
 
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.PlayerController;
 

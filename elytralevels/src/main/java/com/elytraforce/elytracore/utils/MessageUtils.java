@@ -1,6 +1,7 @@
 package com.elytraforce.elytracore.utils;
 
 import org.bukkit.GameMode;
+
 import com.elytraforce.elytracore.config.PluginConfig;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.rewards.RewardController;
@@ -10,40 +11,105 @@ import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class MessageController {
+public class MessageUtils{
 	
-	private static MessageController instance;
+	//TODO: read from config(easy to do, but i dont want to have to rewrite the configs so do it later)
 	
-	public static void godMessage(ElytraPlayer player, Boolean bool) {
-		if (bool) {
-			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet god mode to &aON");
+	public static void godMessage(ElytraPlayer sender, ElytraPlayer target, Boolean bool) {
+		if (sender == target) {
+			if (bool) {
+				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet god mode to &aON");
+			} else {
+				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet god mode to &aOFF");
+			}
 		} else {
-			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet god mode to &aOFF");
+			if (bool) {
+				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet god mode to &aON");
+				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet god mode to &aON&f for &a" + target.asBukkitPlayer().getName());
+			} else {
+				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet god mode to &aOFF");
+				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet god mode to &aOFF&f for &a" + target.asBukkitPlayer().getName());
+			}
+		}
+		
+	}
+	
+	public static void teleport(ElytraPlayer sender, ElytraPlayer target) {
+		AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fTeleported you to &a" + target.asBukkitPlayer().getName() + "&f!");
+	}
+	
+	public static void teleportHere(ElytraPlayer sender, ElytraPlayer target) { 
+		AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fTeleported &a" + target.asBukkitPlayer().getName() + " &fto you!");
+	}
+	
+	public static void killMessage(ElytraPlayer sender, ElytraPlayer target) {
+		if (sender == target) {
+			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fYou suicided!");
+		} else {
+			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&a" + target.asBukkitPlayer().getName() + "&f has been killed!");
+		}
+		
+	}
+	
+	public static void healMessage(ElytraPlayer sender, ElytraPlayer target) {
+		if (sender == target) {
+			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fYou have been healed!");
+		} else {
+			AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fYou have been healed!");
+			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&a" + target.asBukkitPlayer().getName() + "&f has been healed!");
+		}
+		
+	}
+	
+	public static void feedMessage(ElytraPlayer sender, ElytraPlayer target) {
+		if (sender == target) {
+			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fYou have been fed!");
+		} else {
+			AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fYou have been fed!");
+			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&a" + target.asBukkitPlayer().getName() + "&f has been fed!");
 		}
 	}
 	
-	public static void healMessage(ElytraPlayer player) {
-		AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fYou have been healed!");
-	}
-	
-	public static void feedMessage(ElytraPlayer player) {
-		AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fYou have been fed!");
-	}
-	
-	public static void flyMessage(ElytraPlayer player, boolean on) {
-		if (on) {
-			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet fly mode to &aON");
+	public static void flyMessage(ElytraPlayer sender, ElytraPlayer target, boolean on) {
+		if (sender == target) {
+			if (on) {
+				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet fly mode to &aON");
+			} else {
+				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet fly mode to &aOFF");
+			}
 		} else {
-			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet fly mode to &aOFF");
+			if (on) {
+				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet fly mode to &aON");
+				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet fly mode to &aON&f for &a" + target.getName());
+			} else {
+				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet fly mode to &aOFF");
+				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet fly mode to &aOFF&f for &a" + target.getName());
+			}
 		}
+		
 	}
 	
-	public static void gamemodeMessage(ElytraPlayer player, GameMode mode, boolean already) {
-		if (already) {
-			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fYou already are in gamemode &a" + mode.name().toUpperCase());
+	public static void gamemodeMessage(ElytraPlayer player, ElytraPlayer target, GameMode mode, boolean already) {
+		if (player == target) {
+			if (already) {
+				AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fYou already are in gamemode &a" + mode.name().toUpperCase());
+			} else {
+				AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet gamemode to &a" + mode.name().toUpperCase());
+			}
 		} else {
-			AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet gamemode to &a" + mode.name().toUpperCase());
+			if (already) {
+				AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fTarget is already in gamemode &a" + mode.name().toUpperCase());
+				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fYou already are in gamemode &a" + mode.name().toUpperCase());
+			} else {
+				AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet target to gamemode &a" + mode.name().toUpperCase());
+				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet gamemode to &a" + mode.name().toUpperCase());
+			}
 		}
+		
+	}
+	
+	public static void invalidTarget(ElytraPlayer player) {
+		AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&cInvalid Target! Please choose an actual player!");
 	}
 	
 	public static void discordMessage(ElytraPlayer player) {
@@ -154,11 +220,4 @@ public class MessageController {
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7&m-----------------------------------------------------&r"));
 	}
 	
-	public static MessageController get() {
-		if (instance == null) {
-			return instance = new MessageController();
-		} else {
-			return instance;
-		}
-	}
 }

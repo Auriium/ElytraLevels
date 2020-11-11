@@ -1,10 +1,6 @@
 package com.elytraforce.elytracore.matchtracker;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.annotation.Nullable;
-import javax.swing.plaf.ProgressBarUI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -16,7 +12,6 @@ import org.bukkit.scheduler.BukkitTask;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.bossbar.Bar;
 import com.elytraforce.elytracore.player.ElytraPlayer;
-import com.elytraforce.elytracore.utils.AuriUtils;
 
 public class MatchTracker {
 	
@@ -107,9 +102,9 @@ public class MatchTracker {
 		}
 	}
 	
-	public void stop() {
+	public void stop(MatchMenu menu) {
 		for (TrackablePlayer player : trackablePlayers) {
-			player.showGUI();
+			player.showGUI(menu);
 			//THIS MUST BE FUNCTIONALLY IDENTICAL TO #removePlayer
 			
 			Bar bar = this.getFromTrackablePlayer(player);

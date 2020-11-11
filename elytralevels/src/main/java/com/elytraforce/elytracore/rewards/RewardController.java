@@ -2,31 +2,20 @@ package com.elytraforce.elytracore.rewards;
 
 import java.io.File;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.ipvp.canvas.Menu;
 import org.ipvp.canvas.mask.BinaryMask;
-import org.ipvp.canvas.mask.Mask;
 import org.ipvp.canvas.paginate.PaginatedMenuBuilder;
-import org.ipvp.canvas.slot.Slot;
 import org.ipvp.canvas.slot.SlotSettings;
-import org.ipvp.canvas.template.ItemStackTemplate;
-import org.ipvp.canvas.template.StaticItemTemplate;
 import org.ipvp.canvas.type.ChestMenu;
 
 import com.elytraforce.elytracore.Main;
@@ -35,14 +24,11 @@ import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.utils.AuriUtils;
 import com.elytraforce.elytracore.utils.ItemBuilder;
 
-
-
-public class RewardController {
+public class RewardController{
 	
 	private List<RewardData> rewards;
 	private ArrayList<Integer> rewardIntegers = new ArrayList<>();
 	
-	private static RewardController instance;
 	private final File configFile;
     private final FileConfiguration config;
     
@@ -102,7 +88,7 @@ public class RewardController {
     private void registerMenu() {
 
     	ChestMenu.Builder menu = ChestMenu.builder(3)
-                .title(AuriUtils.colorString("&c&lYour Rewards!")).redraw(true);
+                .title(AuriUtils.colorString("&9Your Rewards!")).redraw(true);
     	
     	BinaryMask itemSlots = BinaryMask.builder(menu.getDimensions())
     			.pattern("111111111")
@@ -236,8 +222,6 @@ public class RewardController {
     }
     
     public boolean hasRewards(ElytraPlayer player) {
-    	Bukkit.broadcastMessage(player.getUnlockedRewards().toString());
-    	Bukkit.broadcastMessage(this.getRewardIntsBelowLevel(player.getLevel()).toString());
     	if (player.getUnlockedRewards().containsAll(this.getRewardIntsBelowLevel(player.getLevel())) ) {
     		return false;
     	} else {
@@ -254,12 +238,14 @@ public class RewardController {
 		return false;
     }
     
-	public static RewardController get() {
-		if (instance == null) {
-			return new RewardController();
-		} else {
-			return instance;
-		}
-	}
+    private static RewardController instance;
+    
+    public static RewardController get() {
+    	if (instance == null) {
+    		return instance = new RewardController();
+    	} else {
+    		return instance;
+    	}
+    }
 	
 }

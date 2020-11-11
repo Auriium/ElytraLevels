@@ -19,7 +19,7 @@ import com.elytraforce.elytracore.player.GUIController;
 import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.rewards.RewardController;
 import com.elytraforce.elytracore.storage.SQLStorage;
-import com.elytraforce.elytracore.utils.MessageController;
+import com.elytraforce.elytracore.timedrestart.RestartController;
 
 import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.economy.Economy;
@@ -44,11 +44,12 @@ public class Main extends JavaPlugin {
         
         SQLStorage.get();
         PlayerController.get();
-        MessageController.get();
         RewardController.get();
         TrackerController.get();
         GUIController.get();
         MatchBarController.get();
+        RestartController.get();
+        RestartController.get().onEnable();
         
         for (Player player : this.getServer().getOnlinePlayers()) {
         	if (PlayerController.get().getLevelPlayer(player) == null) {
@@ -109,6 +110,12 @@ public class Main extends JavaPlugin {
 
         SQLStorage.get().shutdown();
         TrackerController.get().shutdown();
+        RestartController.get().onDisable();
+	}
+	
+	
+	public void onReload() {
+		RestartController.get().onReload();
 	}
 	
 }

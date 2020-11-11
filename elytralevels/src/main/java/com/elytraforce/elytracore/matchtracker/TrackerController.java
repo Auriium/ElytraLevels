@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.utils.AuriUtils;
 
 public class TrackerController {
+	
+	//HOW TO USE: gen a random UUID every match, then store this uuid and create a match with it.
+	//CALL THE CORRECT EVENTS when ever something happens.
 
 	private static TrackerController instance;
 	private HashMap<UUID, MatchTracker> trackers;
@@ -55,13 +56,13 @@ public class TrackerController {
 		trackers.get(gameID).removePlayer(player);
 	}
 	
-	public void endTracker(UUID gameID) {
+	public void endTracker(UUID gameID,MatchMenu menu) {
 		if (!trackers.containsKey(gameID)) {
 			AuriUtils.logError("Tracker attempted to end a game id that does not exists");
 			return;
 		}
 		
-		trackers.get(gameID).stop();
+		trackers.get(gameID).stop(menu);
 		this.trackers.remove(gameID);
 	}
 	
@@ -103,7 +104,7 @@ public class TrackerController {
 	
 	public void shutdown() {
 		for (MatchTracker tarcker : this.trackers.values()) {
-			tarcker.stop();
+			tarcker.stop(null);
 		}
 	}
 }

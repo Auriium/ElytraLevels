@@ -1,10 +1,8 @@
 package com.elytraforce.elytracore.hooks;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 

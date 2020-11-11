@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
-import com.elytraforce.elytracore.utils.MessageController;
+import com.elytraforce.elytracore.utils.MessageUtils;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -29,11 +29,11 @@ public class SocialCommand extends BaseCommand {
     @CommandAlias("discord")
 	@Subcommand("discord")
     @Description("View the discord") 
-    public void onDiscord(CommandSender sender) {
+    public void onDiscord(Player sender) {
     	
     	if (sender instanceof Player) {
     		ElytraPlayer player = PlayerController.get().getLevelPlayer((Player) sender);
-    		MessageController.discordMessage(player);
+    		MessageUtils.discordMessage(player);
     	}
     	
     }
@@ -45,7 +45,7 @@ public class SocialCommand extends BaseCommand {
     	
     	if (sender instanceof Player) {
     		ElytraPlayer player = PlayerController.get().getLevelPlayer((Player) sender);
-    		MessageController.websiteMessage(player);
+    		MessageUtils.websiteMessage(player);
     	}
     	
     }
@@ -57,7 +57,7 @@ public class SocialCommand extends BaseCommand {
     	
     	if (sender instanceof Player) {
     		ElytraPlayer player = PlayerController.get().getLevelPlayer((Player) sender);
-    		MessageController.storeMessage(player);
+    		MessageUtils.storeMessage(player);
     	}
     	
     }

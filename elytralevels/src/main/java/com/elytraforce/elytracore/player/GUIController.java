@@ -16,15 +16,14 @@ import me.clip.placeholderapi.PlaceholderAPI;
 
 public class GUIController {
 	
-	private Main main;
 	private static GUIController instance;
 
 	private GUIController(Main main) {
-		this.main = main;
+		
 	}
 	
 	public void showProfile(ElytraPlayer viewer, ElytraPlayer target) {
-    	ChestMenu menu = ChestMenu.builder(6).redraw(true).title(AuriUtils.colorString("&9Statistics")).build();
+    	ChestMenu menu = ChestMenu.builder(6).redraw(true).title(AuriUtils.colorString("&9Player Statistics")).build();
 
     	BinaryMask itemSlots = BinaryMask.builder(menu.getDimensions())
     			.item(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setDisplayName("").build())
@@ -36,7 +35,7 @@ public class GUIController {
 		        .pattern("000100000").build();
     	
     	menu.getSlot(1, 1).setSettings(SlotSettings.builder().itemTemplate(p -> {
-    		return new ItemBuilder(Material.BARRIER).setLore("",AuriUtils.colorString("&7Click to close!")).setDisplayName(AuriUtils.colorString("&cClose")).build();
+    		return new ItemBuilder(Material.BARRIER).setDisplayName(AuriUtils.colorString("&cClose!")).build();
     	}).clickHandler((p, c) -> {
     		p.closeInventory();
     	}).build());
@@ -45,13 +44,12 @@ public class GUIController {
     		ElytraPlayer ep = target;
     		ArrayList<String> lore = new ArrayList<>();
     		lore.add(AuriUtils.colorString(""));
-    		lore.add(AuriUtils.colorString("&9" + ep.asBukkitPlayer().getName() + "&7's Main Network statistics"));
+    		lore.add(AuriUtils.colorString("&bProgress &7» " + ep.getProgressBar()));
+    		lore.add(AuriUtils.colorString("&bEXP &7» " + ep.getExperience() + "&7/" + ep.getRequiredXPToNextLevel() + " &b❂"));
     		lore.add(AuriUtils.colorString(""));
-    		lore.add(AuriUtils.colorString("" + ep.getProgressBar() + " &7&l" + "&c" + ep.getExperience() + "&7/" + ep.getRequiredXPToNextLevel() + " &c❂"));
-    		lore.add(AuriUtils.colorString(""));
-    		lore.add(AuriUtils.colorString("&7You are level &b" + ep.getLevel() + "!&7"));
+    		lore.add(AuriUtils.colorString("&bYour level &7» &b" + ep.getLevel()));
     		
-    		return new ItemBuilder(Material.LEGACY_SKULL_ITEM, (short) 3).setHead(p.getName()).setLore(lore).setDisplayName(AuriUtils.colorString("&9" + p.getName() + " &7| " + ep.getLevel() + "" + "&7 's Profile")).build();
+    		return new ItemBuilder(Material.LEGACY_SKULL_ITEM, (short) 3).setHead(p.getName()).setLore(lore).setDisplayName(AuriUtils.colorString("&9&lPLAYER STATISTICS")).build();
     	}).clickHandler((p, c) -> {
     		//row, collum
     	}).build());
@@ -60,18 +58,18 @@ public class GUIController {
     		ElytraPlayer ep = target;
     		ArrayList<String> lore = new ArrayList<>();
     		lore.add(AuriUtils.colorString(""));
-    		lore.add(AuriUtils.colorString("&9" + ep.asBukkitPlayer().getName() + "&7's Balance"));
-    		lore.add(AuriUtils.colorString(""));
-    		lore.add(AuriUtils.colorString("&7Your balance » &e" + PlaceholderAPI.setPlaceholders(ep.asBukkitPlayer(), "%vault_eco_balance_commas% ⛃")));
+    		lore.add(AuriUtils.colorString("&bYour balance &7» &e" + PlaceholderAPI.setPlaceholders(ep.asBukkitPlayer(), "%vault_eco_balance_commas% ⛃")));
     		if (RewardController.get().hasRewards(ep)) {
     			lore.add(AuriUtils.colorString(""));
     			lore.add(AuriUtils.colorString("&e&lYou have rewards!&7 Do /rewards to claim them!"));
     		}
     		
-    		return new ItemBuilder(Material.SUNFLOWER).setLore(lore).setDisplayName(AuriUtils.colorString("&9" + p.getName() + " &7| &7" + ep.getLevel() + "" + "&7 's Balance")).build();
+    		return new ItemBuilder(Material.SUNFLOWER).setLore(lore).setDisplayName(AuriUtils.colorString("&9&lMONEY STATISTICS")).build();
     	}).clickHandler((p, c) -> {
 
     	}).build());
+    	
+    	
     	
     	
     	itemSlots.apply(menu);
