@@ -1,11 +1,16 @@
 package com.elytraforce.elytracore.hooks;
 
 import java.math.RoundingMode;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
+import com.elytraforce.elytracore.storage.SQLStorage;
+import com.elytraforce.elytracore.utils.AuriUtils;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 
 import com.elytraforce.elytracore.Main;
@@ -15,8 +20,13 @@ import com.elytraforce.elytracore.player.PlayerController;
 import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
-public class ElytraEconomy extends AbstractEconomy{
+public class ElytraEconomy implements Economy {
+
+	//TODO: Something about getting balances from Strings, it is stupid.
 
 	private static String name = "ElytraEconomy";
 	private static DecimalFormat currencyFormat = new DecimalFormat("#0.00", DecimalFormatSymbols.getInstance(Locale.US));
@@ -77,26 +87,45 @@ public class ElytraEconomy extends AbstractEconomy{
 	@Override
 	public boolean hasAccount(String playerName) {
 		// TODO Auto-generated method stub
-		if (PlayerController.get().getLevelPlayer(Bukkit.getPlayer(playerName)) == null) {
-			return false;
+		return hasAccount(Bukkit.getOfflinePlayer(playerName));
+	}
+
+	@Override
+	public boolean hasAccount(OfflinePlayer player) {
+		if (player.isOnline()) {
+			return PlayerController.get().getLevelPlayer(Objects.requireNonNull(player.getPlayer())) != null;
 		} else {
-			return true;
+			return SQLStorage.get().playerExists(player);
 		}
 	}
 
 	@Override
 	public boolean hasAccount(String playerName, String worldName) {
-		// TODO Auto-generated method stub
-		return this.hasAccount(playerName);
+		return hasAccount(playerName);
 	}
 
 	@Override
+	public boolean hasAccount(OfflinePlayer player, String worldName) {
+		return hasAccount(player);
+	}
+
+
+	@Override
 	public double getBalance(String playerName) {
-		try {
-			return PlayerController.get().getLevelPlayer(Bukkit.getPlayer(playerName)).getMoney();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return 0;
+		return this.getBalance(Bukkit.getOfflinePlayer(playerName));
+	}
+
+	@Override
+	public double getBalance(OfflinePlayer player) {
+		if (player.isOnline()) {
+			return PlayerController.get().getLevelPlayer(Objects.requireNonNull(player)).getMoney();
+		} else {
+			try {
+				return SQLStorage.get().loadPlayerCached(player).getMoney();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
 		}
 	}
 
@@ -106,147 +135,198 @@ public class ElytraEconomy extends AbstractEconomy{
 	}
 
 	@Override
+	public double getBalance(OfflinePlayer player, String world) {
+		return this.getBalance(player);
+	}
+
+	@Override
 	public boolean has(String playerName, double amount) {
-		// TODO Auto-generated method stub
-		if (PlayerController.get().getLevelPlayer(Bukkit.getPlayer(playerName)).getMoney() < amount) {
-			return false;
+		return has(Bukkit.getOfflinePlayer(playerName),amount);
+	}
+
+	@Override
+	public boolean has(OfflinePlayer player, double amount) {
+		if (player.isOnline()) {
+			return PlayerController.get().getLevelPlayer(player).getMoney() >= amount;
 		} else {
-			return true;
+			try {
+				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player);
+				return p.getMoney() >= amount;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
 		}
 	}
 
 	@Override
 	public boolean has(String playerName, String worldName, double amount) {
-		// TODO Auto-generated method stub
 		return this.has(playerName, amount);
 	}
 
 	@Override
+	public boolean has(OfflinePlayer player, String worldName, double amount) {
+		return has(player,amount);
+	}
+
+	@Override
 	public EconomyResponse withdrawPlayer(String playerName, double amount) {
-		// TODO Auto-generated method stub
 		if (playerName == null) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player name can not be null.");
-        }
-        if (amount < 0) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");
-        }
-        
-        if (PlayerController.get().getLevelPlayer(Bukkit.getPlayer(playerName)) == null) {
-        	return new EconomyResponse(0, 0, ResponseType.FAILURE, "This player does not exist!");
-        }
-        
-        try {
-        	ElytraPlayer player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(playerName));
-        	player.removeMoney((int)amount, false);
-        	return new EconomyResponse(amount, player.getMoney(), ResponseType.SUCCESS, null);
-        } catch (Exception e) {
-        	e.printStackTrace();
-        	return new EconomyResponse(0, 0, ResponseType.FAILURE, "Something went wrong");
-        }
+			return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player name can not be null.");
+		}
+		return withdrawPlayer(Bukkit.getOfflinePlayer(playerName),amount);
+	}
+
+	@Override
+	public EconomyResponse withdrawPlayer(OfflinePlayer player, double amount) {
+
+		//TODO: is it possible to do this asynchronously?
+
+		if (amount < 0) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");  }
+
+		if (PlayerController.get().getLevelPlayer(player) == null) {
+			//if this is null it means they dont exist in our cached online players, if the following is true they dont exist on database either
+			if (!SQLStorage.get().playerExists(player)) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "This player does not exist!"); }
+			//now get the shit
+			try {
+				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player); p.removeMoney((int) amount,false);
+				SQLStorage.get().updatePlayerCached(p);
+				return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
+			} catch (Exception e) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Unknown error in ElytraEconomy (Error A)!"); }
+		} else {
+			ElytraPlayer p = PlayerController.get().getLevelPlayer(player);
+			p.removeMoney((int)amount, false);
+			return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
+		}
+
 	}
 
 	@Override
 	public EconomyResponse withdrawPlayer(String playerName, String worldName, double amount) {
-		// TODO Auto-generated method stub
 		return this.withdrawPlayer(playerName, amount);
 	}
 
 	@Override
+	public EconomyResponse withdrawPlayer(OfflinePlayer player, String worldName, double amount) {
+		return this.withdrawPlayer(player,amount);
+	}
+
+	@Override
 	public EconomyResponse depositPlayer(String playerName, double amount) {
-		if (playerName == null) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "Player name can not be null.");
-        }
-        if (amount < 0) {
-            return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot desposit negative funds");
-        }
-        
-        if (PlayerController.get().getLevelPlayer(Bukkit.getPlayer(playerName)) == null) {
-        	return new EconomyResponse(0, 0, ResponseType.FAILURE, "This player does not exist!");
-        }
-        
-        try {
-        	ElytraPlayer player = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(playerName));
-        	player.addMoney((int)amount, false);
-        	return new EconomyResponse(amount, player.getMoney(), ResponseType.SUCCESS, null);
-        } catch (Exception e) {
-        	e.printStackTrace();
-        	return new EconomyResponse(0, 0, ResponseType.FAILURE, "Something went wrong");
-        }
+		return this.depositPlayer(Bukkit.getOfflinePlayer(playerName), amount);
+	}
+
+	@Override
+	public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
+		if (amount < 0) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative funds");  }
+
+		if (PlayerController.get().getLevelPlayer(player) == null) {
+			//if this is null it means they dont exist in our cached online players, if the following is true they dont exist on database either
+			if (!SQLStorage.get().playerExists(player)) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "This player does not exist!"); }
+			//now get the shit
+			try {
+				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player); p.addMoney((int) amount,false);
+				SQLStorage.get().updatePlayerCached(p);
+				return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
+			} catch (Exception e) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Unknown error in ElytraEconomy (Error A)!"); }
+		} else {
+			ElytraPlayer p = PlayerController.get().getLevelPlayer(player);
+			p.addMoney((int)amount, false);
+			return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
+		}
 	}
 
 	@Override
 	public EconomyResponse depositPlayer(String playerName, String worldName, double amount) {
-		// TODO Auto-generated method stub
 		return this.depositPlayer(playerName, amount);
 	}
 
 	@Override
+	public EconomyResponse depositPlayer(OfflinePlayer player, String worldName, double amount) {
+		return this.depositPlayer(player,amount);
+	}
+
+	@Override
 	public EconomyResponse createBank(String name, String player) {
-		// TODO Auto-generated method stub
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
+	}
+
+	@Override
+	public EconomyResponse createBank(String name, OfflinePlayer player) {
 		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
 	}
 
 	@Override
 	public EconomyResponse deleteBank(String name) {
-		// TODO Auto-generated method stub
 		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
 	}
 
 	@Override
 	public EconomyResponse bankBalance(String name) {
-		// TODO Auto-generated method stub
 		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
 	}
 
 	@Override
 	public EconomyResponse bankHas(String name, double amount) {
-		// TODO Auto-generated method stub
 		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
 	}
 
 	@Override
 	public EconomyResponse bankWithdraw(String name, double amount) {
-		// TODO Auto-generated method stub
 		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
 	}
 
 	@Override
 	public EconomyResponse bankDeposit(String name, double amount) {
-		// TODO Auto-generated method stub
 		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
 	}
 
 	@Override
 	public EconomyResponse isBankOwner(String name, String playerName) {
-		// TODO Auto-generated method stub
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
+	}
+
+	@Override
+	public EconomyResponse isBankOwner(String name, OfflinePlayer player) {
 		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
 	}
 
 	@Override
 	public EconomyResponse isBankMember(String name, String playerName) {
-		// TODO Auto-generated method stub
+		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
+	}
+
+	@Override
+	public EconomyResponse isBankMember(String name, OfflinePlayer player) {
 		return new EconomyResponse(0, 0, ResponseType.NOT_IMPLEMENTED, "What?");
 	}
 
 	@Override
 	public List<String> getBanks() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean createPlayerAccount(String playerName) {
-		if (PlayerController.get().getLevelPlayer(Bukkit.getPlayer(playerName)) == null) {
-			return true;
-		} else {
-			return false;
+		return this.createPlayerAccount(Bukkit.getOfflinePlayer(playerName));
+	}
+
+	@Override
+	public boolean createPlayerAccount(OfflinePlayer player) {
+		if (PlayerController.get().getLevelPlayer(player) == null) {
+			return !SQLStorage.get().playerExists(player);
 		}
+		return false;
 	}
 
 	@Override
 	public boolean createPlayerAccount(String playerName, String worldName) {
-		// TODO Auto-generated method stub
 		return this.createPlayerAccount(playerName);
+	}
+
+	@Override
+	public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
+		return this.createPlayerAccount(player);
 	}
 
 }

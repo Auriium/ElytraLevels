@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -22,7 +23,7 @@ import com.elytraforce.elytracore.utils.TitleUtils;
 
 public class ElytraPlayer {
 
-	private final Player player;
+	private final OfflinePlayer player;
     private final UUID uniqueId;
     private final String name;
     private int level;
@@ -30,6 +31,7 @@ public class ElytraPlayer {
     private int money;
     private List<Integer> unlockedRewards;
     private boolean inDatabase;
+    private String nickName;
     
     private boolean displayingTitle;
     private int displayedXP;
@@ -37,7 +39,17 @@ public class ElytraPlayer {
     
     private BukkitTask displayedTitleTask;
     
-    public Player asBukkitPlayer() { return player; }
+    public Player asBukkitPlayer() {
+    	if (player.isOnline()) {
+    		return player.getPlayer();
+		}
+    	return null;
+    }
+
+    public OfflinePlayer asOfflinePlayer() {
+    	return player;
+	}
+
     public UUID getUUID() { return uniqueId; }
     public String getName() { return name; }
     public Integer getLevel() { return level; }
@@ -63,7 +75,7 @@ public class ElytraPlayer {
         return uniqueId.equals(((ElytraPlayer) toCompare).uniqueId);
     }
 	
-	public ElytraPlayer(Player player, Integer level, Integer experience, Integer money, List<Integer> unlockedRewards, boolean inDatabase) {
+	public ElytraPlayer(OfflinePlayer player, Integer level, Integer experience, Integer money, List<Integer> unlockedRewards, boolean inDatabase) {
 		this.uniqueId = player.getUniqueId();
 		this.player = player;
 		this.level = level;
@@ -299,10 +311,11 @@ public class ElytraPlayer {
 	}
 	
 	public boolean isDonator() {
-		if (this.asBukkitPlayer().hasPermission("elytraforce.donator")) {
-			return true;
-		} else {
+    	//TODO: mysql time ;) (aka fix this stupidity)
+		if (this.asBukkitPlayer() == null) {
 			return false;
+		} else {
+			return this.asBukkitPlayer().hasPermission("elytraforce.donator");
 		}
 	}
 	

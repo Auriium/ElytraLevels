@@ -1,9 +1,14 @@
 package com.elytraforce.elytracore.player;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
+import com.elytraforce.elytracore.utils.AuriUtils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import com.elytraforce.elytracore.storage.SQLStorage;
 
@@ -13,8 +18,6 @@ public class PlayerController {
 
     private static PlayerController instance;
     private HashSet<ElytraPlayer> players;
-    
-    private HashSet<ElytraPlayer> offlinePlayers;
 
     private PlayerController() {
         players = new HashSet<>();
@@ -22,30 +25,11 @@ public class PlayerController {
 
     public void playerJoined(Player player) {
         SQLStorage.get().loadPlayer(player);
-    }
-    
-    public void joinOfflineCallback(Player player, int level, int experience, int money, List<Integer> unlockedRewards, boolean newPlayer) {
-        if (player.isOnline()) {
-            offlinePlayers.add(new ElytraPlayer(
-                    player,
-                    level,
-                    experience,
-                    money, 
-                    unlockedRewards,
-                    newPlayer
-            ));
-        }
-    }
-    
-    public void completeOfflineStatement(ElytraPlayer player) {
-    	if (player.isInDatabase()) {
-            SQLStorage.get().updatePlayer(player, true);
-        }
-    	this.offlinePlayers.remove(player);
+        //makes sure that if they are in the cache they are removed
+        SQLStorage.get().removePlayerCached(player);
     }
 
-    public void joinCallback(Player player, int level, int experience, int money, List<Integer> unlockedRewards, boolean newPlayer) {
-        if (player.isOnline()) {
+    public void joinCallback(OfflinePlayer player, int level, int experience, int money, List<Integer> unlockedRewards, boolean newPlayer) {
             players.add(new ElytraPlayer(
                     player,
                     level,
@@ -54,11 +38,9 @@ public class PlayerController {
                     unlockedRewards,
                     newPlayer
             ));
-        }
     }
 
     public void playerQuit(ElytraPlayer player) {
-
 
         if (player.isInDatabase()) {
             SQLStorage.get().updatePlayer(player, true);
@@ -73,9 +55,14 @@ public class PlayerController {
         return players;
     }
 
-    public ElytraPlayer getLevelPlayer(Player player) {
+    public ElytraPlayer getLevelPlayer(OfflinePlayer player) {
         return getLevelPlayer(player.getUniqueId());
     }
+
+    // // // // // // // // // //
+
+
+    // // // // // // // // // //
 
     public ElytraPlayer getLevelPlayer(UUID uuid) {
         for (ElytraPlayer elytraPlayer : players) {
