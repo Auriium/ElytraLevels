@@ -158,7 +158,6 @@ public class SQLStorage {
         String sql = "UPDATE `levels_player` SET ";
         sql += "`level` = ?, `experience` = ?, `money` = ?, `unlocked_rewards` = ? ";
         sql += "WHERE `player_uuid` = ?;";
-        AuriUtils.logWarning("LOGGING INFO - " + player.getLevel() + "/" + player.getExperience() + "/" + player.getMoney());
         Object[] toSet = new Object[]{
                 player.getLevel(),
                 player.getExperience(),

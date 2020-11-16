@@ -26,7 +26,7 @@ public class PluginListener implements Listener {
     public void onAsyncJoin(AsyncPlayerPreLoginEvent event) throws InterruptedException {
         //TODO: another shit
         PlayerController.get().playerJoined(Bukkit.getOfflinePlayer(event.getUniqueId()));
-        Thread.sleep(4000L);
+        Thread.sleep(200L);
     }
 	
 	@EventHandler

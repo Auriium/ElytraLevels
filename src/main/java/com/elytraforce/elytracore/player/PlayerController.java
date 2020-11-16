@@ -49,8 +49,6 @@ public class PlayerController {
         players.add(p);
 
         Bukkit.getPluginManager().callEvent(new ElytraPlayerJoinEvent(p));
-
-        AuriUtils.logWarning("LOADING INFO - " + level + "/" + experience + "/" + money);
     }
 
     public void playerQuit(ElytraPlayer player) {
