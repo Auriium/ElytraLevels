@@ -44,12 +44,12 @@ public class MatchCommand extends BaseCommand{
 			ArrayList<ElytraPlayer> listPlayers = new ArrayList<ElytraPlayer>();
 			
 			for (Player p : player.getWorld().getPlayers()) {
-				listPlayers.add(PlayerController.get().getLevelPlayer(player));
+				listPlayers.add(PlayerController.get().getElytraPlayer(player));
 			}
 		
     		TrackerController.get().beginTracker(UUID.fromString(name), listPlayers);
     		
-    		MessageUtils.matchBeginTrackingMessage(PlayerController.get().getLevelPlayer(player), name);
+    		MessageUtils.matchBeginTrackingMessage(PlayerController.get().getElytraPlayer(player), name);
     }
 	
 	@Subcommand("stop")
@@ -61,7 +61,7 @@ public class MatchCommand extends BaseCommand{
 			Player player = (Player) sender;
 		
     		TrackerController.get().endTracker(UUID.fromString(name),new DefaultMenu("&c&lMatch&f&lTest"));
-    		MessageUtils.matchEndTrackingMessage(PlayerController.get().getLevelPlayer(player), name);
+    		MessageUtils.matchEndTrackingMessage(PlayerController.get().getElytraPlayer(player), name);
     }
 	
 	

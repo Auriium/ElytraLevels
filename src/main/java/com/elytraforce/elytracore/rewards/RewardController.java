@@ -108,14 +108,14 @@ public class RewardController{
         	            	ArrayList<String> finalLore = new ArrayList<String>();
         	        		finalLore.addAll(data.getDescription());
         	            	
-        	            	if (data.hasUnlocked(PlayerController.get().getLevelPlayer(p))) {
+        	            	if (data.hasUnlocked(PlayerController.get().getElytraPlayer(p))) {
         	            		finalLore.add("&r ");
         	        			finalLore.add("&a&lYOU HAVE ALREADY CLAIMED THIS");
         	        			
         	        			dataItem = new ItemBuilder(Material.MINECART)
             	    					.setDisplayName(dataName)
             	    					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore)).build();
-        	            	} else if (data.canUnlock(PlayerController.get().getLevelPlayer(p))) {
+        	            	} else if (data.canUnlock(PlayerController.get().getElytraPlayer(p))) {
         	            		if (!data.isCorrectServer()) {
             	            		finalLore.add("&r ");
             	            		finalLore.add("&c&lCLAIM THIS ON &e&l" + data.getServers().get(0));
@@ -145,13 +145,13 @@ public class RewardController{
         	            	return dataItem; })
         	            
         	            .clickHandler((p, c) -> {
-        	                if (data.hasUnlocked(PlayerController.get().getLevelPlayer(p))) {
+        	                if (data.hasUnlocked(PlayerController.get().getElytraPlayer(p))) {
         	                	
-        	                } else if (data.canUnlock(PlayerController.get().getLevelPlayer(p))) {
+        	                } else if (data.canUnlock(PlayerController.get().getElytraPlayer(p))) {
         	                	if (!data.isCorrectServer()) {
         	                		
         	                	} else {
-        	                		data.unlock(PlayerController.get().getLevelPlayer(p));
+        	                		data.unlock(PlayerController.get().getElytraPlayer(p));
             	                	c.getClickedMenu().update(p);
         	                	}	
         	                } else if (!data.isCorrectServer()) {

@@ -22,3 +22,5 @@ elytraforce network.
 - Add the different gamemodes to the EF stat GUI
 - Setup testing branches on Git
 - Promotion and Demotion menu
+
+- IMPORTANT - transactionally based elytraplayers as opposed to schedule based (Save stats on transaction and cache player on join vs saving stats on leave)

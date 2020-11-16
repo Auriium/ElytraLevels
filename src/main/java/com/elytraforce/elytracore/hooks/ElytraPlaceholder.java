@@ -48,32 +48,32 @@ public class ElytraPlaceholder extends PlaceholderExpansion{
 
         // %someplugin_placeholder1%
         if(identifier.equals("level")){
-            return PlayerController.get().getLevelPlayer(player).getLevel().toString();
+            return PlayerController.get().getElytraPlayer(player).getLevel().toString();
         }
         
         if(identifier.equals("next_level")){
-            return PlayerController.get().getLevelPlayer(player).getNextLevel() + "";
+            return PlayerController.get().getElytraPlayer(player).getNextLevel() + "";
         }
         
         if(identifier.equals("exp")){
-            return PlayerController.get().getLevelPlayer(player).getExperience().toString();
+            return PlayerController.get().getElytraPlayer(player).getExperience().toString();
         }
         
         if(identifier.equals("total_exp")){
-            return PlayerController.get().getLevelPlayer(player).getRequiredXPToNextLevel() + "";
+            return PlayerController.get().getElytraPlayer(player).getRequiredXPToNextLevel() + "";
         }
         
         if(identifier.equals("exp_percent")){
-            return PlayerController.get().getLevelPlayer(player).getPercent();
+            return PlayerController.get().getElytraPlayer(player).getPercent();
         }
         
         if(identifier.equals("exp_bar")){
-            return PlayerController.get().getLevelPlayer(player).getProgressBar();
+            return PlayerController.get().getElytraPlayer(player).getProgressBar();
         }
 
         //returns unformatted money. Use vault instead! 
         if(identifier.equals("money")){
-        	return PlayerController.get().getLevelPlayer(player).getMoney() + "";
+        	return PlayerController.get().getElytraPlayer(player).getMoney() + "";
         }
 
         return null;

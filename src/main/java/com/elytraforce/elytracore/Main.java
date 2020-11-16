@@ -31,6 +31,8 @@ public class Main extends JavaPlugin {
 
 	public static String pluginName;
 	private static Main instance;
+
+	public static ElytraEconomy economyImplementation;
 	
 	public static Main get() {
 		return instance;
@@ -55,7 +57,7 @@ public class Main extends JavaPlugin {
         RestartController.get().onEnable();
         
         for (Player player : this.getServer().getOnlinePlayers()) {
-        	if (PlayerController.get().getLevelPlayer(player) == null) {
+        	if (PlayerController.get().getElytraPlayer(player) == null) {
                 PlayerController.get().playerJoined(player);
             }
         }
@@ -94,7 +96,7 @@ public class Main extends JavaPlugin {
         
         if (PluginConfig.isEconomyEnabled()) {
         	if (getServer().getPluginManager().getPlugin("Vault") != null) {
-        		Bukkit.getServer().getServicesManager().register(Economy.class, new ElytraEconomy(), getServer().getPluginManager().getPlugin("Vault"), ServicePriority.High);
+        		Bukkit.getServer().getServicesManager().register(Economy.class, economyImplementation = new ElytraEconomy(), getServer().getPluginManager().getPlugin("Vault"), ServicePriority.High);
         		commandManager.registerCommand(new EcoCommand(this));
         	}
         }

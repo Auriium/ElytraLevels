@@ -1,15 +1,12 @@
 package com.elytraforce.elytracore.hooks;
 
 import java.math.RoundingMode;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import com.elytraforce.elytracore.storage.SQLStorage;
-import com.elytraforce.elytracore.utils.AuriUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 
@@ -17,12 +14,9 @@ import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
 
-import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class ElytraEconomy implements Economy {
 
@@ -93,7 +87,7 @@ public class ElytraEconomy implements Economy {
 	@Override
 	public boolean hasAccount(OfflinePlayer player) {
 		if (player.isOnline()) {
-			return PlayerController.get().getLevelPlayer(Objects.requireNonNull(player.getPlayer())) != null;
+			return PlayerController.get().getElytraPlayer(player.getPlayer()) != null;
 		} else {
 			return SQLStorage.get().playerExists(player);
 		}
@@ -118,7 +112,8 @@ public class ElytraEconomy implements Economy {
 	@Override
 	public double getBalance(OfflinePlayer player) {
 		if (player.isOnline()) {
-			return PlayerController.get().getLevelPlayer(Objects.requireNonNull(player)).getMoney();
+			ElytraPlayer p = PlayerController.get().getElytraPlayer(player);
+			return p == null ? 0 : p.getMoney();
 		} else {
 			try {
 				return SQLStorage.get().loadPlayerCached(player).getMoney();
@@ -147,7 +142,7 @@ public class ElytraEconomy implements Economy {
 	@Override
 	public boolean has(OfflinePlayer player, double amount) {
 		if (player.isOnline()) {
-			return PlayerController.get().getLevelPlayer(player).getMoney() >= amount;
+			return PlayerController.get().getElytraPlayer(player).getMoney() >= amount;
 		} else {
 			try {
 				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player);
@@ -184,7 +179,7 @@ public class ElytraEconomy implements Economy {
 
 		if (amount < 0) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot withdraw negative funds");  }
 
-		if (PlayerController.get().getLevelPlayer(player) == null) {
+		if (PlayerController.get().getElytraPlayer(player) == null) {
 			//if this is null it means they dont exist in our cached online players, if the following is true they dont exist on database either
 			if (!SQLStorage.get().playerExists(player)) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "This player does not exist!"); }
 			//now get the shit
@@ -194,7 +189,7 @@ public class ElytraEconomy implements Economy {
 				return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 			} catch (Exception e) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Unknown error in ElytraEconomy (Error A)!"); }
 		} else {
-			ElytraPlayer p = PlayerController.get().getLevelPlayer(player);
+			ElytraPlayer p = PlayerController.get().getElytraPlayer(player);
 			p.removeMoney((int)amount, false);
 			return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 		}
@@ -220,7 +215,7 @@ public class ElytraEconomy implements Economy {
 	public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
 		if (amount < 0) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Cannot deposit negative funds");  }
 
-		if (PlayerController.get().getLevelPlayer(player) == null) {
+		if (PlayerController.get().getElytraPlayer(player) == null) {
 			//if this is null it means they dont exist in our cached online players, if the following is true they dont exist on database either
 			if (!SQLStorage.get().playerExists(player)) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "This player does not exist!"); }
 			//now get the shit
@@ -230,7 +225,7 @@ public class ElytraEconomy implements Economy {
 				return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 			} catch (Exception e) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Unknown error in ElytraEconomy (Error A)!"); }
 		} else {
-			ElytraPlayer p = PlayerController.get().getLevelPlayer(player);
+			ElytraPlayer p = PlayerController.get().getElytraPlayer(player);
 			p.addMoney((int)amount, false);
 			return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 		}
@@ -313,10 +308,9 @@ public class ElytraEconomy implements Economy {
 
 	@Override
 	public boolean createPlayerAccount(OfflinePlayer player) {
-		if (PlayerController.get().getLevelPlayer(player) == null) {
-			return !SQLStorage.get().playerExists(player);
-		}
-		return false;
+		//TODO: debug testing
+		PlayerController.get().playerJoined(player.getPlayer());
+		return true;
 	}
 
 	@Override

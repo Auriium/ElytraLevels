@@ -11,9 +11,16 @@ import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class MessageUtils{
 	
 	//TODO: read from config(easy to do, but i dont want to have to rewrite the configs so do it later)
+
+	public static String formatNumber(int number) {
+		return AuriUtils.colorString(NumberFormat.getNumberInstance(Locale.US).format(number));
+	}
 	
 	public static void godMessage(ElytraPlayer sender, ElytraPlayer target, Boolean bool) {
 		if (sender == target) {
@@ -133,27 +140,27 @@ public class MessageUtils{
 	}
 	
 	public static void balanceMessage(ElytraPlayer player) {
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7Your balance: &e" + player.getMoney() + " ⛃"));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&e" + player.getName() + "&7's balance: &e" + formatNumber(player.getMoney()) + " ⛃"));
 	}
 	
 	public static void setMoneyMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7Balance set to &e" + amount + " ⛃"));
+		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7Balance set to &e" + formatNumber(amount) + " ⛃"));
 	}
 	
 	public static void addMoneyMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7+ &e" + amount + " ⛃"));
+		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7+ &e" + formatNumber(amount) + " ⛃"));
 	}
 	
 	public static void removeMoneyMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7- &e" + amount + " ⛃"));
+		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7- &e" + formatNumber(amount) + " ⛃"));
 	}
 	
 	public static void addXPMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7+ &b" + amount + " ❂"));
+		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7+ &b" + formatNumber(amount) + " ❂"));
 	}
 	
 	public static void removeXPMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7- &b" + amount + " ❂"));
+		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7- &b" + formatNumber(amount) + " ❂"));
 	}
 	
 	public static void removeLevelMessage(ElytraPlayer player) {
@@ -162,7 +169,7 @@ public class MessageUtils{
 		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7&k&l0&r &9&lLEVEL DOWN! &7&k&l0"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
 		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7You are now &b&lLevel &e&l" + player.getLevel() + "&7!"));
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&b" + player.getExperience() + "&7/" + player.getRequiredXPToNextLevel() + "&b XP&7 to reach &b&lLevel &e&l" + player.getNextLevel()));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&b" + formatNumber(player.getExperience()) + "&7/" + formatNumber(player.getRequiredXPToNextLevel()) + "&b XP&7 to reach &b&lLevel &e&l" + player.getNextLevel()));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&7&m-----------------------------------------------------&r"));
 	}
@@ -175,7 +182,7 @@ public class MessageUtils{
 		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7&k&l0&r &9&lLEVEL UP! &7&k&l0"));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
 		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&7You are now &b&lLevel &e&l" + player.getLevel() + "&7!"));
-		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&b" + player.getExperience() + "&7/" + player.getRequiredXPToNextLevel() + "&b XP&7 to reach &b&lLevel &e&l" + player.getNextLevel()));
+		AuriUtils.sendCenteredMessage(player, AuriUtils.colorString("&b" + formatNumber(player.getExperience()) + "&7/" + formatNumber(player.getRequiredXPToNextLevel()) + "&b XP&7 to reach &b&lLevel &e&l" + player.getNextLevel()));
 		player.asBukkitPlayer().sendMessage(AuriUtils.colorString("&r"));
 		
 		if (RewardController.get().getInteger().contains(player.getLevel())) {

@@ -44,10 +44,10 @@ public class UtilityCommand extends BaseCommand{
     	ElytraPlayer target;
     	
     	if (sender instanceof Player) {
-    		player = PlayerController.get().getLevelPlayer((Player) sender);
+    		player = PlayerController.get().getElytraPlayer((Player) sender);
     		if (t != null) {
     			try {
-    				target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(t));
+    				target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(t));
     			} catch (NullPointerException e) {
     				MessageUtils.invalidTarget(player);
     				return;
@@ -69,12 +69,12 @@ public class UtilityCommand extends BaseCommand{
     public void onTPHere(Player sender, String t) {
     	
     	if (sender instanceof Player) {
-    		ElytraPlayer player = PlayerController.get().getLevelPlayer((Player) sender);
+    		ElytraPlayer player = PlayerController.get().getElytraPlayer((Player) sender);
 
     		if (t == null) { AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&cTarget must be a player!"); return;}
     		
     		try {
-				ElytraPlayer target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(t));
+				ElytraPlayer target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(t));
 				UtilityController.get().teleportHere(player, target);
 			} catch (NullPointerException e) {
 				MessageUtils.invalidTarget(player);
@@ -94,12 +94,12 @@ public class UtilityCommand extends BaseCommand{
     public void onTP(Player sender, String t) {
     	
     	if (sender instanceof Player) {
-    		ElytraPlayer player = PlayerController.get().getLevelPlayer((Player) sender);
+    		ElytraPlayer player = PlayerController.get().getElytraPlayer((Player) sender);
 
     		if (t == null) { AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&cTarget must be a player!"); return;}
     		
     		try {
-				ElytraPlayer target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(t));
+				ElytraPlayer target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(t));
 				UtilityController.get().teleport(player, target);
 			} catch (NullPointerException e) {
 				MessageUtils.invalidTarget(player);
@@ -119,12 +119,12 @@ public class UtilityCommand extends BaseCommand{
     public void invsee(Player sender, String t) {
     	
     	if (sender instanceof Player) {
-    		ElytraPlayer player = PlayerController.get().getLevelPlayer((Player) sender);
+    		ElytraPlayer player = PlayerController.get().getElytraPlayer((Player) sender);
 
     		if (t == null) { AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&cTarget must be a player!"); return;}
     		
     		try {
-				ElytraPlayer target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(t));
+				ElytraPlayer target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(t));
 				UtilityController.get().invsee(player, target);
 			} catch (NullPointerException e) {
 				MessageUtils.invalidTarget(player);
@@ -146,10 +146,10 @@ public class UtilityCommand extends BaseCommand{
     	ElytraPlayer target;
     	
     	if (sender instanceof Player) {
-    		player = PlayerController.get().getLevelPlayer((Player) sender);
+    		player = PlayerController.get().getElytraPlayer((Player) sender);
     		if (player2 != null) {
     			try {
-    				target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
+    				target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     			} catch (NullPointerException e) {
     				MessageUtils.invalidTarget(player);
     				return;
@@ -172,10 +172,10 @@ public class UtilityCommand extends BaseCommand{
     	ElytraPlayer player;
     	ElytraPlayer target;
     	if (sender instanceof Player) {
-    		player = PlayerController.get().getLevelPlayer((Player) sender);
+    		player = PlayerController.get().getElytraPlayer((Player) sender);
     		if (player2 != null) {
     			try {
-    				target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
+    				target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     			} catch (NullPointerException e) {
     				MessageUtils.invalidTarget(player);
     				return;
@@ -197,10 +197,10 @@ public class UtilityCommand extends BaseCommand{
     	ElytraPlayer player;
     	ElytraPlayer target;
     	if (sender instanceof Player) {
-    		player = PlayerController.get().getLevelPlayer((Player) sender);
+    		player = PlayerController.get().getElytraPlayer((Player) sender);
     		if (player2 != null) {
     			try {
-    				target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
+    				target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     			} catch (NullPointerException e) {
     				MessageUtils.invalidTarget(player);
     				return;
@@ -222,10 +222,10 @@ public class UtilityCommand extends BaseCommand{
     	ElytraPlayer player;
     	ElytraPlayer target;
     	if (sender instanceof Player) {
-    		player = PlayerController.get().getLevelPlayer((Player) sender);
+    		player = PlayerController.get().getElytraPlayer((Player) sender);
     		if (player2 != null) {
     			try {
-    				target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
+    				target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     			} catch (NullPointerException e) {
     				MessageUtils.invalidTarget(player);
     				return;
@@ -247,10 +247,10 @@ public class UtilityCommand extends BaseCommand{
     	ElytraPlayer player;
     	ElytraPlayer target;
     	if (sender instanceof Player) {
-    		player = PlayerController.get().getLevelPlayer((Player) sender);
+    		player = PlayerController.get().getElytraPlayer((Player) sender);
     		if (player2 != null) {
     			try {
-    				target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
+    				target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     			} catch (NullPointerException e) {
     				MessageUtils.invalidTarget(player);
     				return;
@@ -272,10 +272,10 @@ public class UtilityCommand extends BaseCommand{
     	ElytraPlayer player;
     	ElytraPlayer target;
     	if (sender instanceof Player) {
-    		player = PlayerController.get().getLevelPlayer((Player) sender);
+    		player = PlayerController.get().getElytraPlayer((Player) sender);
     		if (player2 != null) {
     			try {
-    				target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
+    				target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     			} catch (NullPointerException e) {
     				MessageUtils.invalidTarget(player);
     				return;
@@ -297,10 +297,10 @@ public class UtilityCommand extends BaseCommand{
     	ElytraPlayer player;
     	ElytraPlayer target;
     	if (sender instanceof Player) {
-    		player = PlayerController.get().getLevelPlayer((Player) sender);
+    		player = PlayerController.get().getElytraPlayer((Player) sender);
     		if (player2 != null) {
     			try {
-    				target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
+    				target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     			} catch (NullPointerException e) {
     				MessageUtils.invalidTarget(player);
     				return;
@@ -322,10 +322,10 @@ public class UtilityCommand extends BaseCommand{
     	ElytraPlayer player;
     	ElytraPlayer target;
     	if (sender instanceof Player) {
-    		player = PlayerController.get().getLevelPlayer((Player) sender);
+    		player = PlayerController.get().getElytraPlayer((Player) sender);
     		if (player2 != null) {
     			try {
-    				target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
+    				target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     			} catch (NullPointerException e) {
     				MessageUtils.invalidTarget(player);
     				return;
@@ -347,10 +347,10 @@ public class UtilityCommand extends BaseCommand{
     	ElytraPlayer player;
     	ElytraPlayer target;
     	if (sender instanceof Player) {
-    		player = PlayerController.get().getLevelPlayer((Player) sender);
+    		player = PlayerController.get().getElytraPlayer((Player) sender);
     		if (player2 != null) {
     			try {
-    				target = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
+    				target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     			} catch (NullPointerException e) {
     				MessageUtils.invalidTarget(player);
     				return;

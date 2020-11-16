@@ -73,11 +73,11 @@ public class MatchBarController {
 		//p is the damager.
 		ElytraPlayer p;
 		if (event.getDamager() instanceof Player) {
-			p = PlayerController.get().getLevelPlayer((Player)event.getDamager());
+			p = PlayerController.get().getElytraPlayer((Player)event.getDamager());
 		} else if (event.getDamager() instanceof Projectile) {
 			Projectile proj = (Projectile) event.getDamager();
 			if (!(proj.getShooter() instanceof Player)) { return; }
-			p = PlayerController.get().getLevelPlayer(proj.getShooter() instanceof Player ? (Player)proj.getShooter() : null);
+			p = PlayerController.get().getElytraPlayer(proj.getShooter() instanceof Player ? (Player)proj.getShooter() : null);
 		} else { return; }
 		
 		

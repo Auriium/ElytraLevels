@@ -32,7 +32,7 @@ public class SocialCommand extends BaseCommand {
     public void onDiscord(Player sender) {
     	
     	if (sender instanceof Player) {
-    		ElytraPlayer player = PlayerController.get().getLevelPlayer((Player) sender);
+    		ElytraPlayer player = PlayerController.get().getElytraPlayer((Player) sender);
     		MessageUtils.discordMessage(player);
     	}
     	
@@ -44,7 +44,7 @@ public class SocialCommand extends BaseCommand {
     public void onWebsite(CommandSender sender) {
     	
     	if (sender instanceof Player) {
-    		ElytraPlayer player = PlayerController.get().getLevelPlayer((Player) sender);
+    		ElytraPlayer player = PlayerController.get().getElytraPlayer((Player) sender);
     		MessageUtils.websiteMessage(player);
     	}
     	
@@ -56,7 +56,7 @@ public class SocialCommand extends BaseCommand {
     public void onShop(CommandSender sender) {
     	
     	if (sender instanceof Player) {
-    		ElytraPlayer player = PlayerController.get().getLevelPlayer((Player) sender);
+    		ElytraPlayer player = PlayerController.get().getElytraPlayer((Player) sender);
     		MessageUtils.storeMessage(player);
     	}
     	

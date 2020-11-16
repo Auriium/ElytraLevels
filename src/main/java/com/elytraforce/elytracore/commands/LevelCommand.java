@@ -41,10 +41,10 @@ public class LevelCommand extends BaseCommand {
     	ElytraPlayer p;
     	
     	if (player2 == null) {
-    		p = PlayerController.get().getLevelPlayer(player);
+    		p = PlayerController.get().getElytraPlayer(player);
     	} else {
     		try {
-    			p = PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player2));
+    			p = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     		} catch(NullPointerException e) {
     			player.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
     			return;
@@ -52,7 +52,7 @@ public class LevelCommand extends BaseCommand {
     		
     	}
     	
-    	GUIController.get().showProfile(PlayerController.get().getLevelPlayer(player), p);
+    	GUIController.get().showProfile(PlayerController.get().getElytraPlayer(player), p);
     }
     
     @Subcommand("rewards")
@@ -60,7 +60,7 @@ public class LevelCommand extends BaseCommand {
     @Description("Add levels to a player") 
     @CommandCompletion("@players [amount] [title] [showMessage]")
     public void onRewardsCommands(Player sender) {
-    		RewardController.get().showMenu(PlayerController.get().getLevelPlayer(sender));
+    		RewardController.get().showMenu(PlayerController.get().getElytraPlayer(sender));
     }
     
     @Subcommand("addLevel")
@@ -71,7 +71,7 @@ public class LevelCommand extends BaseCommand {
     public void onAddLevel(Player sender, String player, Integer amount, boolean title, boolean showMessage) {
     	if (player != null) {
     		
-    		PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player)).addLevel(amount, title, showMessage);
+    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).addLevel(amount, title, showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
     		return;
@@ -86,7 +86,7 @@ public class LevelCommand extends BaseCommand {
     public void onAddXP(Player sender, String player, Integer amount, boolean title, boolean showMessage) {
     	
     	if (player != null) {
-    		PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player)).addExperience(amount, title, showMessage);
+    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).addExperience(amount, title, showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
     		return;
@@ -99,7 +99,7 @@ public class LevelCommand extends BaseCommand {
     @CommandCompletion("@players [amount] [title] [showMessage]")
     public void onRemoveLevel(Player sender, String player, Integer amount, boolean title, boolean showMessage) {
     	if (player != null) {
-    		PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player)).removeLevel(amount, title, showMessage);
+    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).removeLevel(amount, title, showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
     		return;
@@ -113,7 +113,7 @@ public class LevelCommand extends BaseCommand {
     @CommandCompletion("@players [amount] [title] [showMessage]")
     public void onRemoveXP(Player sender, String player, Integer amount, boolean title, boolean showMessage) {
     	if (player != null) {
-    		PlayerController.get().getLevelPlayer(Bukkit.getPlayer(player)).removeExperience(amount, title, showMessage);
+    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).removeExperience(amount, title, showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
     		return;

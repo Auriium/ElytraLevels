@@ -124,6 +124,7 @@ public class SQLStorage {
     public void loadPlayer(OfflinePlayer player) {
         String sql = "SELECT * FROM `levels_player` ";
         sql += "WHERE `player_uuid` = ?;";
+
         database.queryAsync(sql, new Object[]{player.getUniqueId().toString()}, resultSet -> {
             if (resultSet.next()) {
                 PlayerController.get().joinCallback(

@@ -1,5 +1,6 @@
 package com.elytraforce.elytracore.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.elytraforce.elytracore.Main;
@@ -30,13 +31,13 @@ public class BalanceCommand extends BaseCommand{
     @Default
     @CommandCompletion("@players @players")
     @Description("Lists your balance")
-    public static void onBalance(Player player, @Optional Player player2) {
+    public static void onBalance(Player player, @Optional String player2) {
     	ElytraPlayer p;
     	
     	if (player2 == null) {
-    		p = PlayerController.get().getLevelPlayer(player);
+    		p = PlayerController.get().getElytraPlayer(player);
     	} else {
-    		p = PlayerController.get().getLevelPlayer(player2);
+    		p = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
     	}
     	
     	MessageUtils.balanceMessage(p);
