@@ -83,6 +83,8 @@ public class Main extends JavaPlugin {
                         AuriUtils.logError(e.toString());
                     }
 
+                    //consume leper toes
+
                 }
             }, 20L, 20L);
         }
