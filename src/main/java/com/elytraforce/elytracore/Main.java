@@ -1,5 +1,6 @@
 package com.elytraforce.elytracore;
 
+import com.elytraforce.elytracore.utils.AuriUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
@@ -73,9 +74,15 @@ public class Main extends JavaPlugin {
         
         if (PluginConfig.isLobby()) {
         	Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            	
                 for (ElytraPlayer player : PlayerController.get().getPlayers()) {
-                	player.asBukkitPlayer().setLevel(player.getLevel());
+                    try {
+                        player.asBukkitPlayer().setLevel(player.getLevel());
+                        player.asBukkitPlayer().setExp(0);
+                    } catch (NullPointerException e) {
+                        AuriUtils.logError("The Main Class has an error regarding setting level and xp (NPE)");
+                        AuriUtils.logError(e.toString());
+                    }
+
                 }
             }, 20L, 20L);
         }

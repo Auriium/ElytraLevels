@@ -24,5 +24,7 @@ elytraforce network.
 - Promotion and Demotion menu
 - Set up supa fancy killfeeds
 - Set up external api shit
+- Speed command
+
 
 - IMPORTANT - transactionally based elytraplayers as opposed to schedule based (Save stats on transaction and cache player on join vs saving stats on leave)

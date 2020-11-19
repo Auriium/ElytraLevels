@@ -22,25 +22,25 @@ import org.jetbrains.annotations.Async;
 
 public class PluginListener implements Listener {
 
-    @EventHandler
-    public void onAsyncJoin(AsyncPlayerPreLoginEvent event) throws InterruptedException {
-        //TODO: another shit
-        PlayerController.get().playerJoined(Bukkit.getOfflinePlayer(event.getUniqueId()));
-        Thread.sleep(200L);
-    }
+    //@EventHandler
+    //public void onAsyncJoin(AsyncPlayerPreLoginEvent event) throws InterruptedException {
+    //    //TODO: another shit
+    //    PlayerController.get().playerJoined(Bukkit.getOfflinePlayer(event.getUniqueId()));
+    //    Thread.sleep(200L);
+    //}
 	
 	@EventHandler
     public void onJoin(final PlayerJoinEvent event) {
-        //if (PlayerController.get().getElytraPlayer(event.getPlayer()) == null) {
-        //    //TODO: shitty fix for mysql loading problems, investigate and patch later when more brainpower
-        //    new BukkitRunnable() {
-        //        @Override
-        //        public void run() {
-        //            PlayerController.get().playerJoined(event.getPlayer());
-        //        }
-        //    }.runTaskLaterAsynchronously(Main.get(), 4L);
-        //
-        //}
+        if (PlayerController.get().getElytraPlayer(event.getPlayer()) == null) {
+            //TODO: shitty fix for mysql loading problems, investigate and patch later when more brainpower
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    PlayerController.get().playerJoined(event.getPlayer());
+                }
+            }.runTaskLaterAsynchronously(Main.get(), 4L);
+
+        }
     }
 
     @EventHandler
