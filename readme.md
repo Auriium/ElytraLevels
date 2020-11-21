@@ -17,14 +17,8 @@ elytraforce network.
 
 # Todo / Bugs
 - Test the timedrestart (I'm not staying up until 2 am)
-- Redis messaging util
 - Finish filling out the matchtracker events so they can be called
 - Add the different gamemodes to the EF stat GUI
-- Setup testing branches on Git
 - Promotion and Demotion menu
 - Set up supa fancy killfeeds
-- Set up external api shit
 - Speed command
-
-
-- IMPORTANT - transactionally based elytraplayers as opposed to schedule based (Save stats on transaction and cache player on join vs saving stats on leave)
