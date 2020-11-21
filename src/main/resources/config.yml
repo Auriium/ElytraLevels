@@ -22,6 +22,6 @@ messages:
   
   
 redis:
-  ip: 172.17.0.1
-  port: 6379
-  password: ""
+  ip: redis-11702.c60.us-west-1-2.ec2.cloud.redislabs.com
+  port: 11702
+  password: "q6g56bbvnS8jQRdmHm3Kp65qGteQ7kCH"

@@ -7,16 +7,14 @@ import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
 import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
 import com.elytraforce.elytracore.utils.AuriUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPubSub;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class RedisController{
 
@@ -25,6 +23,7 @@ public class RedisController{
     private JedisPool pool;
 
     private final String CHANNEL = "channel_elytralevels";
+    private final String COMMAND_CHANNEL = "channel_commands";
 
     private RedisController() {
         //Initiate connection to pool
@@ -38,9 +37,9 @@ public class RedisController{
 
         new BukkitRunnable() {
             public void run() {
-                Jedis jedis = pool.getResource();
-                try {
+                try (Jedis jedis = pool.getResource()){
                     jedis.subscribe(new RedisListener(),CHANNEL);
+                    jedis.subscribe(new CommandListener(),COMMAND_CHANNEL);
                 } catch (Exception e) {
                     AuriUtils.logError("Error connecting to redis - " + e.getMessage());
                     AuriUtils.logError("Broken redis pool");
@@ -64,6 +63,35 @@ public class RedisController{
         return new Delta(id,amount,change,value);
     }
 
+    //THESE MUST ALL BE OF THE SAME TYPE AND UUID (please clean up this shitshow of a utility method)
+    public Delta combineDelta(ArrayList<Delta> deltas) {
+
+        int amount = 0;
+        DeltaEnum type = DeltaEnum.INCREASE;
+
+        for (Delta d : deltas) {
+            if (d.getChange().equals(DeltaEnum.DECREASE)) amount = amount - d.getAmount(); else amount = amount + d.getAmount();
+        }
+
+        if (amount < 0) {
+            amount = Math.negateExact(amount);
+            type = DeltaEnum.DECREASE;
+        }
+
+        return new Delta(deltas.get(0).getTarget(),amount,type,deltas.get(0).getType());
+    }
+
+    public void broadcastCommand(String command) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try (Jedis jedis = pool.getResource()) {
+                    jedis.publish(COMMAND_CHANNEL,command);
+                }
+            }
+        }.runTaskAsynchronously(Main.get());
+    }
+
     public void redisPushChanges(ElytraPlayer player) {
         HashSet<String> updates = new HashSet<>();
         HashSet<Delta> gathered = new HashSet<>();
@@ -75,10 +103,10 @@ public class RedisController{
         new BukkitRunnable() {
             @Override
             public void run() {
-                Jedis jedis = pool.getResource();
-                //push updates
-                for (String string : updates) {
-                    jedis.publish(CHANNEL,string);
+                try (Jedis jedis = pool.getResource()) {
+                    for (String string : updates) {
+                        jedis.publish(CHANNEL,string);
+                    }
                 }
             }
         }.runTaskAsynchronously(Main.get());
@@ -90,6 +118,17 @@ public class RedisController{
             Delta del = decryptDelta(msg);
             ElytraPlayer target = PlayerController.get().getElytraPlayer(del.getTarget());
             if (target != null) { target.adjust(del); }
+        }
+    }
+
+    public class CommandListener extends JedisPubSub {
+        @Override
+        public void onMessage(String channel, final String msg) {
+            new BukkitRunnable() {
+                public void run() {
+                    Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), msg);
+                }
+            }.runTask(Main.get());
         }
     }
 

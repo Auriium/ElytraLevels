@@ -55,13 +55,14 @@ public class PlayerController {
     }
 
     public void playerQuit(ElytraPlayer player) {
-        RedisController.get().redisPushChanges(player);
 
         if (player.isInDatabase()) {
             SQLStorage.get().updatePlayer(player, true);
         } else {
             SQLStorage.get().insertPlayer(player, true);
         }
+
+        RedisController.get().redisPushChanges(player);
 
         players.remove(player);
         Bukkit.getPluginManager().callEvent(new ElytraPlayerQuitEvent(player));

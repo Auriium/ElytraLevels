@@ -67,12 +67,12 @@ public class Main extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
 
             for (ElytraPlayer player : PlayerController.get().getPlayers()) {
-                RedisController.get().redisPushChanges(player);
-
                 if (player.isInDatabase())
                     SQLStorage.get().updatePlayer(player, true);
                 else
                     SQLStorage.get().insertPlayer(player, true);
+
+                RedisController.get().redisPushChanges(player);
             }
         }, PluginConfig.getAutosaveInterval() * 60L * 20L, PluginConfig.getAutosaveInterval() * 60L * 20L);
         
@@ -86,10 +86,6 @@ public class Main extends JavaPlugin {
                         AuriUtils.logError("The Main Class has an error regarding setting level and xp (NPE)");
                         AuriUtils.logError(e.toString());
                     }
-
-                    //PEEPEE POOPOO SHIT CUM AND DIE
-
-                    //consume leper toes
 
                 }
             }, 20L, 20L);

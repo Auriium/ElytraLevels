@@ -194,7 +194,7 @@ public class ElytraEconomy implements Economy {
 			} catch (Exception e) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Unknown error in ElytraEconomy (Error A)!"); }
 		} else {
 			ElytraPlayer p = PlayerController.get().getElytraPlayer(player);
-			p.addChange(new Delta(p.getUUID(), (int) amount, DeltaEnum.DECREASE, ValueEnum.MONEY));
+			PlayerController.get().addMoney(p, (int) amount,false);
 			return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 		}
 
