@@ -3,10 +3,8 @@ package com.elytraforce.elytracore.rewards;
 import java.io.File;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -104,9 +102,8 @@ public class RewardController{
     			SlotSettings clickableItem = SlotSettings.builder()
     				.itemTemplate(p -> { 
         	            	ItemStack dataItem;
-        	            	
-        	            	ArrayList<String> finalLore = new ArrayList<String>();
-        	        		finalLore.addAll(data.getDescription());
+
+							ArrayList<String> finalLore = new ArrayList<String>(data.getDescription());
         	            	
         	            	if (data.hasUnlocked(PlayerController.get().getElytraPlayer(p))) {
         	            		finalLore.add("&r ");
@@ -165,8 +162,8 @@ public class RewardController{
     	}
     	
     	this.slotSettings = clickableItemList;
-    	
-    	
+
+
     	List<Menu> pages = PaginatedMenuBuilder.builder(menu)
 		        .slots(itemSlots)
 		        .addSlotSettings(clickableItemList.values())
@@ -175,7 +172,7 @@ public class RewardController{
 		        .previousButton(new ItemStack(Material.ARROW))
 		        .previousButtonSlot(18)
 		        .build();
-    	
+
 
     	this.pages = pages;
     	
@@ -241,11 +238,7 @@ public class RewardController{
     private static RewardController instance;
     
     public static RewardController get() {
-    	if (instance == null) {
-    		return instance = new RewardController();
-    	} else {
-    		return instance;
-    	}
+		return Objects.requireNonNullElseGet(instance, () -> instance = new RewardController());
     }
 	
 }

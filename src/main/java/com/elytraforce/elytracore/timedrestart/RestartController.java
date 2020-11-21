@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -119,11 +120,7 @@ public class RestartController {
     }
     
     public static RestartController get() {
-    	if (instance == null)  {
-    		return instance = new RestartController(Main.get());
-    	} else {
-    		return instance;
-    	}
+        return Objects.requireNonNullElseGet(instance, () -> instance = new RestartController(Main.get()));
     }
 
 }

@@ -5,6 +5,7 @@ import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.PlayerController;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.jetbrains.annotations.NotNull;
 
 public class ElytraPlaceholder extends PlaceholderExpansion{
 
@@ -25,22 +26,22 @@ public class ElytraPlaceholder extends PlaceholderExpansion{
     }
 
     @Override
-    public String getAuthor(){
+    public @NotNull String getAuthor(){
         return main.getDescription().getAuthors().toString();
     }
 
     @Override
-    public String getIdentifier(){
+    public @NotNull String getIdentifier(){
         return "elytralevels";
     }
 
     @Override
-    public String getVersion(){
+    public @NotNull String getVersion(){
         return main.getDescription().getVersion();
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String identifier){
+    public String onPlaceholderRequest(Player player, @NotNull String identifier){
 
         if(player == null){
             return "";

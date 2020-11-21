@@ -57,6 +57,16 @@ public class MessageUtils{
 		}
 		
 	}
+
+	public static void speedMessage(ElytraPlayer sender, ElytraPlayer target, int amount) {
+		if (sender == target) {
+			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet your speed to &a" + amount);
+		} else {
+			AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet your speed to &a" + amount);
+			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&a" + target.asBukkitPlayer().getName() + "&f's speed has been set to &a" + amount);
+		}
+
+	}
 	
 	public static void healMessage(ElytraPlayer sender, ElytraPlayer target) {
 		if (sender == target) {

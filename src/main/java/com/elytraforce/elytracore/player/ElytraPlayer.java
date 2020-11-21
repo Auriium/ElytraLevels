@@ -1,8 +1,11 @@
 package com.elytraforce.elytracore.player;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.elytraforce.elytracore.player.redis.Delta;
+import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
+import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -31,13 +34,13 @@ public class ElytraPlayer {
     private int money;
     private List<Integer> unlockedRewards;
     private boolean inDatabase;
-    private String nickName;
     
     private boolean displayingTitle;
     private int displayedXP;
     private BukkitTask displayedTask;
-    
     private BukkitTask displayedTitleTask;
+
+    private ArrayList<Delta> queuedChanges;
     
     public Player asBukkitPlayer() {
     	if (player.isOnline()) {
@@ -45,28 +48,31 @@ public class ElytraPlayer {
 		}
     	return null;
     }
-
     public OfflinePlayer asOfflinePlayer() {
     	return player;
 	}
 
+	//make these relay delta related information. ( e.g. getBalance needs to return balance PLUS the combined balances stored in all deltas)
     public UUID getUUID() { return uniqueId; }
     public String getName() { return name; }
-    public Integer getLevel() { return level; }
-    public void setLevel(int level) { this.level = level; }
-    public Integer getExperience() { return experience; }
-    public void setExperience(int exp) { this.experience = exp; }
+    public Integer getLevel() { return level + this.getCachedDeltaData( ValueEnum.LEVEL); }
+    public Integer getExperience() { return experience + this.getCachedDeltaData( ValueEnum.XP); }
     public List<Integer> getUnlockedRewards() { return this.unlockedRewards; }
     public void setUnlockedRewards(List<Integer> list) { this.unlockedRewards = list; }
     public boolean isInDatabase() { return inDatabase; }
     public void setInDatabase(boolean choice) { this.inDatabase = choice; }
-    public Integer getMoney() { return this.money; }
+    public Integer getMoney() { return this.money + this.getCachedDeltaData( ValueEnum.MONEY); }
     
     public boolean isDisplayingTitle() { return this.displayingTitle; }
+    public void setDisplayingTitle(boolean bool) { this.displayingTitle = bool; }
     public int getDisplayedXP() { return this.displayedXP; }
-    
+    public void setDisplayedXP(int xp) { this.displayedXP = xp; }
+    public BukkitTask getDisplayedTask() { return this.displayedTask; }
+    public void setDisplayedTask(BukkitTask task) { this.displayedTask = task; }
     public BukkitTask getDisplayedTitleTask() { return this.displayedTitleTask; }
     public void setDisplayedTitleTask(BukkitTask task) { this.displayedTitleTask = task; }
+
+    public ArrayList<Delta> getChanges() { return this.queuedChanges; }
     
     @Override
     public boolean equals(Object toCompare) {
@@ -88,187 +94,36 @@ public class ElytraPlayer {
 		this.displayingTitle = false;
 		this.displayedXP = 0;
 		this.displayedTask = null;
-	}
-	
-	public void addLevel(int amount, boolean title, boolean sendMessage) {
-		
-		int oldLevel = this.level;
-		
-		this.level = this.level + amount;
-		
-		if (this.level == PluginConfig.getMaxLevel()) {
-			MessageUtils.maxLevelMessage(this);
-			TitleUtils.sendTitle(this, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel()));
-			return;
-		}
-		
-		if (sendMessage) {
-			MessageUtils.addLevelMessage(this);
-		}
-		
-		if (title) {
-			TitleUtils.sendTitle(this, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel()));
-		}
-		
-		Bukkit.getPluginManager().callEvent(new LevelEvent(this, oldLevel, this.level, ChangeEnum.INCREASE));
-		
-	}
-	
-	public void removeLevel(int amount, boolean title, boolean sendMessage) {
-		int oldLevel = this.level;
-		
-		this.level = this.level - amount;
-		if (this.level < 0) {
-			this.level = 0;
-		}
-		
-		if (sendMessage) {
-			MessageUtils.removeLevelMessage(this);
-		}
-		
-		if (title) {
-			TitleUtils.sendTitle(this, "&9&lLEVEL DOWN!", "&7" + (this.getLevel() - 1) + " -> &e" + this.getLevel());
-		}
-		
-		Bukkit.getPluginManager().callEvent(new LevelEvent(this, oldLevel, this.level, ChangeEnum.DECREASE));
-	}
-	
-	public void addExperience(int exp, boolean title, boolean sendMessage) {
-		
-		//current xp is 0, player is level 1. next level xp is 2000 and then 3000, player got 6000.
-		
-		int oldXP = this.experience;
-		
-		if (this.level > PluginConfig.getMaxLevel()) {
-			return;
-		}
-		
-		if (isDonator()) {
-			exp = (int) (exp * 1.2);
-		}
-		
-		if (sendMessage) {
-			MessageUtils.addXPMessage(this, exp);
-		}
-				
-		if (title) {
-			if (this.displayingTitle) {
 
-				this.displayedXP = this.displayedXP + exp;
-				this.displayedTask.cancel();
-				this.displayedTask = new BukkitRunnable() {
-		            public void run() {
-		                displayingTitle = false;
-		                displayedXP = 0;
-		                displayedTask = null;
-		            }
-		        }.runTaskLater(Main.get(), (long)40L);
-			} else {
-				this.displayedXP = exp;
-				this.displayingTitle = true;
-		        
-				this.displayedTask = new BukkitRunnable() {
-		            public void run() {
-		                displayingTitle = false;
-		                displayedXP = 0;
-		                displayedTask = null;
-		            }
-		        }.runTaskLater(Main.get(), (long)40L);
-			}
-			
-			TitleUtils.sendAnimatedSideTitle(this, "", "         &b+" + this.displayedXP + "❂", 10);
-		}
-		
-		this.experience = this.experience + exp;
-		
-		Bukkit.getPluginManager().callEvent(new XPEvent(this, oldXP, this.experience, ChangeEnum.INCREASE));
-		
-		while (this.canLevelUp()) {
-			this.experience = this.experience - getRequiredXPToNextLevel();
-			addLevel(1,true,true);
-		}
+		this.queuedChanges = new ArrayList<>();
 	}
-	
-	public void removeExperience(int exp, boolean title, boolean sendMessage) {
-		
-		int oldXP = this.experience;
-		
-		if (sendMessage) {
-			MessageUtils.removeXPMessage(this, exp);
-		}
-		
-		if (title) {
-			//TODO: title
-		}
 
-		this.experience = this.experience - exp;
-		
-		if (this.experience < 0) {
-			this.experience = 0;
+	public void adjust(Delta delta) {
+    	int amount = delta.getAmount(); if (delta.getChange().equals(DeltaEnum.DECREASE)) { amount = Math.negateExact(amount); }
+		//interpret delta and adjust based on it
+		switch (delta.getType()) {
+			case XP:
+				this.experience = this.experience + amount;
+				break;
+			case LEVEL:
+				this.level = this.level + amount;
+				break;
+			case MONEY:
+				this.money = this.money + amount;
+				break;
 		}
-		
-		Bukkit.getPluginManager().callEvent(new XPEvent(this, oldXP, this.experience, ChangeEnum.DECREASE));
 	}
-	
-	public void addMoney(int money, boolean sendMessage) {
-		
-		int oldMoney = this.money;
-		
-		if (sendMessage) {
-			MessageUtils.addMoneyMessage(this, money);
-		}
-		
-		this.money = this.money + money;
-		
-		if (this.money > Integer.MAX_VALUE) {
-			this.money = Integer.MAX_VALUE;
-		}
-		
-		Bukkit.getPluginManager().callEvent(new MoneyEvent(this, oldMoney, this.experience, ChangeEnum.INCREASE));
+
+	public void addChange(Delta delta) {
+		this.queuedChanges.add(delta);
 	}
-	
-	public void removeMoney(int money, boolean sendMessage) {
-		
-		int oldMoney = this.money;
-		
-		if (sendMessage) {
-			MessageUtils.removeMoneyMessage(this, money);
-		}
-		
-		this.money = this.money - money;
-		
-		if (this.money < 0) {
-			this.money = 0;
-		}
-		
-		Bukkit.getPluginManager().callEvent(new MoneyEvent(this, oldMoney, this.experience, ChangeEnum.DECREASE));
-		
+
+	public void removeChange(Delta delta) {
+    	this.queuedChanges.remove(delta);
 	}
-	
-	public void setMoney(int money, boolean sendMessage) {
-		int oldMoney = this.money;
-		
-		if (sendMessage) {
-			MessageUtils.setMoneyMessage(this, money);
-		}
-		
-		this.money = money;
-		
-		if (this.money < 0) {
-			this.money = 0;
-		}
-		
-		if (this.money > Integer.MAX_VALUE) {
-			this.money = Integer.MAX_VALUE;
-		}
-		
-		Bukkit.getPluginManager().callEvent(new MoneyEvent(this, oldMoney, this.experience, ChangeEnum.SET));
-	}
-	
-	//TODO: xboxsignouts style level up at the end of a round gui with animation, using this! (good maths)
-	//TODO: add symbols!
+
 	public String getProgressBar() {
-		int bars = (int)Math.floor(this.experience * (9 * 1.0) / this.getRequiredXPToNextLevel());
+		int bars = (int)Math.floor(this.getExperience() * (9 * 1.0) / this.getRequiredXPToNextLevel());
 		StringBuilder stringBuild = new StringBuilder();
 		
 		stringBuild.append(ChatColor.YELLOW);
@@ -284,39 +139,43 @@ public class ElytraPlayer {
 	}   
 	
 	public int getProgressBarInt() {
-		int bars = (int)Math.floor(this.experience * (9 * 1.0) / this.getRequiredXPToNextLevel());
-		return bars;
+		return (int)Math.floor(this.getExperience() * (9 * 1.0) / this.getRequiredXPToNextLevel());
 	}
 	
 	public String getPercent() {
-		double v = this.experience / this.getRequiredXPToNextLevel();
+		double v = this.getExperience() / this.getRequiredXPToNextLevel();
 		double sex = (v * 100); 
 		return sex + "%";
 	}
 	
-	private boolean canLevelUp() {
-		if (this.experience >= this.getRequiredXPToNextLevel()) {
-			return true;
-		}
-		return false;
+	public boolean canLevelUp() {
+		return this.getExperience() >= this.getRequiredXPToNextLevel();
 	}
 	
 	public int getRequiredXPToNextLevel() {
-		int next = (this.level + 1)*1000;
-		return next;
+		return (this.getLevel() + 1)*1000;
 	}
 	
 	public int getNextLevel() {
-		return this.level + 1;
+		return this.getLevel() + 1;
 	}
 	
 	public boolean isDonator() {
     	//TODO: mysql time ;) (aka fix this stupidity)
-		if (this.asBukkitPlayer() == null) {
-			return false;
-		} else {
+		if (this.asBukkitPlayer() == null) { return false; } else {
 			return this.asBukkitPlayer().hasPermission("elytraforce.donator");
 		}
+	}
+
+	public int getCachedDeltaData(ValueEnum type) {
+    	int total = 0;
+    	Set<Delta> filter = this.queuedChanges.stream().filter(d -> d.getType() == type).collect(Collectors.toSet());
+    	for (Delta delta : filter) {
+    		if (delta.getChange().equals(DeltaEnum.INCREASE)) { total = total + delta.getAmount();
+			} else { total = total - delta.getAmount(); }
+		}
+
+    	return total;
 	}
 	
 }

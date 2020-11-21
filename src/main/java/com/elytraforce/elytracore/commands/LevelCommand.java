@@ -70,11 +70,9 @@ public class LevelCommand extends BaseCommand {
     @CommandCompletion("@players [amount] [title] [showMessage]")
     public void onAddLevel(Player sender, String player, Integer amount, boolean title, boolean showMessage) {
     	if (player != null) {
-    		
-    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).addLevel(amount, title, showMessage);
+    		PlayerController.get().addLevel(Bukkit.getPlayer(player),amount,title,showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
-    		return;
     	}
     	
     }
@@ -86,10 +84,9 @@ public class LevelCommand extends BaseCommand {
     public void onAddXP(Player sender, String player, Integer amount, boolean title, boolean showMessage) {
     	
     	if (player != null) {
-    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).addExperience(amount, title, showMessage);
+    		PlayerController.get().addXP(Bukkit.getPlayer(player),amount,title,showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
-    		return;
     	}
     }
      
@@ -99,10 +96,9 @@ public class LevelCommand extends BaseCommand {
     @CommandCompletion("@players [amount] [title] [showMessage]")
     public void onRemoveLevel(Player sender, String player, Integer amount, boolean title, boolean showMessage) {
     	if (player != null) {
-    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).removeLevel(amount, title, showMessage);
+            PlayerController.get().removeLevel(Bukkit.getPlayer(player),amount,title,showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
-    		return;
     	}
     	
     }
@@ -113,10 +109,9 @@ public class LevelCommand extends BaseCommand {
     @CommandCompletion("@players [amount] [title] [showMessage]")
     public void onRemoveXP(Player sender, String player, Integer amount, boolean title, boolean showMessage) {
     	if (player != null) {
-    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).removeExperience(amount, title, showMessage);
+            PlayerController.get().removeXP(Bukkit.getPlayer(player),amount,title,showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
-    		return;
     	}
     	
     }

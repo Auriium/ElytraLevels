@@ -5,7 +5,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
+import com.elytraforce.elytracore.player.redis.Delta;
+import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
+import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
 import com.elytraforce.elytracore.storage.SQLStorage;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -87,7 +91,7 @@ public class ElytraEconomy implements Economy {
 	@Override
 	public boolean hasAccount(OfflinePlayer player) {
 		if (player.isOnline()) {
-			return PlayerController.get().getElytraPlayer(player.getPlayer()) != null;
+			return PlayerController.get().getElytraPlayer(Objects.requireNonNull(player.getPlayer())) != null;
 		} else {
 			return SQLStorage.get().playerExists(player);
 		}
@@ -184,13 +188,13 @@ public class ElytraEconomy implements Economy {
 			if (!SQLStorage.get().playerExists(player)) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "This player does not exist!"); }
 			//now get the shit
 			try {
-				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player); p.removeMoney((int) amount,false);
+				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player); p.addChange(new Delta(p.getUUID(), (int) amount, DeltaEnum.DECREASE, ValueEnum.MONEY));
 				SQLStorage.get().updatePlayerCached(p);
 				return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 			} catch (Exception e) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Unknown error in ElytraEconomy (Error A)!"); }
 		} else {
 			ElytraPlayer p = PlayerController.get().getElytraPlayer(player);
-			p.removeMoney((int)amount, false);
+			p.addChange(new Delta(p.getUUID(), (int) amount, DeltaEnum.DECREASE, ValueEnum.MONEY));
 			return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 		}
 
@@ -220,13 +224,13 @@ public class ElytraEconomy implements Economy {
 			if (!SQLStorage.get().playerExists(player)) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "This player does not exist!"); }
 			//now get the shit
 			try {
-				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player); p.addMoney((int) amount,false);
+				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player); p.addChange(new Delta(p.getUUID(), (int) amount, DeltaEnum.INCREASE, ValueEnum.MONEY));
 				SQLStorage.get().updatePlayerCached(p);
 				return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 			} catch (Exception e) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Unknown error in ElytraEconomy (Error A)!"); }
 		} else {
 			ElytraPlayer p = PlayerController.get().getElytraPlayer(player);
-			p.addMoney((int)amount, false);
+			p.addChange(new Delta(p.getUUID(), (int) amount, DeltaEnum.INCREASE, ValueEnum.MONEY));
 			return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 		}
 	}

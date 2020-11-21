@@ -1,5 +1,6 @@
 package com.elytraforce.elytracore;
 
+import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.utils.AuriUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -47,7 +48,7 @@ public class Main extends JavaPlugin {
 		getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         reloadConfig();
-        
+
         SQLStorage.get();
         PlayerController.get();
         RewardController.get();
@@ -64,7 +65,10 @@ public class Main extends JavaPlugin {
         }
         
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+
             for (ElytraPlayer player : PlayerController.get().getPlayers()) {
+                RedisController.get().redisPushChanges(player);
+
                 if (player.isInDatabase())
                     SQLStorage.get().updatePlayer(player, true);
                 else

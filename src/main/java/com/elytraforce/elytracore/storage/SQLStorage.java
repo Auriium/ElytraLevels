@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
@@ -80,7 +81,7 @@ public class SQLStorage {
     public HashMap<OfflinePlayer, ElytraPlayer> playerCache = new HashMap<>();
 
     public void removePlayerCached(OfflinePlayer player) {
-        if (playerCache.containsKey(player)) { playerCache.remove(player); }
+        playerCache.remove(player);
     }
 
     public ElytraPlayer loadPlayerCached(OfflinePlayer player) throws SQLException {
@@ -183,9 +184,6 @@ public class SQLStorage {
     }
 
     public static SQLStorage get() {
-        if (instance == null) {
-            instance = new SQLStorage();
-        }
-        return instance;
+        return Objects.requireNonNullElseGet(instance, () -> instance = new SQLStorage());
     }
 }

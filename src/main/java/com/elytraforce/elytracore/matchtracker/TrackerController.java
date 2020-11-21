@@ -2,6 +2,7 @@ package com.elytraforce.elytracore.matchtracker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -95,11 +96,7 @@ public class TrackerController {
 	}
 	
 	public static TrackerController get() {
-		if (instance == null) {
-			return instance = new TrackerController();
-		} else {
-			return instance;
-		}
+		return Objects.requireNonNullElseGet(instance, () -> instance = new TrackerController());
 	}
 	
 	public void shutdown() {

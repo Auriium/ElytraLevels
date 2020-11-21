@@ -34,11 +34,10 @@ public class EcoCommand extends BaseCommand{
     public void onAddMoney(CommandSender sender, String player, Integer amount, boolean showMessage) {
     	
     	if (player != null) {
-    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).addMoney(amount, showMessage);
+    	    PlayerController.get().addMoney(Bukkit.getPlayer(player),amount,showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
-    		return;
-    	}
+        }
     	
     }
 	
@@ -49,10 +48,9 @@ public class EcoCommand extends BaseCommand{
     public void onRemoveMoney(CommandSender sender, String player, Integer amount, boolean showMessage) {
     	
     	if (player != null) {
-    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).removeMoney(amount, showMessage);
+            PlayerController.get().removeMoney(Bukkit.getPlayer(player),amount,showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
-    		return;
     	}
     }
     
@@ -63,10 +61,9 @@ public class EcoCommand extends BaseCommand{
     public void onSetMoney(CommandSender sender, String player, Integer amount, boolean showMessage) {
     	
     	if (player != null) {
-    		PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player)).setMoney(amount, showMessage);
+    		PlayerController.get().setMoney(Bukkit.getPlayer(player),amount,showMessage);
     	} else {
     		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
-    		return;
     	}
     }
 }

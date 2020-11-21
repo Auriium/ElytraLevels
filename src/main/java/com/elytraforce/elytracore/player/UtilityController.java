@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 
 import com.elytraforce.elytracore.utils.MessageUtils;
+import org.bukkit.entity.Player;
 
 public class UtilityController {
 	
@@ -78,6 +79,16 @@ public class UtilityController {
 		} else {
 			this.godModeEnabled.put(target, true);
 			MessageUtils.godMessage(player, target, true);
+		}
+	}
+
+	public void speed(ElytraPlayer player, ElytraPlayer target,int amount) {
+		Player ptarget = target.asBukkitPlayer();
+		MessageUtils.speedMessage(player,target,amount);
+		if (ptarget.isFlying()) {
+			ptarget.setFlySpeed(amount);
+		} else {
+			ptarget.setWalkSpeed(amount);
 		}
 	}
 	

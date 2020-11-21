@@ -117,9 +117,7 @@ public class MatchBarController {
 			} else {
 				//otherwise add them to the displayed list under the damager, and remove them in a bit.
 				this.initiatedBars.put(damaged, player);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.get(), () -> {
-					this.initiatedBars.remove(damaged);
-				}, 20L);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.get(), () -> this.initiatedBars.remove(damaged), 20L);
 			}
 		}
 	}
