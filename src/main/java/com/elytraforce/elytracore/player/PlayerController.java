@@ -97,9 +97,13 @@ public class PlayerController {
 
     public void removeMoney(ElytraPlayer player, int amount, boolean sendMessage) {
         int oldMoney = player.getMoney();
-        if (sendMessage) {MessageUtils.addMoneyMessage(player, amount); }
+        if (sendMessage) {MessageUtils.removeMoneyMessage(player, amount); }
 
         player.addChange(new Delta(player.getUUID(),amount, DeltaEnum.DECREASE, ValueEnum.MONEY));
+
+        if (player.getMoney() < 0) {
+            player.addChange(new Delta(player.getUUID(),Math.abs(player.getMoney()),DeltaEnum.INCREASE,ValueEnum.MONEY));
+        }
 
         Bukkit.getPluginManager().callEvent(new MoneyEvent(player, oldMoney, player.getMoney(), ChangeEnum.INCREASE));
     }
@@ -161,7 +165,7 @@ public class PlayerController {
             return;
         }
 
-        if (sendMessage) { MessageUtils.addLevelMessage(player); }
+        if (sendMessage) { MessageUtils.removeLevelMessage(player); }
         if (title) {TitleUtils.sendTitle(player, AuriUtils.colorString("&9&lLEVEL DOWN!"), AuriUtils.colorString("&7" + oldLevel + " -> &e" + newLevel)); }
 
         Bukkit.getPluginManager().callEvent(new LevelEvent(player, oldLevel, newLevel, ChangeEnum.DECREASE));

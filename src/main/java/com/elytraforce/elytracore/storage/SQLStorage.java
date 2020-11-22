@@ -10,6 +10,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
+import com.elytraforce.elytracore.player.redis.RedisController;
+import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
 import com.elytraforce.elytracore.utils.AuriUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -157,17 +159,38 @@ public class SQLStorage {
 
     public void updatePlayer(ElytraPlayer player, boolean async) {
         String sql = "UPDATE `levels_player` SET ";
-        sql += "`level` = ?, `experience` = ?, `money` = ?, `unlocked_rewards` = ? ";
+        sql += "`level` = `level` + ?, `experience` = `experience` + ?, `money` = `money` + ?, `unlocked_rewards` = ? ";
         sql += "WHERE `player_uuid` = ?;";
+
+        int level = player.getCachedDeltaData(ValueEnum.LEVEL);
+        int money = player.getCachedDeltaData(ValueEnum.MONEY);
+        int exp = player.getCachedDeltaData(ValueEnum.XP);
+
         Object[] toSet = new Object[]{
-                player.getLevel(),
-                player.getExperience(),
-                player.getMoney(),
+                level,
+                exp,
+                money,
                 gson.toJson(player.getUnlockedRewards()),
                 player.getUUID().toString()
         };
         executeUpdate(player, sql, toSet, async);
     }
+
+    @Deprecated
+    //public void updatePlayer(ElytraPlayer player, boolean async) {
+    //    String sql = "UPDATE `levels_player` SET ";
+    //    sql += "`level` = ?, `experience` = ?, `money` = ?, `unlocked_rewards` = ? ";
+    //    sql += "WHERE `player_uuid` = ?;";
+    //
+    //    Object[] toSet = new Object[]{
+    //            player.getLevel(),
+    //            player.getExperience(),
+    //            player.getMoney(),
+    //            gson.toJson(player.getUnlockedRewards()),
+    //            player.getUUID().toString()
+    //    };
+    //    executeUpdate(player, sql, toSet, async);
+    //}
 
     private void executeUpdate(ElytraPlayer player, String sql, Object[] toSet, boolean async) {
         if (async)
