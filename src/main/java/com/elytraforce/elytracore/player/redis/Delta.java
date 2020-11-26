@@ -7,10 +7,10 @@ import java.util.UUID;
 
 public class Delta {
 
-    private DeltaEnum change;
-    private ValueEnum type;
-    private int amount;
-    private UUID target;
+    private final DeltaEnum change;
+    private final ValueEnum type;
+    private final int amount;
+    private final UUID target;
 
     public Delta(UUID target, int amount, DeltaEnum change, ValueEnum type) {
         this.amount = amount;

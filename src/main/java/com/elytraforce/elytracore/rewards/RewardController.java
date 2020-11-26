@@ -1,10 +1,10 @@
 package com.elytraforce.elytracore.rewards;
 
-import java.io.File;
-
-
-import java.util.*;
-
+import com.elytraforce.aUtils.item.AItemBuilder;
+import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.player.ElytraPlayer;
+import com.elytraforce.elytracore.player.PlayerController;
+import com.elytraforce.elytracore.utils.AuriUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,16 +16,13 @@ import org.ipvp.canvas.paginate.PaginatedMenuBuilder;
 import org.ipvp.canvas.slot.SlotSettings;
 import org.ipvp.canvas.type.ChestMenu;
 
-import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.player.ElytraPlayer;
-import com.elytraforce.elytracore.player.PlayerController;
-import com.elytraforce.elytracore.utils.AuriUtils;
-import com.elytraforce.elytracore.utils.ItemBuilder;
+import java.io.File;
+import java.util.*;
 
 public class RewardController{
 	
-	private List<RewardData> rewards;
-	private ArrayList<Integer> rewardIntegers = new ArrayList<>();
+	private final List<RewardData> rewards;
+	private final ArrayList<Integer> rewardIntegers = new ArrayList<>();
 	
 	private final File configFile;
     private final FileConfiguration config;
@@ -61,12 +58,12 @@ public class RewardController{
 				int level = thisReward.getInt("Level");
 				String name = AuriUtils.colorString(thisReward.getString("Name"));
 				List<String> description = AuriUtils.colorString(thisReward.getStringList("Description"));
-				List<String> servers = (List<String>)thisReward.getStringList("Servers");
+				List<String> servers = thisReward.getStringList("Servers");
 				if (thisReward.getStringList("Servers").isEmpty()) {
 					servers.add("all");
 				}
 				
-                List<String> commands = (List<String>)thisReward.getStringList("Commands");
+                List<String> commands = thisReward.getStringList("Commands");
              
                 this.rewardIntegers.add(level);
                 
@@ -108,8 +105,9 @@ public class RewardController{
         	            	if (data.hasUnlocked(PlayerController.get().getElytraPlayer(p))) {
         	            		finalLore.add("&r ");
         	        			finalLore.add("&a&lYOU HAVE ALREADY CLAIMED THIS");
-        	        			
-        	        			dataItem = new ItemBuilder(Material.MINECART)
+
+
+        	        			dataItem = new AItemBuilder(Material.MINECART)
             	    					.setDisplayName(dataName)
             	    					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore)).build();
         	            	} else if (data.canUnlock(PlayerController.get().getElytraPlayer(p))) {
@@ -117,7 +115,7 @@ public class RewardController{
             	            		finalLore.add("&r ");
             	            		finalLore.add("&c&lCLAIM THIS ON &e&l" + data.getServers().get(0));
             	        			
-            	        			dataItem = new ItemBuilder(Material.CHEST_MINECART)
+            	        			dataItem = new AItemBuilder(Material.CHEST_MINECART)
             	        					.setDisplayName(dataName)
             	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore))
             	        					.setGlow(true).build();
@@ -125,7 +123,7 @@ public class RewardController{
             	            		finalLore.add("&r ");
             	        			finalLore.add("&e&lCLICK TO CLAIM");
             	        			
-            	        			dataItem = new ItemBuilder(Material.CHEST_MINECART)
+            	        			dataItem = new AItemBuilder(Material.CHEST_MINECART)
             	        					.setDisplayName(dataName)
             	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore))
             	        					.setGlow(true).build();
@@ -134,7 +132,7 @@ public class RewardController{
         	            		finalLore.add("&r ");
         	        			finalLore.add("&c&lREACH LEVEL &e&l" + data.getLevel() + "&c&l TO CLAIM");
         	        			
-        	        			dataItem = new ItemBuilder(Material.CHEST_MINECART)
+        	        			dataItem = new AItemBuilder(Material.CHEST_MINECART)
         	        					.setDisplayName(dataName)
         	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore)).build();
         	            	}
@@ -219,11 +217,7 @@ public class RewardController{
     }
     
     public boolean hasRewards(ElytraPlayer player) {
-    	if (player.getUnlockedRewards().containsAll(this.getRewardIntsBelowLevel(player.getLevel())) ) {
-    		return false;
-    	} else {
-    		return true;
-    	}
+		return !player.getUnlockedRewards().containsAll(this.getRewardIntsBelowLevel(player.getLevel()));
     }
 	
     private boolean containsLevel(RewardData input) {

@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.config.PluginConfig;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.player.UtilityController;
@@ -21,6 +20,7 @@ import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 
+@SuppressWarnings("unused")
 public class UtilityCommand extends BaseCommand{
 
 	public static final String WILDCARD = "*";
@@ -66,7 +66,7 @@ public class UtilityCommand extends BaseCommand{
     public void onTPHere(Player sender, String t) {
     		ElytraPlayer player = PlayerController.get().getElytraPlayer(sender);
 
-    		if (t == null) { AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&cTarget must be a player!"); return;}
+    		if (t == null) { AuriUtils.sendMessage(player, Main.getAConfig().pluginPrefix + "&cTarget must be a player!"); return;}
     		
     		try {
 				ElytraPlayer target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(t));
@@ -85,7 +85,7 @@ public class UtilityCommand extends BaseCommand{
 
     		ElytraPlayer player = PlayerController.get().getElytraPlayer(sender);
 
-    		if (t == null) { AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&cTarget must be a player!"); return;}
+    		if (t == null) { AuriUtils.sendMessage(player, Main.getAConfig().pluginPrefix + "&cTarget must be a player!"); return;}
     		
     		try {
 				ElytraPlayer target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(t));
@@ -105,7 +105,7 @@ public class UtilityCommand extends BaseCommand{
 
     		ElytraPlayer player = PlayerController.get().getElytraPlayer(sender);
 
-    		if (t == null) { AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&cTarget must be a player!"); return;}
+    		if (t == null) { AuriUtils.sendMessage(player, Main.getAConfig().pluginPrefix + "&cTarget must be a player!"); return;}
     		
     		try {
 				ElytraPlayer target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(t));

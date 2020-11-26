@@ -7,10 +7,10 @@ import com.elytraforce.elytracore.player.ElytraPlayer;
 
 public class LevelEvent extends Event{
 	
-	private ElytraPlayer player;
-	private int oldLevel;
-	private int newLevel;
-	private ChangeEnum changeType;
+	private final ElytraPlayer player;
+	private final int oldLevel;
+	private final int newLevel;
+	private final ChangeEnum changeType;
 	
 	public ElytraPlayer getElytraPlayer() { return this.player; }
 	public int getOldLevel() { return this.oldLevel; }

@@ -1,8 +1,9 @@
 package com.elytraforce.elytracore.utils;
 
+import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.config.Config;
 import org.bukkit.GameMode;
 
-import com.elytraforce.elytracore.config.PluginConfig;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.rewards.RewardController;
 
@@ -15,6 +16,12 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 public class MessageUtils{
+
+	private static final Config config;
+
+	static {
+		config = Main.getAConfig();
+	}
 	
 	//TODO: read from config(easy to do, but i dont want to have to rewrite the configs so do it later)
 
@@ -25,82 +32,82 @@ public class MessageUtils{
 	public static void godMessage(ElytraPlayer sender, ElytraPlayer target, Boolean bool) {
 		if (sender == target) {
 			if (bool) {
-				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet god mode to &aON");
+				AuriUtils.sendMessage(sender, config.pluginPrefix + "&fSet god mode to &aON");
 			} else {
-				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet god mode to &aOFF");
+				AuriUtils.sendMessage(sender, config.pluginPrefix + "&fSet god mode to &aOFF");
 			}
 		} else {
 			if (bool) {
-				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet god mode to &aON");
-				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet god mode to &aON&f for &a" + target.asBukkitPlayer().getName());
+				AuriUtils.sendMessage(target, config.pluginPrefix + "&fSet god mode to &aON");
+				AuriUtils.sendMessage(sender, config.pluginPrefix + "&fSet god mode to &aON&f for &a" + target.asBukkitPlayer().getName());
 			} else {
-				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet god mode to &aOFF");
-				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet god mode to &aOFF&f for &a" + target.asBukkitPlayer().getName());
+				AuriUtils.sendMessage(target, config.pluginPrefix + "&fSet god mode to &aOFF");
+				AuriUtils.sendMessage(sender, config.pluginPrefix + "&fSet god mode to &aOFF&f for &a" + target.asBukkitPlayer().getName());
 			}
 		}
 		
 	}
 	
 	public static void teleport(ElytraPlayer sender, ElytraPlayer target) {
-		AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fTeleported you to &a" + target.asBukkitPlayer().getName() + "&f!");
+		AuriUtils.sendMessage(sender, config.pluginPrefix + "&fTeleported you to &a" + target.asBukkitPlayer().getName() + "&f!");
 	}
 	
 	public static void teleportHere(ElytraPlayer sender, ElytraPlayer target) { 
-		AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fTeleported &a" + target.asBukkitPlayer().getName() + " &fto you!");
+		AuriUtils.sendMessage(sender, config.pluginPrefix + "&fTeleported &a" + target.asBukkitPlayer().getName() + " &fto you!");
 	}
 	
 	public static void killMessage(ElytraPlayer sender, ElytraPlayer target) {
 		if (sender == target) {
-			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fYou suicided!");
+			AuriUtils.sendMessage(sender, config.pluginPrefix + "&fYou suicided!");
 		} else {
-			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&a" + target.asBukkitPlayer().getName() + "&f has been killed!");
+			AuriUtils.sendMessage(sender, config.pluginPrefix + "&a" + target.asBukkitPlayer().getName() + "&f has been killed!");
 		}
 		
 	}
 
 	public static void speedMessage(ElytraPlayer sender, ElytraPlayer target, int amount) {
 		if (sender == target) {
-			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet your speed to &a" + amount);
+			AuriUtils.sendMessage(sender, config.pluginPrefix + "&fSet your speed to &a" + amount);
 		} else {
-			AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet your speed to &a" + amount);
-			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&a" + target.asBukkitPlayer().getName() + "&f's speed has been set to &a" + amount);
+			AuriUtils.sendMessage(target, config.pluginPrefix + "&fSet your speed to &a" + amount);
+			AuriUtils.sendMessage(sender, config.pluginPrefix + "&a" + target.asBukkitPlayer().getName() + "&f's speed has been set to &a" + amount);
 		}
 
 	}
 	
 	public static void healMessage(ElytraPlayer sender, ElytraPlayer target) {
 		if (sender == target) {
-			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fYou have been healed!");
+			AuriUtils.sendMessage(sender, config.pluginPrefix + "&fYou have been healed!");
 		} else {
-			AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fYou have been healed!");
-			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&a" + target.asBukkitPlayer().getName() + "&f has been healed!");
+			AuriUtils.sendMessage(target, config.pluginPrefix + "&fYou have been healed!");
+			AuriUtils.sendMessage(sender, config.pluginPrefix + "&a" + target.asBukkitPlayer().getName() + "&f has been healed!");
 		}
 		
 	}
 	
 	public static void feedMessage(ElytraPlayer sender, ElytraPlayer target) {
 		if (sender == target) {
-			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fYou have been fed!");
+			AuriUtils.sendMessage(sender, config.pluginPrefix + "&fYou have been fed!");
 		} else {
-			AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fYou have been fed!");
-			AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&a" + target.asBukkitPlayer().getName() + "&f has been fed!");
+			AuriUtils.sendMessage(target, config.pluginPrefix + "&fYou have been fed!");
+			AuriUtils.sendMessage(sender, config.pluginPrefix + "&a" + target.asBukkitPlayer().getName() + "&f has been fed!");
 		}
 	}
 	
 	public static void flyMessage(ElytraPlayer sender, ElytraPlayer target, boolean on) {
 		if (sender == target) {
 			if (on) {
-				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet fly mode to &aON");
+				AuriUtils.sendMessage(sender, config.pluginPrefix + "&fSet fly mode to &aON");
 			} else {
-				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet fly mode to &aOFF");
+				AuriUtils.sendMessage(sender, config.pluginPrefix + "&fSet fly mode to &aOFF");
 			}
 		} else {
 			if (on) {
-				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet fly mode to &aON");
-				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet fly mode to &aON&f for &a" + target.getName());
+				AuriUtils.sendMessage(target, config.pluginPrefix + "&fSet fly mode to &aON");
+				AuriUtils.sendMessage(sender, config.pluginPrefix + "&fSet fly mode to &aON&f for &a" + target.getName());
 			} else {
-				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet fly mode to &aOFF");
-				AuriUtils.sendMessage(sender, PluginConfig.getPrefix() + "&fSet fly mode to &aOFF&f for &a" + target.getName());
+				AuriUtils.sendMessage(target, config.pluginPrefix + "&fSet fly mode to &aOFF");
+				AuriUtils.sendMessage(sender, config.pluginPrefix + "&fSet fly mode to &aOFF&f for &a" + target.getName());
 			}
 		}
 		
@@ -109,24 +116,24 @@ public class MessageUtils{
 	public static void gamemodeMessage(ElytraPlayer player, ElytraPlayer target, GameMode mode, boolean already) {
 		if (player == target) {
 			if (already) {
-				AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fYou already are in gamemode &a" + mode.name().toUpperCase());
+				AuriUtils.sendMessage(player, config.pluginPrefix + "&fYou already are in gamemode &a" + mode.name().toUpperCase());
 			} else {
-				AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet gamemode to &a" + mode.name().toUpperCase());
+				AuriUtils.sendMessage(player, config.pluginPrefix + "&fSet gamemode to &a" + mode.name().toUpperCase());
 			}
 		} else {
 			if (already) {
-				AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fTarget is already in gamemode &a" + mode.name().toUpperCase());
-				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fYou already are in gamemode &a" + mode.name().toUpperCase());
+				AuriUtils.sendMessage(player, config.pluginPrefix + "&fTarget is already in gamemode &a" + mode.name().toUpperCase());
+				AuriUtils.sendMessage(target, config.pluginPrefix + "&fYou already are in gamemode &a" + mode.name().toUpperCase());
 			} else {
-				AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&fSet target to gamemode &a" + mode.name().toUpperCase());
-				AuriUtils.sendMessage(target, PluginConfig.getPrefix() + "&fSet gamemode to &a" + mode.name().toUpperCase());
+				AuriUtils.sendMessage(player, config.pluginPrefix + "&fSet target to gamemode &a" + mode.name().toUpperCase());
+				AuriUtils.sendMessage(target, config.pluginPrefix + "&fSet gamemode to &a" + mode.name().toUpperCase());
 			}
 		}
 		
 	}
 	
 	public static void invalidTarget(ElytraPlayer player) {
-		AuriUtils.sendMessage(player, PluginConfig.getPrefix() + "&cInvalid Target! Please choose an actual player!");
+		AuriUtils.sendMessage(player, config.pluginPrefix + "&cInvalid Target! Please choose an actual player!");
 	}
 	
 	public static void discordMessage(ElytraPlayer player) {

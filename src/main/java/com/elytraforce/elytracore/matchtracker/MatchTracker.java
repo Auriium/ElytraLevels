@@ -15,8 +15,8 @@ import com.elytraforce.elytracore.player.ElytraPlayer;
 
 public class MatchTracker {
 	
-	private ArrayList<Bar> bossBarCollection;
-	private ArrayList<TrackablePlayer> trackablePlayers;
+	private final ArrayList<Bar> bossBarCollection;
+	private final ArrayList<TrackablePlayer> trackablePlayers;
 	private int timeElapsed;
 	
 	public int getTimeElapsed() { return this.timeElapsed; }
@@ -125,11 +125,7 @@ public class MatchTracker {
 	}
 	
 	public boolean isTracked(ElytraPlayer player) {
-		if (this.getTrackablePlayer(player) != null) {
-			return true;
-		} else {
-			return false;
-		}
+        return this.getTrackablePlayer(player) != null;
 	}
 	
 	public TrackablePlayer getTrackablePlayer(ElytraPlayer player) {

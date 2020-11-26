@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+/*
 public class ItemBuilder {
 
     private ItemStack stack;
@@ -138,3 +139,4 @@ public class ItemBuilder {
 	}
 
 }
+*/

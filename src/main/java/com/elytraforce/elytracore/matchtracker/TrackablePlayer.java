@@ -4,7 +4,7 @@ import com.elytraforce.elytracore.player.ElytraPlayer;
 
 public class TrackablePlayer {
 	
-	private ElytraPlayer player;
+	private final ElytraPlayer player;
 	private int matchKills;
 	private int matchDeaths;
 	private int matchAssists;

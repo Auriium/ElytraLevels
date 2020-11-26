@@ -1,30 +1,22 @@
 package com.elytraforce.elytracore.storage;
 
+import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.config.Config;
+import com.elytraforce.elytracore.player.ElytraPlayer;
+import com.elytraforce.elytracore.player.PlayerController;
+import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import dev.magicmq.rappu.Database;
+import org.bukkit.OfflinePlayer;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
-
-import com.elytraforce.elytracore.player.redis.RedisController;
-import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
-import com.elytraforce.elytracore.utils.AuriUtils;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-
-import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.config.PluginConfig;
-import com.elytraforce.elytracore.player.ElytraPlayer;
-import com.elytraforce.elytracore.player.PlayerController;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import dev.magicmq.rappu.Database;
 
 public class SQLStorage {
 
@@ -34,13 +26,13 @@ public class SQLStorage {
     private final Gson gson;
     
     private SQLStorage() {
-    	
-        ConfigurationSection config = PluginConfig.getSqlInfo();
+        Config config = Main.getAConfig();
+
         database = Database.newDatabase()
                 .withPluginUsing(Main.get())
-                .withUsername(config.getString("username"))
-                .withPassword(config.getString("password"))
-                .withConnectionInfo(config.getString("host"), config.getInt("port"), config.getString("database"), false)
+                .withUsername(config.databaseUsername)
+                .withPassword(config.databasePassword)
+                .withConnectionInfo(config.databaseHost, config.databasePort, config.databaseName, false)
                 .withDefaultProperties()
                 .open();
 

@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 
 public class ElytraPlayerQuitEvent extends Event {
 
-    private ElytraPlayer player;
+    private final ElytraPlayer player;
 
     public ElytraPlayer getElytraPlayer() { return this.player; }
     public Player getBukkitPlayer() { return this.player.asBukkitPlayer(); }

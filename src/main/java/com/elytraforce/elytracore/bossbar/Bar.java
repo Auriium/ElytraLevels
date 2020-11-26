@@ -7,8 +7,8 @@ import com.elytraforce.elytracore.matchtracker.TrackablePlayer;
 
 public class Bar {
 	
-	private TrackablePlayer player;
-	private BossBar bar;
+	private final TrackablePlayer player;
+	private final BossBar bar;
 	private BukkitTask task;
 	
 	public TrackablePlayer getPlayer() { return this.player; }

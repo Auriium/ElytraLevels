@@ -26,8 +26,8 @@ public class ElytraEconomy implements Economy {
 
 	//TODO: Something about getting balances from Strings, it is stupid.
 
-	private static String name = "ElytraEconomy";
-	private static DecimalFormat currencyFormat = new DecimalFormat("#0.00", DecimalFormatSymbols.getInstance(Locale.US));
+	private static final String name = "ElytraEconomy";
+	private static final DecimalFormat currencyFormat = new DecimalFormat("#0.00", DecimalFormatSymbols.getInstance(Locale.US));
 	
 	@Override
 	public boolean isEnabled() {

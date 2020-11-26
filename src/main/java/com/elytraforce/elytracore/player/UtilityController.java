@@ -11,7 +11,7 @@ public class UtilityController {
 	
 	private static UtilityController instance;
 	
-	private HashMap<ElytraPlayer, Boolean> godModeEnabled;
+	private final HashMap<ElytraPlayer, Boolean> godModeEnabled;
 	
 	private UtilityController() {
 		this.godModeEnabled = new HashMap<>();

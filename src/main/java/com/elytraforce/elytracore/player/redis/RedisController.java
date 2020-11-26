@@ -1,7 +1,7 @@
 package com.elytraforce.elytracore.player.redis;
 
 import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.config.PluginConfig;
+import com.elytraforce.elytracore.config.Config;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
@@ -14,22 +14,27 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPubSub;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.UUID;
 
 public class RedisController{
 
     private static RedisController instance;
-    private PlayerController playerController;
-    private JedisPool pool;
+    private final PlayerController playerController;
+    private final JedisPool pool;
 
     private final String CHANNEL = "channel_elytralevels";
     private final String COMMAND_CHANNEL = "channel_commands";
+    private final String BUNGEE_CHANNEL = "channel_bungee";
 
     private RedisController() {
         //Initiate connection to pool
-        String ip = PluginConfig.getRedisIP();
-        int port = PluginConfig.getRedisPort();
-        String password = PluginConfig.getRedisPassword();
+        Config config = Main.getAConfig();
+        String ip = config.redisIP;
+        int port = config.redisPort;
+        String password = config.redisPassword;
         if (password == null || password.equals(""))
             pool = new JedisPool(new JedisPoolConfig(), ip, port, 0);
         else
@@ -87,6 +92,17 @@ public class RedisController{
             public void run() {
                 try (Jedis jedis = pool.getResource()) {
                     jedis.publish(COMMAND_CHANNEL,command);
+                }
+            }
+        }.runTaskAsynchronously(Main.get());
+    }
+
+    public void redisPushToBungee(Delta delta) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try (Jedis jedis = pool.getResource()) {
+                        jedis.publish(BUNGEE_CHANNEL,encryptDelta(delta));
                 }
             }
         }.runTaskAsynchronously(Main.get());

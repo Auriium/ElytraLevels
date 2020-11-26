@@ -1,35 +1,37 @@
 package com.elytraforce.elytracore.player;
 
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-
 import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.config.PluginConfig;
+import com.elytraforce.elytracore.config.Config;
 import com.elytraforce.elytracore.events.*;
 import com.elytraforce.elytracore.player.redis.Delta;
 import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
 import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
+import com.elytraforce.elytracore.storage.SQLStorage;
 import com.elytraforce.elytracore.utils.AuriUtils;
 import com.elytraforce.elytracore.utils.MessageUtils;
 import com.elytraforce.elytracore.utils.TitleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import com.elytraforce.elytracore.storage.SQLStorage;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
+
+@SuppressWarnings("unused")
 public class PlayerController {
 
-    //TODO: transactionally based rewrite
-
     private static PlayerController instance;
-    private HashSet<ElytraPlayer> players;
+    private final HashSet<ElytraPlayer> players;
+    private final Config config;
 
     private PlayerController() {
         players = new HashSet<>();
+        config = Main.getAConfig();
     }
 
     public void playerJoined(OfflinePlayer player) {
@@ -132,7 +134,7 @@ public class PlayerController {
 
         int newLevel = player.getLevel();
 
-        if (newLevel == PluginConfig.getMaxLevel()) {
+        if (newLevel == config.maxLevel) {
             MessageUtils.maxLevelMessage(player);
             TitleUtils.sendTitle(player, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + oldLevel + " -> &e" + newLevel));
             return;
@@ -159,7 +161,7 @@ public class PlayerController {
 
         int newLevel = player.getLevel();
 
-        if (newLevel == PluginConfig.getMaxLevel()) {
+        if (newLevel == config.maxLevel) {
             MessageUtils.maxLevelMessage(player);
             TitleUtils.sendTitle(player, AuriUtils.colorString("&9&lLEVEL DOWN!"), AuriUtils.colorString("&7" + oldLevel + " -> &e" + newLevel));
             return;
@@ -214,7 +216,7 @@ public class PlayerController {
             TitleUtils.sendAnimatedSideTitle(player, "", "         &b+" + player.getDisplayedXP() + "❂", 10);
         }
 
-        if (player.getLevel() > PluginConfig.getMaxLevel()) { return; }
+        if (player.getLevel() > config.maxLevel) { return; }
 
         player.addChange(new Delta(player.getUUID(),amount, DeltaEnum.INCREASE, ValueEnum.XP));
         Bukkit.getPluginManager().callEvent(new XPEvent(player, oldXP, player.getExperience(), ChangeEnum.INCREASE));

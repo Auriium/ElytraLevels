@@ -8,7 +8,7 @@ import com.elytraforce.elytracore.events.XPEvent;
 
 public class TrackerListener implements Listener{
 	
-	private TrackerController controllerInstance;
+	private final TrackerController controllerInstance;
 	
 	public TrackerListener() {
 		this.controllerInstance = TrackerController.get();

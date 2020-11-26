@@ -7,10 +7,10 @@ import com.elytraforce.elytracore.player.ElytraPlayer;
 
 public class XPEvent extends Event {
 	
-	private ElytraPlayer player;
-	private int oldXP;
-	private int newXP;
-	private ChangeEnum change;
+	private final ElytraPlayer player;
+	private final int oldXP;
+	private final int newXP;
+	private final ChangeEnum change;
 	
 	public ElytraPlayer getElytraPlayer() { return this.player; }
 	public int getOldXP() { return this.oldXP; }

@@ -32,7 +32,7 @@ public class SocialCommand extends BaseCommand {
     public void onDiscord(Player sender) {
     	
     	if (sender instanceof Player) {
-    		ElytraPlayer player = PlayerController.get().getElytraPlayer((Player) sender);
+    		ElytraPlayer player = PlayerController.get().getElytraPlayer(sender);
     		MessageUtils.discordMessage(player);
     	}
     	

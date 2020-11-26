@@ -7,10 +7,10 @@ import com.elytraforce.elytracore.player.ElytraPlayer;
 
 public class MoneyEvent extends Event{
 	
-	private ElytraPlayer player;
-	private int oldMoney;
-	private int newMoney;
-	private ChangeEnum change;
+	private final ElytraPlayer player;
+	private final int oldMoney;
+	private final int newMoney;
+	private final ChangeEnum change;
 	
 	public ElytraPlayer getElytraPlayer() { return this.player; }
 	public int getOldMoney() { return this.oldMoney; }

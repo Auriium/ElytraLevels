@@ -1,6 +1,7 @@
 package com.elytraforce.elytracore.player;
 
 import com.elytraforce.elytracore.player.redis.Delta;
+import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
 import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
 import org.bukkit.ChatColor;
@@ -31,7 +32,7 @@ public class ElytraPlayer {
     private BukkitTask displayedTask;
     private BukkitTask displayedTitleTask;
 
-    private ArrayList<Delta> queuedChanges;
+    private final ArrayList<Delta> queuedChanges;
     
     public Player asBukkitPlayer() {
     	if (player.isOnline()) {
@@ -90,6 +91,7 @@ public class ElytraPlayer {
 	}
 
 	public void adjust(Delta delta) {
+		RedisController.get().redisPushToBungee(delta);
     	int amount = delta.getAmount(); if (delta.getChange().equals(DeltaEnum.DECREASE)) { amount = Math.negateExact(amount); }
 		//interpret delta and adjust based on it
 		switch (delta.getType()) {

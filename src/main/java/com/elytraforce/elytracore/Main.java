@@ -3,11 +3,10 @@ package com.elytraforce.elytracore;
 import co.aikar.commands.MessageType;
 import com.elytraforce.aUtils.ALogger;
 import com.elytraforce.aUtils.AUtil;
-import com.elytraforce.aUtils.config.AConfig;
-import com.elytraforce.aUtils.particles.AParticles;
 import com.elytraforce.elytracore.config.Config;
 import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.utils.AuriUtils;
+import com.elytraforce.elytracore.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,7 +17,6 @@ import org.ipvp.canvas.MenuFunctionListener;
 import com.elytraforce.elytracore.commands.BalanceCommand;
 import com.elytraforce.elytracore.bossbar.MatchBarController;
 import com.elytraforce.elytracore.commands.*;
-import com.elytraforce.elytracore.config.PluginConfig;
 import com.elytraforce.elytracore.hooks.ElytraEconomy;
 import com.elytraforce.elytracore.hooks.ElytraPlaceholder;
 import com.elytraforce.elytracore.matchtracker.TrackerController;
@@ -40,12 +38,14 @@ public class Main extends JavaPlugin {
 
 	public static String pluginName;
 	private static Main instance;
+	private static Config config;
 
 	public static ElytraEconomy economyImplementation;
 	
 	public static Main get() {
 		return instance;
 	}
+	public static Config getAConfig() { return config; }
 
 	public static AUtil util;
 	
@@ -53,15 +53,16 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		Main.instance = this;
 		Main.pluginName = "[ElytraLevels]";
-        AUtil.newUtil().using(this);
 
+        AUtil.newUtil().using(this);
         ALogger.logError("test");
 		
 		/*getConfig().options().copyDefaults(true);
         saveDefaultConfig();
         reloadConfig();*/
 
-        new Config().create().load();
+        config = new Config();
+        config.create().load();
 
         SQLStorage.get();
         PlayerController.get();
@@ -71,7 +72,7 @@ public class Main extends JavaPlugin {
         MatchBarController.get();
         RestartController.get();
         RestartController.get().onEnable();
-        
+
         for (Player player : this.getServer().getOnlinePlayers()) {
         	if (PlayerController.get().getElytraPlayer(player) == null) {
                 PlayerController.get().playerJoined(player);
@@ -88,9 +89,9 @@ public class Main extends JavaPlugin {
 
                 RedisController.get().redisPushChanges(player);
             }
-        }, PluginConfig.getAutosaveInterval() * 60L * 20L, PluginConfig.getAutosaveInterval() * 60L * 20L);
+        }, config.autosaveInterval * 60L * 20L, config.autosaveInterval * 60L * 20L);
         
-        if (PluginConfig.isLobby()) {
+        if (config.isLobby) {
         	Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
                 for (ElytraPlayer player : PlayerController.get().getPlayers()) {
                     try {
@@ -125,7 +126,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new TrackerListener(), this);
         Bukkit.getPluginManager().registerEvents(new MenuFunctionListener(), this);
         
-        if (PluginConfig.isEconomyEnabled()) {
+        if (config.isEconomyEnabled) {
         	if (getServer().getPluginManager().getPlugin("Vault") != null) {
         		Bukkit.getServer().getServicesManager().register(Economy.class, economyImplementation = new ElytraEconomy(), getServer().getPluginManager().getPlugin("Vault"), ServicePriority.High);
         		commandManager.registerCommand(new EcoCommand(this));

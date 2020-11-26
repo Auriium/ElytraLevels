@@ -24,7 +24,7 @@ public class RestartController {
 	private LocalDateTime nextRestartTime;
     private ScheduledExecutorService executor;
     
-    private Main main;
+    private final Main main;
     private static RestartController instance;
     
     public RestartController(Main plugin) {

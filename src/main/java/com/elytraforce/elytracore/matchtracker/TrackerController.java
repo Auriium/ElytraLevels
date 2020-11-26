@@ -16,7 +16,7 @@ public class TrackerController {
 	//CALL THE CORRECT EVENTS when ever something happens.
 
 	private static TrackerController instance;
-	private HashMap<UUID, MatchTracker> trackers;
+	private final HashMap<UUID, MatchTracker> trackers;
 	
 	private TrackerController() {
 		this.trackers = new HashMap<>();

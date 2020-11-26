@@ -2,18 +2,18 @@ package com.elytraforce.elytracore.rewards;
 
 import java.util.List;
 
+import com.elytraforce.elytracore.Main;
 import org.bukkit.Bukkit;
-import com.elytraforce.elytracore.config.PluginConfig;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.utils.AuriUtils;
 
 public class RewardData {
 	
-	private List<String> description;
-	private List<String> commands;
-	private List<String> servers;
-	private String name;
-	private Integer level;
+	private final List<String> description;
+	private final List<String> commands;
+	private final List<String> servers;
+	private final String name;
+	private final Integer level;
 	
 	public List<String> getDescription() { return this.description; }
 	public List<String> getCommands() { return this.commands; } 
@@ -31,27 +31,17 @@ public class RewardData {
 	}
 	
 	public boolean isCorrectServer() {
-		if (this.servers.contains(PluginConfig.getServerName())) {
+		if (this.servers.contains(Main.getAConfig().serverName)) {
 			return true;
-		} else if (this.servers.contains("all")) {
-			return true;
-		} else {
-			return false;
-		}
+		} else return this.servers.contains("all");
 	}
 	
 	public boolean canUnlock(ElytraPlayer player) {
-		if (player.getLevel() >= level) {
-			return true;
-		} else {
-			return false;
-		}
+		return player.getLevel() >= level;
 	}
 	
 	public boolean hasUnlocked(ElytraPlayer player) {
-		if (player.getUnlockedRewards().contains(this.level)) { return true; }
-		
-		return false;
+		return player.getUnlockedRewards().contains(this.level);
 	}
 	
 	public void unlock(ElytraPlayer player) {

@@ -8,12 +8,12 @@ import org.bukkit.event.HandlerList;
 
 public class MatchKillEvent extends Event {
 
-    private ElytraPlayer killer;
-    private ElytraPlayer killed;
-    private int oldKills;
-    private int newKills;
-    private ChangeEnum change;
-    private String reason;
+    private final ElytraPlayer killer;
+    private final ElytraPlayer killed;
+    private final int oldKills;
+    private final int newKills;
+    private final ChangeEnum change;
+    private final String reason;
 
     public ElytraPlayer getKiller() { return this.killer; }
     public ElytraPlayer getKilled() { return this.killed; }

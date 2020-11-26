@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ElytraPlaceholder extends PlaceholderExpansion{
 
-	private Main main;
+	private final Main main;
 
     public ElytraPlaceholder(Main plugin){
         this.main = plugin;
