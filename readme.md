@@ -21,4 +21,4 @@ elytraforce network.
 - Add the different gamemodes to the EF stat GUI
 - Promotion and Demotion menu
 - Set up supa fancy killfeeds
-- Speed command
+

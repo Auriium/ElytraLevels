@@ -1,27 +1,18 @@
 package com.elytraforce.elytracore.player;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.elytraforce.elytracore.player.redis.Delta;
 import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
 import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.config.PluginConfig;
-import com.elytraforce.elytracore.events.ChangeEnum;
-import com.elytraforce.elytracore.events.LevelEvent;
-import com.elytraforce.elytracore.events.MoneyEvent;
-import com.elytraforce.elytracore.events.XPEvent;
-import com.elytraforce.elytracore.utils.AuriUtils;
-import com.elytraforce.elytracore.utils.MessageUtils;
-import com.elytraforce.elytracore.utils.TitleUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 public class ElytraPlayer {

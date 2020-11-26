@@ -1,8 +1,15 @@
 package com.elytraforce.elytracore;
 
+import co.aikar.commands.MessageType;
+import com.elytraforce.aUtils.ALogger;
+import com.elytraforce.aUtils.AUtil;
+import com.elytraforce.aUtils.config.AConfig;
+import com.elytraforce.aUtils.particles.AParticles;
+import com.elytraforce.elytracore.config.Config;
 import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.utils.AuriUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,15 +46,22 @@ public class Main extends JavaPlugin {
 	public static Main get() {
 		return instance;
 	}
+
+	public static AUtil util;
 	
 	@Override
 	public void onEnable() {
 		Main.instance = this;
 		Main.pluginName = "[ElytraLevels]";
+        AUtil.newUtil().using(this);
+
+        ALogger.logError("test");
 		
-		getConfig().options().copyDefaults(true);
+		/*getConfig().options().copyDefaults(true);
         saveDefaultConfig();
-        reloadConfig();
+        reloadConfig();*/
+
+        new Config().create().load();
 
         SQLStorage.get();
         PlayerController.get();
@@ -90,9 +104,15 @@ public class Main extends JavaPlugin {
                 }
             }, 20L, 20L);
         }
+
         
 
         PaperCommandManager commandManager = new PaperCommandManager(this);
+        commandManager.setFormat(MessageType.ERROR, ChatColor.RED, ChatColor.AQUA);
+        commandManager.setFormat(MessageType.SYNTAX, ChatColor.GRAY,ChatColor.AQUA,ChatColor.GRAY);
+        commandManager.setFormat(MessageType.INFO,ChatColor.GRAY,ChatColor.AQUA,ChatColor.GRAY);
+        commandManager.setFormat(MessageType.HELP, ChatColor.GRAY,ChatColor.AQUA,ChatColor.GRAY);
+
         commandManager.registerCommand(new LevelCommand(this));
         commandManager.registerCommand(new BalanceCommand(this));
         

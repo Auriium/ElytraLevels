@@ -7,6 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.utils.AuriUtils;
 
+/*
 public class PluginConfig {
 
     private static final FileConfiguration config;
@@ -65,3 +66,4 @@ public class PluginConfig {
 
 }
 
+*/
