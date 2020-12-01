@@ -1,12 +1,13 @@
 package com.elytraforce.elytracore.player.redis;
 
+import com.elytraforce.aUtils.ALogger;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.config.Config;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
 import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
-import com.elytraforce.elytracore.utils.AuriUtils;
+import com.elytraforce.elytracore.storage.SQLStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import redis.clients.jedis.Jedis;
@@ -28,6 +29,7 @@ public class RedisController{
     private final String CHANNEL = "channel_elytralevels";
     private final String COMMAND_CHANNEL = "channel_commands";
     private final String BUNGEE_CHANNEL = "channel_bungee";
+    private final String LOAD_DATA_CHANNEL = "channel_data";
 
     private RedisController() {
         //Initiate connection to pool
@@ -43,11 +45,12 @@ public class RedisController{
         new BukkitRunnable() {
             public void run() {
                 try (Jedis jedis = pool.getResource()){
-                    jedis.subscribe(new RedisListener(),CHANNEL);
+                    /*jedis.subscribe(new RedisListener(),CHANNEL);*/
+                    jedis.subscribe(new DataChangeListener(), LOAD_DATA_CHANNEL);
                     jedis.subscribe(new CommandListener(),COMMAND_CHANNEL);
                 } catch (Exception e) {
-                    AuriUtils.logError("Error connecting to redis - " + e.getMessage());
-                    AuriUtils.logError("Broken redis pool");
+                    ALogger.logError("Error connecting to redis - " + e.getMessage());
+                    ALogger.logError("Broken redis pool");
                 }
             }
         }.runTaskAsynchronously(Main.get());
@@ -56,7 +59,7 @@ public class RedisController{
     }
 
     public String encryptDelta(Delta delta) {
-        return delta.getAmount() + ":" + delta.getChange().name() + ":" + delta.getType().name();
+        return delta.getTarget() + ":" + delta.getAmount() + ":" + delta.getChange().name() + ":" + delta.getType().name();
     }
 
     public Delta decryptDelta(String string) {
@@ -69,7 +72,7 @@ public class RedisController{
     }
 
     //THESE MUST ALL BE OF THE SAME TYPE AND UUID (please clean up this shitshow of a utility method)
-    public Delta combineDelta(ArrayList<Delta> deltas) {
+    /*public Delta combineDelta(ArrayList<Delta> deltas) {
 
         int amount = 0;
         DeltaEnum type = DeltaEnum.INCREASE;
@@ -84,7 +87,7 @@ public class RedisController{
         }
 
         return new Delta(deltas.get(0).getTarget(),amount,type,deltas.get(0).getType());
-    }
+    }*/
 
     public void broadcastCommand(String command) {
         new BukkitRunnable() {
@@ -108,36 +111,29 @@ public class RedisController{
         }.runTaskAsynchronously(Main.get());
     }
 
-    public void redisPushChanges(ElytraPlayer player) {
-        HashSet<String> updates = new HashSet<>();
-        HashSet<Delta> gathered = new HashSet<>();
-        player.getChanges().forEach(d -> {
-           updates.add(this.encryptDelta(d));
-           gathered.add(d);
-        }); player.getChanges().removeAll(gathered);
-
+    public void redisOnSQLFinish(ElytraPlayer player) {
         new BukkitRunnable() {
             @Override
             public void run() {
                 try (Jedis jedis = pool.getResource()) {
-                    for (String string : updates) {
-                        jedis.publish(CHANNEL,string);
-                    }
+                    jedis.publish(LOAD_DATA_CHANNEL,player.getUUID().toString());
                 }
             }
         }.runTaskAsynchronously(Main.get());
     }
 
-    public class RedisListener extends JedisPubSub {
+    public static class DataChangeListener extends JedisPubSub {
         @Override
         public void onMessage(String channel, final String msg) {
-            Delta del = decryptDelta(msg);
-            ElytraPlayer target = PlayerController.get().getElytraPlayer(del.getTarget());
-            if (target != null) { target.adjust(del); }
+            ALogger.logInfo("Loading player via jedispubsub complete message!");
+            ElytraPlayer target = PlayerController.get().getElytraPlayer(UUID.fromString(msg));
+            if (target != null) {
+                SQLStorage.get().adjustPlayerAfterRedis(target);
+            }
         }
     }
 
-    public class CommandListener extends JedisPubSub {
+    public static class CommandListener extends JedisPubSub {
         @Override
         public void onMessage(String channel, final String msg) {
             new BukkitRunnable() {

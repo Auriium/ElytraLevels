@@ -1,9 +1,8 @@
 package com.elytraforce.elytracore.events;
 
+import com.elytraforce.elytracore.player.ElytraPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import com.elytraforce.elytracore.player.ElytraPlayer;
 
 public class LevelEvent extends Event{
 	

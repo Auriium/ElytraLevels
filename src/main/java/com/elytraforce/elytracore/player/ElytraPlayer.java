@@ -1,5 +1,6 @@
 package com.elytraforce.elytracore.player;
 
+import com.elytraforce.aUtils.ALogger;
 import com.elytraforce.elytracore.player.redis.Delta;
 import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
@@ -91,7 +92,6 @@ public class ElytraPlayer {
 	}
 
 	public void adjust(Delta delta) {
-		RedisController.get().redisPushToBungee(delta);
     	int amount = delta.getAmount(); if (delta.getChange().equals(DeltaEnum.DECREASE)) { amount = Math.negateExact(amount); }
 		//interpret delta and adjust based on it
 		switch (delta.getType()) {
@@ -107,8 +107,16 @@ public class ElytraPlayer {
 		}
 	}
 
+	public void adjustFromPlayer(ElytraPlayer player) {
+    	this.level = player.getLevel();
+    	this.experience = player.getExperience();
+    	this.money = player.getMoney();
+    	this.unlockedRewards = player.getUnlockedRewards();
+	}
+
 	public void addChange(Delta delta) {
 		this.queuedChanges.add(delta);
+		RedisController.get().redisPushToBungee(delta);
 	}
 
 	public void removeChange(Delta delta) {

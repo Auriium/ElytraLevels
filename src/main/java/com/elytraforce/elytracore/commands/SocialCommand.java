@@ -1,17 +1,15 @@
 package com.elytraforce.elytracore.commands;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.player.ElytraPlayer;
-import com.elytraforce.elytracore.player.PlayerController;
-import com.elytraforce.elytracore.utils.MessageUtils;
-
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
+import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.player.ElytraPlayer;
+import com.elytraforce.elytracore.player.PlayerController;
+import com.elytraforce.elytracore.utils.MessageUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @CommandAlias("socials")
 public class SocialCommand extends BaseCommand {

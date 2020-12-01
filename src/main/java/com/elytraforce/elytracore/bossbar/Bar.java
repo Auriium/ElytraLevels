@@ -1,9 +1,8 @@
 package com.elytraforce.elytracore.bossbar;
 
+import com.elytraforce.elytracore.matchtracker.TrackablePlayer;
 import org.bukkit.boss.BossBar;
 import org.bukkit.scheduler.BukkitTask;
-
-import com.elytraforce.elytracore.matchtracker.TrackablePlayer;
 
 public class Bar {
 	

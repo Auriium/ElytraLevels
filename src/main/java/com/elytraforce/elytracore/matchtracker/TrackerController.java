@@ -1,14 +1,14 @@
 package com.elytraforce.elytracore.matchtracker;
 
+import com.elytraforce.aUtils.ALogger;
+import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.player.ElytraPlayer;
+import org.bukkit.Bukkit;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.player.ElytraPlayer;
-import com.elytraforce.elytracore.utils.AuriUtils;
 
 public class TrackerController {
 	
@@ -32,7 +32,7 @@ public class TrackerController {
 	
 	public void beginTracker(UUID gameID, ArrayList<ElytraPlayer> players) {
 		if (trackers.containsKey(gameID)) {
-			AuriUtils.logError("Tracker attempted to track a game id that already exists");
+			ALogger.logError("Tracker attempted to track a game id that already exists");
 			return;
 		}
 		
@@ -43,7 +43,7 @@ public class TrackerController {
 	
 	public void addToTracker(UUID gameID, ElytraPlayer player) {
 		if (!trackers.containsKey(gameID)) {
-			AuriUtils.logError("Tracker attempted to add a user to game id that does not exists");
+			ALogger.logError("Tracker attempted to add a user to game id that does not exists");
 		}
 		
 		trackers.get(gameID).addPlayer(player);
@@ -51,7 +51,7 @@ public class TrackerController {
 	
 	public void removeFromTracker(UUID gameID, ElytraPlayer player) {
 		if (!trackers.containsKey(gameID)) {
-			AuriUtils.logError("Tracker attempted to remove a user to game id that does not exists");
+			ALogger.logError("Tracker attempted to remove a user to game id that does not exists");
 		}
 		
 		trackers.get(gameID).removePlayer(player);
@@ -59,7 +59,7 @@ public class TrackerController {
 	
 	public void endTracker(UUID gameID,MatchMenu menu) {
 		if (!trackers.containsKey(gameID)) {
-			AuriUtils.logError("Tracker attempted to end a game id that does not exists");
+			ALogger.logError("Tracker attempted to end a game id that does not exists");
 			return;
 		}
 		

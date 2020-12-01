@@ -1,11 +1,11 @@
 package com.elytraforce.elytracore.rewards;
 
-import java.util.List;
-
+import com.elytraforce.aUtils.chat.AChat;
 import com.elytraforce.elytracore.Main;
-import org.bukkit.Bukkit;
 import com.elytraforce.elytracore.player.ElytraPlayer;
-import com.elytraforce.elytracore.utils.AuriUtils;
+import org.bukkit.Bukkit;
+
+import java.util.List;
 
 public class RewardData {
 	
@@ -19,7 +19,7 @@ public class RewardData {
 	public List<String> getCommands() { return this.commands; } 
 	public List<String> getServers() { return this.servers; }
 	public String getName() { return this.name; }
-	public String getNameFormatted() { return this.name.replaceAll("%level%", AuriUtils.colorString("&e&l") + this.level.toString()); }
+	public String getNameFormatted() { return this.name.replaceAll("%level%", AChat.colorString("&e&l") + this.level.toString()); }
 	public int getLevel() { return this.level; }
 	
 	public RewardData(Integer level, String name, List<String> description, List<String> servers, List<String> commands) {

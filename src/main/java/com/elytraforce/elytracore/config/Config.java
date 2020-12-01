@@ -17,7 +17,7 @@ public class Config extends AConfig {
     @ConfigField(location = "database.port")
     public int databasePort = 3306;
     @ConfigField(location = "database.password")
-    public String databasePassword = "cum";
+    public String databasePassword = "DX$;xFeuZ7YAyre`";
     @ConfigField(location = "database-interval")
     public long autosaveInterval = 2;
     @ConfigField(location = "is-hub")

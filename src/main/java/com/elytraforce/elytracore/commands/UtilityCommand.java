@@ -1,24 +1,16 @@
 package com.elytraforce.elytracore.commands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.player.UtilityController;
-import com.elytraforce.elytracore.utils.AuriUtils;
 import com.elytraforce.elytracore.utils.MessageUtils;
-
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.Subcommand;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
 public class UtilityCommand extends BaseCommand{
@@ -60,13 +52,13 @@ public class UtilityCommand extends BaseCommand{
     
     @CommandAlias("teleporthere|tphere")
 	@Subcommand("teleporthere")
-    @Description("Check a player's inventory") 
+    @Description("Teleport there or here!") 
     @CommandPermission("elytraforce.mod")
     @CommandCompletion("@players ")
     public void onTPHere(Player sender, String t) {
     		ElytraPlayer player = PlayerController.get().getElytraPlayer(sender);
 
-    		if (t == null) { AuriUtils.sendMessage(player, Main.getAConfig().pluginPrefix + "&cTarget must be a player!"); return;}
+    		if (t == null) { sender.sendMessage(Main.getAConfig().pluginPrefix + "&cTarget must be a player!"); return; }
     		
     		try {
 				ElytraPlayer target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(t));
@@ -78,14 +70,14 @@ public class UtilityCommand extends BaseCommand{
     
     @CommandAlias("teleport|tp")
 	@Subcommand("teleport")
-    @Description("Check a player's inventory") 
+    @Description("Teleport to someone!") 
     @CommandPermission("elytraforce.mod")
     @CommandCompletion("@players ")
     public void onTP(Player sender, String t) {
 
     		ElytraPlayer player = PlayerController.get().getElytraPlayer(sender);
 
-    		if (t == null) { AuriUtils.sendMessage(player, Main.getAConfig().pluginPrefix + "&cTarget must be a player!"); return;}
+    		if (t == null) { sender.sendMessage(Main.getAConfig().pluginPrefix + "&cTarget must be a player!"); return; }
     		
     		try {
 				ElytraPlayer target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(t));
@@ -105,7 +97,7 @@ public class UtilityCommand extends BaseCommand{
 
     		ElytraPlayer player = PlayerController.get().getElytraPlayer(sender);
 
-    		if (t == null) { AuriUtils.sendMessage(player, Main.getAConfig().pluginPrefix + "&cTarget must be a player!"); return;}
+    		if (t == null) { sender.sendMessage(Main.getAConfig().pluginPrefix + "&cTarget must be a player!"); return; }
     		
     		try {
 				ElytraPlayer target = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(t));

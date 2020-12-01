@@ -1,5 +1,6 @@
 package com.elytraforce.elytracore.player;
 
+import com.elytraforce.aUtils.chat.AChat;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.config.Config;
 import com.elytraforce.elytracore.events.*;
@@ -8,7 +9,6 @@ import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
 import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
 import com.elytraforce.elytracore.storage.SQLStorage;
-import com.elytraforce.elytracore.utils.AuriUtils;
 import com.elytraforce.elytracore.utils.MessageUtils;
 import com.elytraforce.elytracore.utils.TitleUtils;
 import org.bukkit.Bukkit;
@@ -58,14 +58,7 @@ public class PlayerController {
 
     public void playerQuit(ElytraPlayer player) {
 
-        if (player.isInDatabase()) {
-            SQLStorage.get().updatePlayer(player, true);
-        } else {
-            SQLStorage.get().insertPlayer(player, true);
-        }
-
-        RedisController.get().redisPushChanges(player);
-
+        SQLStorage.get().playerQuit(player);
         players.remove(player);
         Bukkit.getPluginManager().callEvent(new ElytraPlayerQuitEvent(player));
     }
@@ -136,12 +129,12 @@ public class PlayerController {
 
         if (newLevel == config.maxLevel) {
             MessageUtils.maxLevelMessage(player);
-            TitleUtils.sendTitle(player, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + oldLevel + " -> &e" + newLevel));
+            TitleUtils.sendTitle(player, AChat.colorString("&9&lLEVEL UP!"), AChat.colorString("&7" + oldLevel + " -> &e" + newLevel));
             return;
         }
 
         if (sendMessage) { MessageUtils.addLevelMessage(player); }
-        if (title) {TitleUtils.sendTitle(player, AuriUtils.colorString("&9&lLEVEL UP!"), AuriUtils.colorString("&7" + oldLevel + " -> &e" + newLevel)); }
+        if (title) {TitleUtils.sendTitle(player, AChat.colorString("&9&lLEVEL UP!"), AChat.colorString("&7" + oldLevel + " -> &e" + newLevel)); }
 
         Bukkit.getPluginManager().callEvent(new LevelEvent(player, oldLevel, newLevel, ChangeEnum.INCREASE));
     }
@@ -163,12 +156,12 @@ public class PlayerController {
 
         if (newLevel == config.maxLevel) {
             MessageUtils.maxLevelMessage(player);
-            TitleUtils.sendTitle(player, AuriUtils.colorString("&9&lLEVEL DOWN!"), AuriUtils.colorString("&7" + oldLevel + " -> &e" + newLevel));
+            TitleUtils.sendTitle(player, AChat.colorString("&9&lLEVEL DOWN!"), AChat.colorString("&7" + oldLevel + " -> &e" + newLevel));
             return;
         }
 
         if (sendMessage) { MessageUtils.removeLevelMessage(player); }
-        if (title) {TitleUtils.sendTitle(player, AuriUtils.colorString("&9&lLEVEL DOWN!"), AuriUtils.colorString("&7" + oldLevel + " -> &e" + newLevel)); }
+        if (title) {TitleUtils.sendTitle(player, AChat.colorString("&9&lLEVEL DOWN!"), AChat.colorString("&7" + oldLevel + " -> &e" + newLevel)); }
 
         Bukkit.getPluginManager().callEvent(new LevelEvent(player, oldLevel, newLevel, ChangeEnum.DECREASE));
     }
@@ -222,8 +215,8 @@ public class PlayerController {
         Bukkit.getPluginManager().callEvent(new XPEvent(player, oldXP, player.getExperience(), ChangeEnum.INCREASE));
 
         while (player.canLevelUp()) {
-            player.addChange(new Delta(player.getUUID(),player.getExperience() - player.getRequiredXPToNextLevel(), DeltaEnum.DECREASE, ValueEnum.XP));
-            player.addChange(new Delta(player.getUUID(),1,DeltaEnum.INCREASE,ValueEnum.LEVEL));
+            player.addChange(new Delta(player.getUUID(),player.getRequiredXPToNextLevel(), DeltaEnum.DECREASE, ValueEnum.XP));
+            this.addLevel(player,1,true,true);
         }
     }
 

@@ -1,13 +1,15 @@
 package com.elytraforce.elytracore.storage;
 
+import com.elytraforce.aUtils.database.Database;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.config.Config;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
+import com.elytraforce.elytracore.player.redis.Delta;
+import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import dev.magicmq.rappu.Database;
 import org.bukkit.OfflinePlayer;
 
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -48,10 +51,7 @@ public class SQLStorage {
 
     public void shutdown() {
         for (ElytraPlayer player : PlayerController.get().getPlayers()) {
-            if (player.isInDatabase())
-                updatePlayer(player, false);
-            else
-                insertPlayer(player, false);
+            this.playerQuit(player);
         }
         database.close();
     }
@@ -111,7 +111,7 @@ public class SQLStorage {
      */
     public void updatePlayerCached(ElytraPlayer changedPlayer) {
         this.playerCache.put(changedPlayer.asOfflinePlayer(), changedPlayer);
-        this.updatePlayer(changedPlayer, true);
+        this.playerUpdate(changedPlayer);
     }
 
     // // // // // // // // // // // // /// // // // // // // //
@@ -135,54 +135,97 @@ public class SQLStorage {
         });
     }
 
-    public void insertPlayer(ElytraPlayer player, boolean async) {
-        String sql = "INSERT INTO `levels_player` ";
-        sql += "(`player_uuid`, `level`, `experience`, `money`, `unlocked_rewards`) ";
-        sql += "VALUES (?, ?, ?, ?, ?);";
-        Object[] toSet = new Object[]{
-                player.getUUID().toString(),
-                player.getLevel(),
-                player.getExperience(),
-                player.getMoney(),
-                gson.toJson(player.getUnlockedRewards())
-        };
-        executeUpdate(player, sql, toSet, async);
+    public void playerUpdate(ElytraPlayer player) {
+        String sql;
+        Object[] toSet;
+
+        if (player.isInDatabase()) {
+            sql = "UPDATE `levels_player` SET ";
+            sql += "`level` = `level` + ?, `experience` = `experience` + ?, `money` = `money` + ?, `unlocked_rewards` = ? ";
+            sql += "WHERE `player_uuid` = ?;";
+
+            int level = player.getCachedDeltaData(ValueEnum.LEVEL);
+            int money = player.getCachedDeltaData(ValueEnum.MONEY);
+            int exp = player.getCachedDeltaData(ValueEnum.XP);
+
+            HashSet<Delta> gathered = new HashSet<>();
+            player.getChanges().forEach(d -> {
+                player.adjust(d);
+                gathered.add(d);
+            }); player.getChanges().removeAll(gathered);
+
+            toSet = new Object[]{
+                    level,
+                    exp,
+                    money,
+                    gson.toJson(player.getUnlockedRewards()),
+                    player.getUUID().toString()
+            };
+
+        } else {
+            sql = "INSERT INTO `levels_player` ";
+            sql += "(`player_uuid`, `level`, `experience`, `money`, `unlocked_rewards`) ";
+            sql += "VALUES (?, ?, ?, ?, ?);";
+            toSet = new Object[]{
+                    player.getUUID().toString(),
+                    player.getLevel(),
+                    player.getExperience(),
+                    player.getMoney(),
+                    gson.toJson(player.getUnlockedRewards())
+            };
+        }
+
+        database.updateAsync(sql, toSet, integer -> {
+            player.setInDatabase(true);
+        });
     }
 
-    public void updatePlayer(ElytraPlayer player, boolean async) {
-        String sql = "UPDATE `levels_player` SET ";
-        sql += "`level` = `level` + ?, `experience` = `experience` + ?, `money` = `money` + ?, `unlocked_rewards` = ? ";
-        sql += "WHERE `player_uuid` = ?;";
+    //TODO: fix redis
+    public void playerQuit(ElytraPlayer player) {
+        String sql;
+        Object[] toSet;
 
-        int level = player.getCachedDeltaData(ValueEnum.LEVEL);
-        int money = player.getCachedDeltaData(ValueEnum.MONEY);
-        int exp = player.getCachedDeltaData(ValueEnum.XP);
+        if (player.isInDatabase()) {
+            sql = "UPDATE `levels_player` SET ";
+            sql += "`level` = `level` + ?, `experience` = `experience` + ?, `money` = `money` + ?, `unlocked_rewards` = ? ";
+            sql += "WHERE `player_uuid` = ?;";
 
-        Object[] toSet = new Object[]{
-                level,
-                exp,
-                money,
-                gson.toJson(player.getUnlockedRewards()),
-                player.getUUID().toString()
-        };
-        executeUpdate(player, sql, toSet, async);
+            int level = player.getCachedDeltaData(ValueEnum.LEVEL);
+            int money = player.getCachedDeltaData(ValueEnum.MONEY);
+            int exp = player.getCachedDeltaData(ValueEnum.XP);
+
+            HashSet<Delta> gathered = new HashSet<>();
+            player.getChanges().forEach(d -> {
+                player.adjust(d);
+                gathered.add(d);
+            }); player.getChanges().removeAll(gathered);
+
+            toSet = new Object[]{
+                    level,
+                    exp,
+                    money,
+                    gson.toJson(player.getUnlockedRewards()),
+                    player.getUUID().toString()
+            };
+
+        } else {
+            sql = "INSERT INTO `levels_player` ";
+            sql += "(`player_uuid`, `level`, `experience`, `money`, `unlocked_rewards`) ";
+            sql += "VALUES (?, ?, ?, ?, ?);";
+            toSet = new Object[]{
+                    player.getUUID().toString(),
+                    player.getLevel(),
+                    player.getExperience(),
+                    player.getMoney(),
+                    gson.toJson(player.getUnlockedRewards())
+            };
+        }
+
+        database.updateAsync(sql, toSet, integer -> {
+            player.setInDatabase(true);
+            RedisController.get().redisOnSQLFinish(player);
+        });
     }
-
-    @Deprecated
-    //public void updatePlayer(ElytraPlayer player, boolean async) {
-    //    String sql = "UPDATE `levels_player` SET ";
-    //    sql += "`level` = ?, `experience` = ?, `money` = ?, `unlocked_rewards` = ? ";
-    //    sql += "WHERE `player_uuid` = ?;";
-    //
-    //    Object[] toSet = new Object[]{
-    //            player.getLevel(),
-    //            player.getExperience(),
-    //            player.getMoney(),
-    //            gson.toJson(player.getUnlockedRewards()),
-    //            player.getUUID().toString()
-    //    };
-    //    executeUpdate(player, sql, toSet, async);
-    //}
 
     private void executeUpdate(ElytraPlayer player, String sql, Object[] toSet, boolean async) {
         if (async)

@@ -1,22 +1,12 @@
 package com.elytraforce.elytracore;
 
 import co.aikar.commands.MessageType;
+import co.aikar.commands.PaperCommandManager;
 import com.elytraforce.aUtils.ALogger;
 import com.elytraforce.aUtils.AUtil;
-import com.elytraforce.elytracore.config.Config;
-import com.elytraforce.elytracore.player.redis.RedisController;
-import com.elytraforce.elytracore.utils.AuriUtils;
-import com.elytraforce.elytracore.utils.MessageUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.ipvp.canvas.MenuFunctionListener;
-
-import com.elytraforce.elytracore.commands.BalanceCommand;
 import com.elytraforce.elytracore.bossbar.MatchBarController;
 import com.elytraforce.elytracore.commands.*;
+import com.elytraforce.elytracore.config.Config;
 import com.elytraforce.elytracore.hooks.ElytraEconomy;
 import com.elytraforce.elytracore.hooks.ElytraPlaceholder;
 import com.elytraforce.elytracore.matchtracker.TrackerController;
@@ -24,12 +14,17 @@ import com.elytraforce.elytracore.matchtracker.TrackerListener;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.GUIController;
 import com.elytraforce.elytracore.player.PlayerController;
+import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.rewards.RewardController;
 import com.elytraforce.elytracore.storage.SQLStorage;
 import com.elytraforce.elytracore.timedrestart.RestartController;
-
-import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.ServicePriority;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.ipvp.canvas.MenuFunctionListener;
 
 
 public class Main extends JavaPlugin {
@@ -82,12 +77,7 @@ public class Main extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
 
             for (ElytraPlayer player : PlayerController.get().getPlayers()) {
-                if (player.isInDatabase())
-                    SQLStorage.get().updatePlayer(player, true);
-                else
-                    SQLStorage.get().insertPlayer(player, true);
-
-                RedisController.get().redisPushChanges(player);
+                SQLStorage.get().playerUpdate(player);
             }
         }, config.autosaveInterval * 60L * 20L, config.autosaveInterval * 60L * 20L);
         
@@ -98,8 +88,9 @@ public class Main extends JavaPlugin {
                         player.asBukkitPlayer().setLevel(player.getLevel());
                         player.asBukkitPlayer().setExp(0);
                     } catch (NullPointerException e) {
-                        AuriUtils.logError("The Main Class has an error regarding setting level and xp (NPE)");
-                        AuriUtils.logError(e.toString());
+                        ALogger.logError("The Main Class has an error regarding setting level and xp (NPE)");
+                        ALogger.logError(e.toString());
+                        
                     }
 
                 }
@@ -136,10 +127,7 @@ public class Main extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
           new ElytraPlaceholder(this).register();
         }  
-        
-        //Now enable bungee incoming
-        //RedisAccepter.get();
-        //RedisAccepter.get().sendRequest("test");
+
 	}
 	@Override
 	public void onDisable() {

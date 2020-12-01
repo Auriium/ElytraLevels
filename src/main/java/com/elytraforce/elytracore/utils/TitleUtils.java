@@ -1,10 +1,10 @@
 package com.elytraforce.elytracore.utils;
 
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-
+import com.elytraforce.aUtils.chat.AChat;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.ElytraPlayer;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 public class TitleUtils {
 	
@@ -12,7 +12,7 @@ public class TitleUtils {
 		if (player.getDisplayedTitleTask() != null) {
 			player.getDisplayedTitleTask().cancel();
 		}
-		player.asBukkitPlayer().sendTitle(AuriUtils.colorString(top), AuriUtils.colorString(bottom), 10, 10, 10);
+		player.asBukkitPlayer().sendTitle(AChat.colorString(top), AChat.colorString(bottom), 10, 10, 10);
 	}
 	
 	public static void sendAnimatedSideTitle(ElytraPlayer player, String top, String bottom, int length) {
@@ -32,7 +32,7 @@ public class TitleUtils {
 			        }
 					StringBuilder sb2 = sb;
 					
-					player.asBukkitPlayer().sendTitle(AuriUtils.colorString(sb.append(top).toString()), AuriUtils.colorString(sb2.append(bottom).toString()), 0, 10, 10);
+					player.asBukkitPlayer().sendTitle(AChat.colorString(sb.append(top).toString()), AChat.colorString(sb2.append(bottom).toString()), 0, 10, 10);
 					
 					i--;
 				}
@@ -55,7 +55,7 @@ public class TitleUtils {
 			        }
 					StringBuilder sb2 = sb;
 					
-					player.asBukkitPlayer().sendTitle(AuriUtils.colorString(sb.append(top).toString()), AuriUtils.colorString(sb2.append(bottom).toString()), 0, 10, 10);
+					player.asBukkitPlayer().sendTitle(AChat.colorString(sb.append(top).toString()), AChat.colorString(sb2.append(bottom).toString()), 0, 10, 10);
 					
 					i--;
 				}

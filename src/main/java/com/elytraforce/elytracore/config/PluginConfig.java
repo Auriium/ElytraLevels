@@ -1,12 +1,5 @@
 package com.elytraforce.elytracore.config;
 
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.utils.AuriUtils;
-
 /*
 public class PluginConfig {
 

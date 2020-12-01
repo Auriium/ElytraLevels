@@ -1,8 +1,8 @@
 package com.elytraforce.elytracore.matchtracker.matchevents;
 
+import com.elytraforce.aUtils.chat.AChat;
 import com.elytraforce.elytracore.events.ChangeEnum;
 import com.elytraforce.elytracore.player.ElytraPlayer;
-import com.elytraforce.elytracore.utils.AuriUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -22,7 +22,7 @@ public class MatchKillEvent extends Event {
     public ChangeEnum getChangeType() { return this.change; }
     public String getKillReason() { return this.reason; }
     public String getFormattedKillReason() {
-        return AuriUtils.colorString(reason);
+        return AChat.colorString(reason);
     }
 
     

@@ -1,10 +1,9 @@
 package com.elytraforce.elytracore.matchtracker;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
 import com.elytraforce.elytracore.events.MoneyEvent;
 import com.elytraforce.elytracore.events.XPEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 public class TrackerListener implements Listener{
 	

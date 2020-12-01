@@ -1,7 +1,8 @@
 package com.elytraforce.elytracore.matchtracker;
 
-import java.util.ArrayList;
-
+import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.bossbar.Bar;
+import com.elytraforce.elytracore.player.ElytraPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -9,9 +10,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.bossbar.Bar;
-import com.elytraforce.elytracore.player.ElytraPlayer;
+import java.util.ArrayList;
 
 public class MatchTracker {
 	

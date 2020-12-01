@@ -1,26 +1,24 @@
 package com.elytraforce.elytracore.hooks;
 
+import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.player.ElytraPlayer;
+import com.elytraforce.elytracore.player.PlayerController;
+import com.elytraforce.elytracore.player.redis.Delta;
+import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
+import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
+import com.elytraforce.elytracore.storage.SQLStorage;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
+import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
-import com.elytraforce.elytracore.player.redis.Delta;
-import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
-import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
-import com.elytraforce.elytracore.storage.SQLStorage;
-import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-
-import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.player.ElytraPlayer;
-import com.elytraforce.elytracore.player.PlayerController;
-
-import net.milkbowl.vault.economy.EconomyResponse;
-import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
-import org.bukkit.OfflinePlayer;
 
 public class ElytraEconomy implements Economy {
 

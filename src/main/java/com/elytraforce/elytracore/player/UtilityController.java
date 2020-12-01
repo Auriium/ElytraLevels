@@ -1,11 +1,11 @@
 package com.elytraforce.elytracore.player;
 
-import java.util.HashMap;
+import com.elytraforce.elytracore.utils.MessageUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-
-import com.elytraforce.elytracore.utils.MessageUtils;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
 
 public class UtilityController {
 	

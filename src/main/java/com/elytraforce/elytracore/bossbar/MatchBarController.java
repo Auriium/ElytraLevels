@@ -1,19 +1,19 @@
 package com.elytraforce.elytracore.bossbar;
 
-import java.util.HashMap;
-
+import com.elytraforce.aUtils.chat.AChat;
+import com.elytraforce.elytracore.Main;
+import com.elytraforce.elytracore.matchtracker.TrackablePlayer;
+import com.elytraforce.elytracore.matchtracker.TrackerController;
+import com.elytraforce.elytracore.player.ElytraPlayer;
+import com.elytraforce.elytracore.player.PlayerController;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.matchtracker.TrackablePlayer;
-import com.elytraforce.elytracore.matchtracker.TrackerController;
-import com.elytraforce.elytracore.player.ElytraPlayer;
-import com.elytraforce.elytracore.player.PlayerController;
-import com.elytraforce.elytracore.utils.AuriUtils;
+
+import java.util.HashMap;
 
 public class MatchBarController {
 	
@@ -61,8 +61,9 @@ public class MatchBarController {
 		if (this.initiatedBars.containsKey(damaged)) {
 			TrackablePlayer otherPlayer = this.initiatedBars.get(damaged);
 			
-			TrackerController.get().getMatch(otherPlayer).displayBar(otherPlayer, AuriUtils.colorString(
+			TrackerController.get().getMatch(otherPlayer).displayBar(otherPlayer, AChat.colorString(
 					"&7" + name + " &f" + hp + "&7/" + "&a" + maxHp),hp/maxHp);
+			
 		}
 	}
 	
@@ -104,7 +105,7 @@ public class MatchBarController {
 			double maxHp = (double)Math.round(damaged.getMaxHealth() * 10d) / 10d;
 			
 			TrackablePlayer player = TrackerController.get().getTrackablePlayer(p);
-			TrackerController.get().getMatch(player).displayBar(player, AuriUtils.colorString(
+			TrackerController.get().getMatch(player).displayBar(player, AChat.colorString(
 					"&7" + name + " &f" + hp + "&7/" + "&a" + maxHp),hp/maxHp);
 			
 			
@@ -112,7 +113,7 @@ public class MatchBarController {
 			if (this.initiatedBars.containsKey(damaged)) {
 				TrackablePlayer otherPlayer = this.initiatedBars.get(damaged);
 				
-				TrackerController.get().getMatch(otherPlayer).displayBar(otherPlayer, AuriUtils.colorString(
+				TrackerController.get().getMatch(otherPlayer).displayBar(otherPlayer, AChat.colorString(
 						"&7" + name + " &f" + hp + "&7/" + "&a" + maxHp),hp/maxHp);
 			} else {
 				//otherwise add them to the displayed list under the damager, and remove them in a bit.

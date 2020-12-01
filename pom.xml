@@ -135,10 +135,6 @@
                             <shadedPattern>${project.groupId}.libs.hikari</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>dev.magicmq.rappu</pattern>
-                            <shadedPattern>${project.groupId}.libs.rappu</shadedPattern>
-                        </relocation>
-                        <relocation>
                             <pattern>com.elytraforce.aUtils</pattern>
                             <shadedPattern>${project.groupId}.libs.aUtils</shadedPattern>
                         </relocation>

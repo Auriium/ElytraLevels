@@ -1,10 +1,9 @@
 package com.elytraforce.elytracore.hooks;
 
-import org.bukkit.entity.Player;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.PlayerController;
-
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ElytraPlaceholder extends PlaceholderExpansion{

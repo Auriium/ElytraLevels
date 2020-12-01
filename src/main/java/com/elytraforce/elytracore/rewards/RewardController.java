@@ -1,10 +1,12 @@
 package com.elytraforce.elytracore.rewards;
 
+import com.elytraforce.aUtils.ALogger;
+import com.elytraforce.aUtils.chat.AChat;
 import com.elytraforce.aUtils.item.AItemBuilder;
+import com.elytraforce.aUtils.math.AMath;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
-import com.elytraforce.elytracore.utils.AuriUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,11 +25,8 @@ public class RewardController{
 	
 	private final List<RewardData> rewards;
 	private final ArrayList<Integer> rewardIntegers = new ArrayList<>();
-	
-	private final File configFile;
-    private final FileConfiguration config;
-    
-    public List<RewardData> getRewards() { return this.rewards; }
+
+	public List<RewardData> getRewards() { return this.rewards; }
     public ArrayList<Integer> getInteger() { return this.rewardIntegers; }
     
     public List<Menu> pages;
@@ -36,14 +35,14 @@ public class RewardController{
     
     
     private RewardController() {
-		this.configFile = new File(Main.get().getDataFolder(), "rewards.yml");
+		File configFile = new File(Main.get().getDataFolder(), "rewards.yml");
 		
-		if (!this.configFile.exists()) {
+		if (!configFile.exists()) {
 			configFile.getParentFile().mkdirs();
 			Main.get().saveResource("rewards.yml", false);
 		}
-		
-		this.config = YamlConfiguration.loadConfiguration(configFile);
+
+		FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 		
 		//initialize reward list
 		
@@ -56,8 +55,8 @@ public class RewardController{
 				ConfigurationSection thisReward = rewardSection.getConfigurationSection(key);
 				
 				int level = thisReward.getInt("Level");
-				String name = AuriUtils.colorString(thisReward.getString("Name"));
-				List<String> description = AuriUtils.colorString(thisReward.getStringList("Description"));
+				String name = AChat.colorString(thisReward.getString("Name"));
+				List<String> description = AChat.colorString(thisReward.getStringList("Description"));
 				List<String> servers = thisReward.getStringList("Servers");
 				if (thisReward.getStringList("Servers").isEmpty()) {
 					servers.add("all");
@@ -71,7 +70,7 @@ public class RewardController{
                 
 			}
 		} else {
-			AuriUtils.logError("Reward section of rewards.yml does not exist!");
+			ALogger.logError("Reward section of rewards.yml does not exist!");
 		}
 		
 		this.rewards = preRewardData;
@@ -83,7 +82,7 @@ public class RewardController{
     private void registerMenu() {
 
     	ChestMenu.Builder menu = ChestMenu.builder(3)
-                .title(AuriUtils.colorString("&9Your Rewards!")).redraw(true);
+                .title(AChat.colorString("&9Your Rewards!")).redraw(true);
     	
     	BinaryMask itemSlots = BinaryMask.builder(menu.getDimensions())
     			.pattern("111111111")
@@ -109,7 +108,7 @@ public class RewardController{
 
         	        			dataItem = new AItemBuilder(Material.MINECART)
             	    					.setDisplayName(dataName)
-            	    					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore)).build();
+            	    					.setLore((ArrayList<String>)AChat.colorString(finalLore)).build();
         	            	} else if (data.canUnlock(PlayerController.get().getElytraPlayer(p))) {
         	            		if (!data.isCorrectServer()) {
             	            		finalLore.add("&r ");
@@ -117,7 +116,7 @@ public class RewardController{
             	        			
             	        			dataItem = new AItemBuilder(Material.CHEST_MINECART)
             	        					.setDisplayName(dataName)
-            	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore))
+            	        					.setLore((ArrayList<String>)AChat.colorString(finalLore))
             	        					.setGlow(true).build();
             	            	} else {
             	            		finalLore.add("&r ");
@@ -125,7 +124,7 @@ public class RewardController{
             	        			
             	        			dataItem = new AItemBuilder(Material.CHEST_MINECART)
             	        					.setDisplayName(dataName)
-            	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore))
+            	        					.setLore((ArrayList<String>)AChat.colorString(finalLore))
             	        					.setGlow(true).build();
             	            	}
         	            	} else {
@@ -134,7 +133,7 @@ public class RewardController{
         	        			
         	        			dataItem = new AItemBuilder(Material.CHEST_MINECART)
         	        					.setDisplayName(dataName)
-        	        					.setLore((ArrayList<String>)AuriUtils.colorString(finalLore)).build();
+        	        					.setLore((ArrayList<String>)AChat.colorString(finalLore)).build();
         	            	}
         	            	
         	            	return dataItem; })
@@ -183,7 +182,7 @@ public class RewardController{
     }
     
     public int getHighestUnlockedReward(ElytraPlayer player) {
-    	return AuriUtils.closestInteger(Collections.max(player.getUnlockedRewards()), this.getRewardLevels());
+    	return AMath.closestInteger(Collections.max(player.getUnlockedRewards()), this.getRewardLevels());
     }
     
     private ArrayList<Integer> getRewardIntsBelowLevel(int level) {
@@ -197,7 +196,7 @@ public class RewardController{
     }
     
     public RewardData getHighestUnlockedRewardData(ElytraPlayer player) {
-    	int level = AuriUtils.closestInteger(Collections.max(player.getUnlockedRewards()), this.getRewardLevels());
+    	int level = AMath.closestInteger(Collections.max(player.getUnlockedRewards()), this.getRewardLevels());
     	for (RewardData data : this.rewards) {
     		if (data.getLevel() == level) {
     			return data;

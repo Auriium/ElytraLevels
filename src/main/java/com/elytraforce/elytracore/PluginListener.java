@@ -1,23 +1,18 @@
 package com.elytraforce.elytracore;
 
-import org.bukkit.Bukkit;
+import com.elytraforce.elytracore.bossbar.MatchBarController;
+import com.elytraforce.elytracore.player.ElytraPlayer;
+import com.elytraforce.elytracore.player.PlayerController;
+import com.elytraforce.elytracore.player.UtilityController;
 import org.bukkit.entity.Player;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import com.elytraforce.elytracore.bossbar.MatchBarController;
-import com.elytraforce.elytracore.player.ElytraPlayer;
-import com.elytraforce.elytracore.player.PlayerController;
-import com.elytraforce.elytracore.player.UtilityController;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.Async;
 
 
 public class PluginListener implements Listener {

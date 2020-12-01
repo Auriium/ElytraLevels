@@ -1,24 +1,18 @@
 package com.elytraforce.elytracore.commands;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.matchtracker.TrackerController;
 import com.elytraforce.elytracore.matchtracker.menu.DefaultMenu;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.utils.MessageUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Subcommand;
+import java.util.ArrayList;
+import java.util.UUID;
 
 @CommandAlias("match")
 @CommandPermission("elytraforce.admin")

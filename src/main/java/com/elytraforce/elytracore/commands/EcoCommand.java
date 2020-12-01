@@ -1,18 +1,12 @@
 package com.elytraforce.elytracore.commands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
+import com.elytraforce.aUtils.chat.AChat;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.PlayerController;
-import com.elytraforce.elytracore.utils.AuriUtils;
-
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Subcommand;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 
 @CommandAlias("eco|economy|elytraeco")
 public class EcoCommand extends BaseCommand{
@@ -36,7 +30,7 @@ public class EcoCommand extends BaseCommand{
     	if (player != null) {
     	    PlayerController.get().addMoney(Bukkit.getPlayer(player),amount,showMessage);
     	} else {
-    		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
+    		sender.sendMessage(AChat.colorString("&cThat player is offline or does not exist!"));
         }
     	
     }
@@ -50,7 +44,7 @@ public class EcoCommand extends BaseCommand{
     	if (player != null) {
             PlayerController.get().removeMoney(Bukkit.getPlayer(player),amount,showMessage);
     	} else {
-    		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
+    		sender.sendMessage(AChat.colorString("&cThat player is offline or does not exist!"));
     	}
     }
     
@@ -63,7 +57,7 @@ public class EcoCommand extends BaseCommand{
     	if (player != null) {
     		PlayerController.get().setMoney(Bukkit.getPlayer(player),amount,showMessage);
     	} else {
-    		sender.sendMessage(AuriUtils.colorString("&cThat player is offline or does not exist!"));
+    		sender.sendMessage(AChat.colorString("&cThat player is offline or does not exist!"));
     	}
     }
 }
