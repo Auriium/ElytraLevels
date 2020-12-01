@@ -58,7 +58,11 @@ public class PlayerController {
 
     public void playerQuit(ElytraPlayer player) {
 
-        SQLStorage.get().playerQuit(player);
+        if (player.isInDatabase()) {
+            SQLStorage.get().updatePlayer(player, true);
+        } else {
+            SQLStorage.get().insertPlayer(player,true);
+        }
         players.remove(player);
         Bukkit.getPluginManager().callEvent(new ElytraPlayerQuitEvent(player));
     }
