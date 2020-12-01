@@ -46,7 +46,7 @@ public class RedisController{
             public void run() {
                 try (Jedis jedis = pool.getResource()){
                     /*jedis.subscribe(new RedisListener(),CHANNEL);*/
-                    jedis.subscribe(new DataChangeListener(), LOAD_DATA_CHANNEL);
+                    /*jedis.subscribe(new DataChangeListener(), LOAD_DATA_CHANNEL);*/
                     jedis.subscribe(new CommandListener(),COMMAND_CHANNEL);
                 } catch (Exception e) {
                     ALogger.logError("Error connecting to redis - " + e.getMessage());
@@ -71,24 +71,6 @@ public class RedisController{
         return new Delta(id,amount,change,value);
     }
 
-    //THESE MUST ALL BE OF THE SAME TYPE AND UUID (please clean up this shitshow of a utility method)
-    /*public Delta combineDelta(ArrayList<Delta> deltas) {
-
-        int amount = 0;
-        DeltaEnum type = DeltaEnum.INCREASE;
-
-        for (Delta d : deltas) {
-            if (d.getChange().equals(DeltaEnum.DECREASE)) amount = amount - d.getAmount(); else amount = amount + d.getAmount();
-        }
-
-        if (amount < 0) {
-            amount = Math.negateExact(amount);
-            type = DeltaEnum.DECREASE;
-        }
-
-        return new Delta(deltas.get(0).getTarget(),amount,type,deltas.get(0).getType());
-    }*/
-
     public void broadcastCommand(String command) {
         new BukkitRunnable() {
             @Override
@@ -111,7 +93,7 @@ public class RedisController{
         }.runTaskAsynchronously(Main.get());
     }
 
-    public void redisOnSQLFinish(ElytraPlayer player) {
+    /*public void redisOnSQLFinish(ElytraPlayer player) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -120,9 +102,9 @@ public class RedisController{
                 }
             }
         }.runTaskAsynchronously(Main.get());
-    }
+    }*/
 
-    public static class DataChangeListener extends JedisPubSub {
+    /*public static class DataChangeListener extends JedisPubSub {
         @Override
         public void onMessage(String channel, final String msg) {
             ALogger.logInfo("Loading player via jedispubsub complete message!");
@@ -131,7 +113,7 @@ public class RedisController{
                 SQLStorage.get().adjustPlayerAfterRedis(target);
             }
         }
-    }
+    }*/
 
     public static class CommandListener extends JedisPubSub {
         @Override

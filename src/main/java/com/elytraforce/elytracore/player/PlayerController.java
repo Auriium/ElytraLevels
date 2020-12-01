@@ -35,10 +35,14 @@ public class PlayerController {
     }
 
     public void playerJoined(OfflinePlayer player) {
-
-        SQLStorage.get().loadPlayer(player);
-        //makes sure that if they are in the cache they are removed
-        SQLStorage.get().removePlayerCached(player);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                SQLStorage.get().loadPlayer(player);
+                //makes sure that if they are in the cache they are removed
+                SQLStorage.get().removePlayerCached(player);
+            }
+        }.runTaskLaterAsynchronously(Main.get(),4L);
     }
 
     public void joinCallback(OfflinePlayer player, int level, int experience, int money, List<Integer> unlockedRewards, boolean newPlayer) {
