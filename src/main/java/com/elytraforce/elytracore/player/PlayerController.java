@@ -92,6 +92,7 @@ public class PlayerController {
                 throw new NegativeException(amount);
             } catch (NegativeException e) {
                 e.printStackTrace();
+                return;
             }
         }
         int oldMoney = player.getMoney();
@@ -112,6 +113,7 @@ public class PlayerController {
                 throw new NegativeException(amount);
             } catch (NegativeException e) {
                 e.printStackTrace();
+                return;
             }
         }
         int oldMoney = player.getMoney();
@@ -132,6 +134,7 @@ public class PlayerController {
                 throw new NegativeException(amount);
             } catch (NegativeException e) {
                 e.printStackTrace();
+                return;
             }
         }
         int sex = amount - player.getMoney();
@@ -152,6 +155,7 @@ public class PlayerController {
                 throw new NegativeException(amount);
             } catch (NegativeException e) {
                 e.printStackTrace();
+                return;
             }
         }
         int oldLevel = player.getLevel();
@@ -182,6 +186,7 @@ public class PlayerController {
                 throw new NegativeException(amount);
             } catch (NegativeException e) {
                 e.printStackTrace();
+                return;
             }
         }
         int oldLevel = player.getLevel();
@@ -213,6 +218,7 @@ public class PlayerController {
                 throw new NegativeException(amount);
             } catch (NegativeException e) {
                 e.printStackTrace();
+                return;
             }
         }
         int sex = amount - player.getLevel();
@@ -233,6 +239,7 @@ public class PlayerController {
                 throw new NegativeException(amount);
             } catch (NegativeException e) {
                 e.printStackTrace();
+                return;
             }
         }
         int oldXP = player.getExperience();
@@ -280,6 +287,7 @@ public class PlayerController {
                 throw new NegativeException(amount);
             } catch (NegativeException e) {
                 e.printStackTrace();
+                return;
             }
         }
         int oldXP = player.getExperience();
@@ -296,6 +304,14 @@ public class PlayerController {
     }
 
     public void setXP(ElytraPlayer player, int amount, boolean title, boolean sendMessage) {
+        if (amount < 0) {
+            try {
+                throw new NegativeException(amount);
+            } catch (NegativeException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
         int sex = amount - player.getExperience();
         if (sex == 0) { return; } else if (sex < 0) { //number is negative
             this.removeXP(player,Math.abs(sex),title,sendMessage);
