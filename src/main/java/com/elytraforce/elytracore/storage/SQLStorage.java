@@ -143,6 +143,7 @@ public class SQLStorage {
         String sql = "INSERT INTO `levels_player` ";
         sql += "(`player_uuid`, `level`, `experience`, `money`, `unlocked_rewards`) ";
         sql += "VALUES (?, ?, ?, ?, ?);";
+
         Object[] toSet = new Object[]{
                 player.getUUID().toString(),
                 player.getLevel(),
@@ -161,6 +162,12 @@ public class SQLStorage {
         int level = player.getCachedDeltaData(ValueEnum.LEVEL);
         int money = player.getCachedDeltaData(ValueEnum.MONEY);
         int exp = player.getCachedDeltaData(ValueEnum.XP);
+
+        ArrayList<Delta> toRemove = new ArrayList<>();
+        player.getChanges().forEach(del -> {
+            player.adjust(del);
+            toRemove.add(del);
+        }); player.getChanges().removeAll(toRemove);
 
         Object[] toSet = new Object[]{
                 level,

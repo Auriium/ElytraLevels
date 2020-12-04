@@ -91,7 +91,7 @@ public class ElytraPlayer {
 		this.queuedChanges = new ArrayList<>();
 	}
 
-	/*public void adjust(Delta delta) {
+	public void adjust(Delta delta) {
     	int amount = delta.getAmount(); if (delta.getChange().equals(DeltaEnum.DECREASE)) { amount = Math.negateExact(amount); }
 		//interpret delta and adjust based on it
 		switch (delta.getType()) {
@@ -106,13 +106,6 @@ public class ElytraPlayer {
 				break;
 		}
 	}
-
-	public void adjustFromPlayer(ElytraPlayer player) {
-    	this.level = player.getLevel();
-    	this.experience = player.getExperience();
-    	this.money = player.getMoney();
-    	this.unlockedRewards = player.getUnlockedRewards();
-	}*/
 
 	public void addChange(Delta delta) {
 		if (delta.getAmount() == 0) return;
