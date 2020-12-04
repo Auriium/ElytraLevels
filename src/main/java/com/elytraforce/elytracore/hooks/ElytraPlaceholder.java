@@ -1,10 +1,13 @@
 package com.elytraforce.elytracore.hooks;
 
+import com.elytraforce.aUtils.ALogger;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.PlayerController;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class ElytraPlaceholder extends PlaceholderExpansion{
 
@@ -39,6 +42,8 @@ public class ElytraPlaceholder extends PlaceholderExpansion{
         return main.getDescription().getVersion();
     }
 
+
+    //todo clean this autism up
     @Override
     public String onPlaceholderRequest(Player player, @NotNull String identifier){
 
@@ -46,34 +51,71 @@ public class ElytraPlaceholder extends PlaceholderExpansion{
             return "";
         }
 
+        if (PlayerController.get().getElytraPlayer(player) == null) {
+            return "Loading...";
+        }
+
         // %someplugin_placeholder1%
         if(identifier.equals("level")){
-            return PlayerController.get().getElytraPlayer(player).getLevel().toString();
+            try {
+                return PlayerController.get().getElytraPlayer(player).getLevel() + "";
+            } catch (NullPointerException ex) {
+                return "Loading...";
+            }
         }
         
         if(identifier.equals("next_level")){
-            return PlayerController.get().getElytraPlayer(player).getNextLevel() + "";
+            try {
+                return Objects.requireNonNullElse(PlayerController.get().getElytraPlayer(player).getNextLevel() + "","Loading...");
+            } catch (NullPointerException ex) {
+                return "Loading...";
+            }
         }
         
         if(identifier.equals("exp")){
-            return PlayerController.get().getElytraPlayer(player).getExperience().toString();
+            try {
+                return Objects.requireNonNullElse(PlayerController.get().getElytraPlayer(player).getExperience() + "","Loading...");
+            } catch (NullPointerException ex) {
+                return "Loading...";
+            }
+
         }
         
         if(identifier.equals("total_exp")){
-            return PlayerController.get().getElytraPlayer(player).getRequiredXPToNextLevel() + "";
+            try {
+                return Objects.requireNonNullElse(PlayerController.get().getElytraPlayer(player).getRequiredXPToNextLevel() + "","Loading...");
+            } catch (NullPointerException ex) {
+                return "Loading...";
+            }
+
         }
         
         if(identifier.equals("exp_percent")){
-            return PlayerController.get().getElytraPlayer(player).getPercent();
+            try {
+                return Objects.requireNonNullElse(PlayerController.get().getElytraPlayer(player).getPercent(),"Loading...");
+            } catch (NullPointerException ex) {
+                return "Loading...";
+            }
+
         }
         
         if(identifier.equals("exp_bar")){
-            return PlayerController.get().getElytraPlayer(player).getProgressBar();
+            try {
+                return Objects.requireNonNullElse(PlayerController.get().getElytraPlayer(player).getProgressBar(),"Loading...");
+            } catch (NullPointerException ex) {
+                return "Loading...";
+            }
+
         }
 
         //returns unformatted money. Use vault instead! 
         if(identifier.equals("money")){
-        	return PlayerController.get().getElytraPlayer(player).getMoney() + "";
+            try {
+                return Objects.requireNonNullElse(PlayerController.get().getElytraPlayer(player).getMoney() + "","Loading...");
+            } catch (NullPointerException ex) {
+                return "Loading...";
+            }
+
         }
 
         return null;

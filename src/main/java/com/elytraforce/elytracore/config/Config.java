@@ -11,7 +11,7 @@ public class Config extends AConfig {
     @ConfigField(location = "database.username")
     public String databaseUsername = "owners";
     @ConfigField(location = "database.database")
-    public String databaseName = "minecraft";
+    public String databaseName = "players";
     @ConfigField(location = "database.host")
     public String databaseHost = "172.17.0.1";
     @ConfigField(location = "database.port")

@@ -77,7 +77,12 @@ public class Main extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
 
             for (ElytraPlayer player : PlayerController.get().getPlayers()) {
-                SQLStorage.get().updatePlayer(player,true);
+                if (player.isInDatabase()) {
+                    SQLStorage.get().updatePlayer(player,true);
+                } else {
+                    SQLStorage.get().insertPlayer(player, true);
+                }
+
             }
         }, config.autosaveInterval * 60L * 20L, config.autosaveInterval * 60L * 20L);
         

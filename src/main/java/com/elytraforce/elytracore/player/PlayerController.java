@@ -4,6 +4,7 @@ import com.elytraforce.aUtils.chat.AChat;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.config.Config;
 import com.elytraforce.elytracore.events.*;
+import com.elytraforce.elytracore.exception.NegativeException;
 import com.elytraforce.elytracore.player.redis.Delta;
 import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
@@ -86,6 +87,13 @@ public class PlayerController {
     }
 
     public void addMoney(ElytraPlayer player, int amount, boolean sendMessage) {
+        if (amount < 0) {
+            try {
+                throw new NegativeException(amount);
+            } catch (NegativeException e) {
+                e.printStackTrace();
+            }
+        }
         int oldMoney = player.getMoney();
         if (sendMessage) { MessageUtils.addMoneyMessage(player, amount); }
 
@@ -99,14 +107,17 @@ public class PlayerController {
     }
 
     public void removeMoney(ElytraPlayer player, int amount, boolean sendMessage) {
+        if (amount < 0) {
+            try {
+                throw new NegativeException(amount);
+            } catch (NegativeException e) {
+                e.printStackTrace();
+            }
+        }
         int oldMoney = player.getMoney();
         if (sendMessage) {MessageUtils.removeMoneyMessage(player, amount); }
 
-        player.addChange(new Delta(player.getUUID(),amount, DeltaEnum.DECREASE, ValueEnum.MONEY));
-
-        if (player.getMoney() < 0) {
-            player.addChange(new Delta(player.getUUID(),Math.abs(player.getMoney()),DeltaEnum.INCREASE,ValueEnum.MONEY));
-        }
+        player.addChange(new Delta(player.getUUID(),Math.min(player.getMoney(),Math.abs(amount)), DeltaEnum.DECREASE, ValueEnum.MONEY));
 
         Bukkit.getPluginManager().callEvent(new MoneyEvent(player, oldMoney, player.getMoney(), ChangeEnum.INCREASE));
     }
@@ -116,6 +127,13 @@ public class PlayerController {
     }
 
     public void setMoney(ElytraPlayer player, int amount, boolean sendMessage) {
+        if (amount < 0) {
+            try {
+                throw new NegativeException(amount);
+            } catch (NegativeException e) {
+                e.printStackTrace();
+            }
+        }
         int sex = amount - player.getMoney();
         if (sex == 0) { return; } else if (sex < 0) { //number is negative
             this.removeMoney(player,Math.abs(sex),sendMessage);
@@ -129,6 +147,13 @@ public class PlayerController {
     }
 
     public void addLevel(ElytraPlayer player, int amount, boolean title, boolean sendMessage) {
+        if (amount < 0) {
+            try {
+                throw new NegativeException(amount);
+            } catch (NegativeException e) {
+                e.printStackTrace();
+            }
+        }
         int oldLevel = player.getLevel();
 
         player.addChange(new Delta(player.getUUID(),amount, DeltaEnum.INCREASE, ValueEnum.LEVEL));
@@ -152,13 +177,16 @@ public class PlayerController {
     }
 
     public void removeLevel(ElytraPlayer player, int amount, boolean title, boolean sendMessage) {
+        if (amount < 0) {
+            try {
+                throw new NegativeException(amount);
+            } catch (NegativeException e) {
+                e.printStackTrace();
+            }
+        }
         int oldLevel = player.getLevel();
 
-        player.addChange(new Delta(player.getUUID(),amount, DeltaEnum.DECREASE, ValueEnum.LEVEL));
-
-        if (player.getLevel() < 0) {
-            player.addChange(new Delta(player.getUUID(),Math.abs(player.getLevel()),DeltaEnum.INCREASE,ValueEnum.LEVEL));
-        }
+        player.addChange(new Delta(player.getUUID(),Math.min(player.getLevel(),Math.abs(amount)), DeltaEnum.DECREASE, ValueEnum.LEVEL));
 
         int newLevel = player.getLevel();
 
@@ -180,6 +208,13 @@ public class PlayerController {
     }
 
     public void setLevel(ElytraPlayer player, int amount, boolean title, boolean sendMessage) {
+        if (amount < 0) {
+            try {
+                throw new NegativeException(amount);
+            } catch (NegativeException e) {
+                e.printStackTrace();
+            }
+        }
         int sex = amount - player.getLevel();
         if (sex == 0) { return; } else if (sex < 0) { //number is negative
             this.removeLevel(player,Math.abs(sex),title,sendMessage);
@@ -193,6 +228,13 @@ public class PlayerController {
     }
 
     public void addXP(ElytraPlayer player, int amount, boolean title, boolean sendMessage) {
+        if (amount < 0) {
+            try {
+                throw new NegativeException(amount);
+            } catch (NegativeException e) {
+                e.printStackTrace();
+            }
+        }
         int oldXP = player.getExperience();
         if (player.isDonator()) {amount = (int) (amount * 1.2); }
         if (sendMessage) { MessageUtils.addXPMessage(player, amount); }
@@ -233,15 +275,18 @@ public class PlayerController {
     }
 
     public void removeXP(ElytraPlayer player, int amount, boolean title, boolean sendMessage) {
+        if (amount < 0) {
+            try {
+                throw new NegativeException(amount);
+            } catch (NegativeException e) {
+                e.printStackTrace();
+            }
+        }
         int oldXP = player.getExperience();
 
         if (sendMessage) { MessageUtils.removeXPMessage(player, amount); }
 
-        player.addChange(new Delta(player.getUUID(),amount, DeltaEnum.DECREASE, ValueEnum.XP));
-
-        if (player.getExperience() < 0) {
-            player.addChange(new Delta(player.getUUID(),Math.abs(player.getExperience()),DeltaEnum.INCREASE,ValueEnum.XP));
-        }
+        player.addChange(new Delta(player.getUUID(),Math.min(player.getExperience(),Math.abs(amount)), DeltaEnum.DECREASE, ValueEnum.XP));
 
         Bukkit.getPluginManager().callEvent(new XPEvent(player, oldXP, player.getExperience(), ChangeEnum.DECREASE));
     }

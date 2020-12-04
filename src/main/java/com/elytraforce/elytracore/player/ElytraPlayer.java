@@ -91,7 +91,7 @@ public class ElytraPlayer {
 		this.queuedChanges = new ArrayList<>();
 	}
 
-	public void adjust(Delta delta) {
+	/*public void adjust(Delta delta) {
     	int amount = delta.getAmount(); if (delta.getChange().equals(DeltaEnum.DECREASE)) { amount = Math.negateExact(amount); }
 		//interpret delta and adjust based on it
 		switch (delta.getType()) {
@@ -112,9 +112,10 @@ public class ElytraPlayer {
     	this.experience = player.getExperience();
     	this.money = player.getMoney();
     	this.unlockedRewards = player.getUnlockedRewards();
-	}
+	}*/
 
 	public void addChange(Delta delta) {
+		if (delta.getAmount() == 0) return;
 		this.queuedChanges.add(delta);
 		RedisController.get().redisPushToBungee(delta);
 	}
@@ -144,9 +145,8 @@ public class ElytraPlayer {
 	}
 	
 	public String getPercent() {
-		double v = this.getExperience() / this.getRequiredXPToNextLevel();
-		double sex = (v * 100); 
-		return sex + "%";
+		int percent = (int)((this.getExperience() * 100.0f) / this.getRequiredXPToNextLevel());
+		return percent + "%";
 	}
 	
 	public boolean canLevelUp() {
