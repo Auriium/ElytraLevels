@@ -118,7 +118,7 @@ public class ElytraEconomy implements Economy {
 			return p == null ? 0 : p.getMoney();
 		} else {
 			try {
-				return SQLStorage.get().loadPlayerCached(player).getMoney();
+				return SQLStorage.get().getOrDefaultPlayer(player.getUniqueId(), true).join().getMoney();
 			} catch (Exception e) {
 				e.printStackTrace();
 				return 0;
@@ -147,8 +147,7 @@ public class ElytraEconomy implements Economy {
 			return PlayerController.get().getElytraPlayer(player).getMoney() >= amount;
 		} else {
 			try {
-				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player);
-				return p.getMoney() >= amount;
+				return SQLStorage.get().getOrDefaultPlayer(player.getUniqueId(),true).join().getMoney() >= amount;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
@@ -186,8 +185,7 @@ public class ElytraEconomy implements Economy {
 			if (!SQLStorage.get().playerExists(player)) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "This player does not exist!"); }
 			//now get the shit
 			try {
-				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player); p.addChange(new Delta(p.getUUID(), (int) Math.min(p.getMoney(),Math.abs(amount)), DeltaEnum.DECREASE, ValueEnum.MONEY));
-				SQLStorage.get().updatePlayerCached(p);
+				ElytraPlayer p = SQLStorage.get().getOrDefaultPlayer(player.getUniqueId(),true).join(); p.addChange(new Delta(p.getUUID(), (int) Math.min(p.getMoney(),Math.abs(amount)), DeltaEnum.DECREASE, ValueEnum.MONEY)); p.update();
 				return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 			} catch (Exception e) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Unknown error in ElytraEconomy (Error A)!"); }
 		} else {
@@ -222,8 +220,7 @@ public class ElytraEconomy implements Economy {
 			if (!SQLStorage.get().playerExists(player)) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "This player does not exist!"); }
 			//now get the shit
 			try {
-				ElytraPlayer p = SQLStorage.get().loadPlayerCached(player); p.addChange(new Delta(p.getUUID(), (int) amount, DeltaEnum.INCREASE, ValueEnum.MONEY));
-				SQLStorage.get().updatePlayerCached(p);
+				ElytraPlayer p = SQLStorage.get().getOrDefaultPlayer(player.getUniqueId(),true).join(); p.addChange(new Delta(p.getUUID(), (int) amount, DeltaEnum.INCREASE, ValueEnum.MONEY)); p.update();
 				return new EconomyResponse(amount, p.getMoney(), ResponseType.SUCCESS, null);
 			} catch (Exception e) { return new EconomyResponse(0, 0, ResponseType.FAILURE, "Unknown error in ElytraEconomy (Error A)!"); }
 		} else {

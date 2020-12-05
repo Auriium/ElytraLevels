@@ -1,10 +1,11 @@
 package com.elytraforce.elytracore.player;
 
-import com.elytraforce.aUtils.ALogger;
 import com.elytraforce.elytracore.player.redis.Delta;
 import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.player.redis.enums.DeltaEnum;
 import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
+import com.elytraforce.elytracore.storage.SQLStorage;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -19,9 +20,8 @@ import java.util.stream.Collectors;
 
 public class ElytraPlayer {
 
-	private final OfflinePlayer player;
-    private final UUID uniqueId;
-    private final String name;
+	private String name;
+    private final UUID player;
     private int level;
     private int experience;
     private int money;
@@ -36,17 +36,17 @@ public class ElytraPlayer {
     private final ArrayList<Delta> queuedChanges;
     
     public Player asBukkitPlayer() {
-    	if (player.isOnline()) {
-    		return player.getPlayer();
+    	if (isOnline()) {
+    		return asOfflinePlayer().getPlayer();
 		}
     	return null;
     }
     public OfflinePlayer asOfflinePlayer() {
-    	return player;
+    	return Bukkit.getOfflinePlayer(player);
 	}
 
 	//make these relay delta related information. ( e.g. getBalance needs to return balance PLUS the combined balances stored in all deltas)
-    public UUID getUUID() { return uniqueId; }
+    public UUID getUUID() { return player; }
     public String getName() { return name; }
     public Integer getLevel() { return level + this.getCachedDeltaData( ValueEnum.LEVEL); }
     public Integer getExperience() { return experience + this.getCachedDeltaData( ValueEnum.XP); }
@@ -55,7 +55,8 @@ public class ElytraPlayer {
     public boolean isInDatabase() { return inDatabase; }
     public void setInDatabase(boolean choice) { this.inDatabase = choice; }
     public Integer getMoney() { return this.money + this.getCachedDeltaData( ValueEnum.MONEY); }
-    
+
+    //NONE OF THESE ARE OFFLINE SAFE
     public boolean isDisplayingTitle() { return this.displayingTitle; }
     public void setDisplayingTitle(boolean bool) { this.displayingTitle = bool; }
     public int getDisplayedXP() { return this.displayedXP; }
@@ -71,22 +72,24 @@ public class ElytraPlayer {
     public boolean equals(Object toCompare) {
         if (!(toCompare instanceof ElytraPlayer))
             return false;
-        return uniqueId.equals(((ElytraPlayer) toCompare).uniqueId);
+        return player.equals(((ElytraPlayer) toCompare).player);
     }
 	
-	public ElytraPlayer(OfflinePlayer player, Integer level, Integer experience, Integer money, List<Integer> unlockedRewards, boolean inDatabase) {
-		this.uniqueId = player.getUniqueId();
+	public ElytraPlayer(UUID player, Integer level, Integer experience,
+						Integer money, List<Integer> unlockedRewards, boolean inDatabase,
+						String nick,boolean discord_in,boolean discord_out,boolean pms,ChatColor color, String name) {
+
 		this.player = player;
 		this.level = level;
 		this.experience = experience;
 		this.unlockedRewards = unlockedRewards;
-		this.name = player.getName();
 		this.inDatabase = inDatabase;
 		this.money = money;
 		
 		this.displayingTitle = false;
 		this.displayedXP = 0;
 		this.displayedTask = null;
+		this.name = name;
 
 		this.queuedChanges = new ArrayList<>();
 	}
@@ -170,6 +173,18 @@ public class ElytraPlayer {
 		}
 
     	return total;
+	}
+
+	public boolean isOnline() {
+    	return asOfflinePlayer().isOnline();
+	}
+
+	public void update() {
+    	if (inDatabase) {
+			SQLStorage.get().updatePlayer(this);
+		} else {
+    		SQLStorage.get().insertPlayer(this);
+		}
 	}
 	
 }

@@ -17,14 +17,14 @@ public class UtilityController {
 		this.godModeEnabled = new HashMap<>();
 	}
 	
-	public void teleportHere(ElytraPlayer player, ElytraPlayer target) {
+	public void teleportHere(ElytraPlayer sender, ElytraPlayer player, ElytraPlayer target) {
 		target.asBukkitPlayer().teleport(player.asBukkitPlayer());
-		MessageUtils.teleportHere(player, target);
+		MessageUtils.teleportHere(sender,player,target);
 	}
 	
-	public void teleport(ElytraPlayer player, ElytraPlayer target) {
+	public void teleport(ElytraPlayer sender, ElytraPlayer player, ElytraPlayer target) {
 		player.asBukkitPlayer().teleport(target.asBukkitPlayer());
-		MessageUtils.teleport(player, target);
+		MessageUtils.teleport(sender,player,target);
 	}
 	
 	public void teleportCoords(ElytraPlayer player, int x, int y, int z) {

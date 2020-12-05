@@ -10,6 +10,7 @@ import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -29,110 +30,66 @@ public class MessageUtils{
 	}
 	
 	public static void godMessage(ElytraPlayer sender, ElytraPlayer target, Boolean bool) {
-		if (sender == target) {
-			if (bool) {
-				sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet god mode to &aON");
-			} else {
-				sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet god mode to &aOFF");
-			}
-		} else {
-			if (bool) {
-				target.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet god mode to &aON");
-				sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet god mode to &aON&f for &a" + target.asBukkitPlayer().getName());
-			} else {
-				target.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet god mode to &aOFF");
-				sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet god mode to &aOFF&f for &a" + target.asBukkitPlayer().getName());
-			}
-		}
-		
+		String string = AChat.colorString(String.format(config.pluginPrefix +"&fSet god mode to &a%s &f for %s",bool.toString().toUpperCase(),target.getName()));
+		sender.asBukkitPlayer().sendMessage(string);
 	}
 	
-	public static void teleport(ElytraPlayer sender, ElytraPlayer target) {
-		sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fTeleported you to &a" + target.asBukkitPlayer().getName() + "&f!");
+	public static void teleport(ElytraPlayer sender, ElytraPlayer target1, ElytraPlayer target2) {
+		String string = AChat.colorString(String.format(config.pluginPrefix +"&fTeleported &a%s &f to &a%s",target1.getName(),target2.getName()));
+		sender.asBukkitPlayer().sendMessage(string);
 	}
 	
-	public static void teleportHere(ElytraPlayer sender, ElytraPlayer target) {
-		sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fTeleported &a" + target.asBukkitPlayer().getName() + " &fto you!");
+	public static void teleportHere(ElytraPlayer sender, ElytraPlayer target1, ElytraPlayer target2) {
+		String string = AChat.colorString(String.format(config.pluginPrefix +"&fTeleported &a%s &f to &a%s",target2.getName(),target1.getName()));
+		sender.asBukkitPlayer().sendMessage(string);
 	}
 	
 	public static void killMessage(ElytraPlayer sender, ElytraPlayer target) {
-		if (sender == target) {
-			sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fYou suicided!");
-		} else {
-			sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&a" + target.asBukkitPlayer().getName() + "&f has been killed!");
-		}
+		String string = AChat.colorString(String.format(config.pluginPrefix +"&fKilled &a%s",target.getName()));
+		sender.asBukkitPlayer().sendMessage(string);
 		
 	}
 
 	public static void speedMessage(ElytraPlayer sender, ElytraPlayer target, int amount) {
-		if (sender == target) {
-			sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet your speed to &a" + amount);
-		} else {
-			target.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet your speed to &a" + amount);
-			sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&a" + target.asBukkitPlayer().getName() + "&f's speed has been set to &a" + amount);
-		}
-
+		String string = AChat.colorString(String.format(config.pluginPrefix +"&fSet speed of &a%s&f to &a%s",target.getName(),amount));
+		sender.asBukkitPlayer().sendMessage(string);
 	}
 	
 	public static void healMessage(ElytraPlayer sender, ElytraPlayer target) {
-		if (sender == target) {
-			sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fYou have been healed!");
-		} else {
-			target.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fYou have been healed!");
-			sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&a" + target.asBukkitPlayer().getName() + "&f has been healed!");
-		}
-		
+		String string = AChat.colorString(String.format(config.pluginPrefix +"&fHealed &a%s",target.getName()));
+		sender.asBukkitPlayer().sendMessage(string);
 	}
 	
 	public static void feedMessage(ElytraPlayer sender, ElytraPlayer target) {
-		if (sender == target) {
-			sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fYou have been fed!");
-		} else {
-			target.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fYou have been fed!");
-			sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&a" + target.asBukkitPlayer().getName() + "&f has been fed!");
-		}
+		String string = AChat.colorString(String.format(config.pluginPrefix +"&fFed &a%s",target.getName()));
+		sender.asBukkitPlayer().sendMessage(string);
 	}
 	
-	public static void flyMessage(ElytraPlayer sender, ElytraPlayer target, boolean on) {
-		if (sender == target) {
-			if (on) {
-				sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet fly mode to &aON");
-			} else {
-				sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet fly mode to &aOFF");
-			}
-		} else {
-			if (on) {
-				target.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet fly mode to &aON");
-				sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet fly mode to &aON&f for &a" + target.getName());
-			} else {
-				target.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet fly mode to &aOFF");
-				sender.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet fly mode to &aOFF&f for &a" + target.getName());
-			}
-		}
-		
+	public static void flyMessage(ElytraPlayer sender, ElytraPlayer target, Boolean on) {
+		String string = AChat.colorString(String.format(config.pluginPrefix +"&fSet fly to &a%s &ffor %s",on.toString().toUpperCase(),target.getName()));
+		sender.asBukkitPlayer().sendMessage(string);
 	}
 	
-	public static void gamemodeMessage(ElytraPlayer player, ElytraPlayer target, GameMode mode, boolean already) {
-		if (player == target) {
-			if (already) {
-				player.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fYou already are in gamemode &a" + mode.name().toUpperCase());
-			} else {
-				player.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet gamemode to &a" + mode.name().toUpperCase());
-			}
+	public static void gamemodeMessage(ElytraPlayer sender, ElytraPlayer target, GameMode mode, Boolean already) {
+		String string;
+		if (already) {
+			string = AChat.colorString(String.format(config.pluginPrefix +"&fSet &a%s's&f gamemode to &a%s",target.getName(),mode.name().toUpperCase()));
 		} else {
-			if (already) {
-				player.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fTarget is already in gamemode &a" + mode.name().toUpperCase());
-				target.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fYou already are in gamemode &a" + mode.name().toUpperCase());
-			} else {
-				player.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet target to gamemode &a" + mode.name().toUpperCase());
-				target.asBukkitPlayer().sendMessage(config.pluginPrefix + "&fSet gamemode to &a" + mode.name().toUpperCase());
-			}
+			string = AChat.colorString(String.format(config.pluginPrefix +"&a%s's&f gamemode is already &a%s",target.getName(),mode.name().toUpperCase()));
 		}
+
+		sender.asBukkitPlayer().sendMessage(string);
 
 	}
 
-	public static void invalidTarget(ElytraPlayer player) {
-		player.asBukkitPlayer().sendMessage(config.pluginPrefix + "&cInvalid Target! Please choose an actual player!");
+	public static void invalidTarget(Player player, String chosen) {
+		String string = AChat.colorString(String.format(config.pluginPrefix +"&c%s is an invalid target!",chosen));
+		player.sendMessage(string);
+	}
+
+	public static void invalidTarget(ElytraPlayer player, String chosen) {
+		String string = AChat.colorString(String.format(config.pluginPrefix +"&c%s is an invalid target!",chosen));
+		player.asBukkitPlayer().sendMessage(string);
 	}
 
 	public static void discordMessage(ElytraPlayer player) {
@@ -155,30 +112,44 @@ public class MessageUtils{
 		player.asBukkitPlayer().sendMessage(AChat.centerMessage(AChat.colorString("&7Ending tracking UUID: &6" + uuid + "!")));
 	}
 
-	public static void balanceMessage(ElytraPlayer player) {
+	public static void balanceMessage(ElytraPlayer sender, ElytraPlayer target) {
 
-		String test = AChat.centerMessage(AChat.colorString("&e" + player.getName() + "&7's balance: &e" + formatNumber(player.getMoney()) + " ⛃"));
-		player.asBukkitPlayer().sendMessage(test);
+		String test = AChat.centerMessage(AChat.colorString("&e" + target.getName() + "&7's balance: &e" + formatNumber(target.getMoney()) + " ⛃"));
+		sender.asBukkitPlayer().sendMessage(test);
 	}
 
-	public static void setMoneyMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AChat.colorString("&7Balance set to &e" + formatNumber(amount) + " ⛃"));
+	public static void setMoneyMessage(ElytraPlayer sender, ElytraPlayer target, int amount) {
+		String string = AChat.colorString(String.format("&7Balance set to &e%s ⛃",target.getMoney()));
+		sender.asBukkitPlayer().sendMessage(string);
+		target.asBukkitPlayer().sendMessage(string);
 	}
 
-	public static void addMoneyMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AChat.colorString("&7+ &e" + formatNumber(amount) + " ⛃"));
+	public static void addMoneyMessage(ElytraPlayer sender, ElytraPlayer target, int amount) {
+		String string = AChat.colorString(String.format("&7+ &e%s ⛃",amount));
+		String string2 = AChat.colorString(String.format("&7(%s)+ &e%s ⛃",target.getName(),amount));
+		sender.asBukkitPlayer().sendMessage(string2);
+		target.asBukkitPlayer().sendMessage(string);
 	}
 
-	public static void removeMoneyMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AChat.colorString("&7- &e" + formatNumber(amount) + " ⛃"));
+	public static void removeMoneyMessage(ElytraPlayer sender, ElytraPlayer target, int amount) {
+		String string = AChat.colorString(String.format("&7- &e%s ⛃",amount));
+		String string2 = AChat.colorString(String.format("&7(%s)- &e%s ⛃",target.getName(),amount));
+		sender.asBukkitPlayer().sendMessage(string2);
+		target.asBukkitPlayer().sendMessage(string);
 	}
 
-	public static void addXPMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AChat.colorString("&7+ &b" + formatNumber(amount) + " ❂"));
+	public static void addXPMessage(ElytraPlayer sender, ElytraPlayer target, int amount) {
+		String string = AChat.colorString(String.format("&7+ &b%s ❂",amount));
+		String string2 = AChat.colorString(String.format("&7(%s)+ &b%s ❂",target.getName(),amount));
+		sender.asBukkitPlayer().sendMessage(string2);
+		target.asBukkitPlayer().sendMessage(string);
 	}
 
-	public static void removeXPMessage(ElytraPlayer player, int amount) {
-		player.asBukkitPlayer().sendMessage(AChat.colorString("&7- &b" + formatNumber(amount) + " ❂"));
+	public static void removeXPMessage(ElytraPlayer sender, ElytraPlayer target, int amount) {
+		String string = AChat.colorString(String.format("&7- &b%s ❂",amount));
+		String string2 = AChat.colorString(String.format("&7(%s)- &b%s ❂",target.getName(),amount));
+		sender.asBukkitPlayer().sendMessage(string2);
+		target.asBukkitPlayer().sendMessage(string);
 	}
 
 	public static void removeLevelMessage(ElytraPlayer player) {

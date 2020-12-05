@@ -1,26 +1,22 @@
 package com.elytraforce.elytracore.storage;
 
-import com.elytraforce.aUtils.ALogger;
 import com.elytraforce.elytracore.Main;
-import com.elytraforce.elytracore.config.Config;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
 import com.elytraforce.elytracore.player.redis.Delta;
-import com.elytraforce.elytracore.player.redis.RedisController;
 import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dev.magicmq.rappu.Database;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public class SQLStorage {
@@ -29,6 +25,11 @@ public class SQLStorage {
 
     private final dev.magicmq.rappu.Database database;
     private final Gson gson;
+    private final ArrayList<ElytraPlayer> cache;
+
+    public void clearFromQueue(ElytraPlayer player) {
+        cache.remove(player);
+    }
 
     private SQLStorage() {
 
@@ -48,16 +49,120 @@ public class SQLStorage {
         }
 
         gson = new Gson();
+        cache = new ArrayList<>();
     }
 
-    public void shutdown() {
-        for (ElytraPlayer player : PlayerController.get().getPlayers()) {
-            if (player.isInDatabase())
-                updatePlayer(player, false);
-            else
-                insertPlayer(player, false);
+    public CompletableFuture<UUID> getIDFromUsername(String name) {
+        CompletableFuture<UUID> future = new CompletableFuture<>();
+
+        if (name == null) { future.complete(null); return future; }
+
+        Player online = Main.get().getServer().getPlayer(name);
+        if (online != null) {
+            future.complete(online.getUniqueId()); return future;
         }
-        database.close();
+
+        String sql = "SELECT id FROM player_login WHERE name = ? ORDER BY time DESC LIMIT 1;";
+
+        database.queryAsync(sql, new Object[]{name}, resultSet -> {
+            if (resultSet.next()) {
+                try {
+                    future.complete(UUID.fromString(resultSet.getString("id")));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    future.complete(null);
+                }
+            } else {
+                future.complete(null);
+            }
+        });
+
+        return future;
+    }
+
+
+    //TODO: use views instead of this autism
+    public CompletableFuture<ElytraPlayer> getOrDefaultPlayer(UUID player, boolean cached) {
+        CompletableFuture<ElytraPlayer> future = new CompletableFuture<>();
+
+        if (player == null) { future.complete(null);return future; }
+
+        if (cached) {
+            for (ElytraPlayer player1 : cache) {
+                if (player1.getUUID().equals(player)) {
+                    future.complete(player1);
+                    return future;
+                }
+            };
+        }
+
+        String sql = "SELECT * FROM `levels_player` ";
+        sql += "WHERE `player_uuid` = ?;";
+
+        database.queryAsync(sql, new Object[]{player.toString()},resultSet -> {
+            int level;
+            int exp;
+            int money;
+            ArrayList<Integer> rewards;
+            boolean inDatabase;
+
+            if (resultSet.next()) {
+                level = resultSet.getInt("level");
+                exp = resultSet.getInt("experience");
+                money = resultSet.getInt("money");
+                rewards = gson.fromJson(resultSet.getString("unlocked_rewards"), new TypeToken<ArrayList<Integer>>() {}.getType());
+                inDatabase = true;
+            } else {
+                level = 0;
+                exp = 0;
+                money = 0;
+                rewards = new ArrayList<>();
+                inDatabase = false;
+            }
+
+            String sql2 = "SELECT * FROM `player_info` ";
+            sql2 += "WHERE `id` = ?;";
+
+
+            database.queryAsync(sql2, new Object[]{player.toString()},rs -> {
+                String nick;
+                boolean pms;
+                boolean discord_out;
+                boolean discord_in;
+                ChatColor color;
+
+                if (rs.next()) {
+                    nick = rs.getString("nickname");
+                    pms = rs.getBoolean("pms");
+                    discord_out = rs.getBoolean("discord_out");
+                    discord_in = rs.getBoolean("discord_in");
+                    color = ChatColor.valueOf(rs.getString("chat_color"));
+                } else {
+                    nick = null;
+                    pms = true;
+                    discord_in = true;
+                    discord_out = true;
+                    color = ChatColor.WHITE;
+                }
+
+                String sql3 = "SELECT name FROM player_login WHERE id = ? ORDER BY time DESC LIMIT 1;";
+                database.queryAsync(sql3,new Object[]{player.toString()},rs1 -> {
+                    String name;
+                    if (rs.next()) {
+                        name = rs.getString("name");
+                    } else {
+                        name = "";
+                    }
+                    ElytraPlayer player1 = new ElytraPlayer(player,level,exp,money,rewards,inDatabase,nick,discord_in,discord_out,pms,color,name);
+                    if (cached) {
+                        cache.add(player1);
+                    }
+
+                    future.complete(player1);
+                });
+            });
+        });
+        return future;
     }
 
     public Boolean playerExists(OfflinePlayer player) {
@@ -74,72 +179,7 @@ public class SQLStorage {
         }
     }
 
-    // // // // // // // // // // // // /// // // // // // // //
-
-    public HashMap<OfflinePlayer, ElytraPlayer> playerCache = new HashMap<>();
-
-    public void removePlayerCached(OfflinePlayer player) {
-        playerCache.remove(player);
-    }
-
-    public ElytraPlayer loadPlayerCached(OfflinePlayer player) throws SQLException {
-        //TODO: this is shit someone needs to fix this who knows more about databases than me
-
-        if (playerCache.containsKey(player)) { return playerCache.get(player); } else {
-            String sql = "SELECT * FROM `levels_player` ";
-            sql += "WHERE `player_uuid` = ?;";
-
-            ResultSet resultSet = database.query(sql, new Object[]{player.getUniqueId().toString()} );
-            ElytraPlayer cachedPlayer;
-
-            if (resultSet.next()) {
-                cachedPlayer = new ElytraPlayer(
-                        player,
-                        resultSet.getInt("level"),
-                        resultSet.getInt("experience"),
-                        resultSet.getInt("money"),
-                        gson.fromJson(resultSet.getString("unlocked_rewards"), new TypeToken<ArrayList<Integer>>() {}.getType()),
-                        true);
-            } else {
-                cachedPlayer = new ElytraPlayer(player, 0, 0, 0, new ArrayList<>(), false);
-            }
-
-            playerCache.put(player,cachedPlayer);
-            return cachedPlayer;
-        }
-
-    }
-
-    /*
-        changedPlayer must be the player after all changes occur to it
-     */
-    public void updatePlayerCached(ElytraPlayer changedPlayer) {
-        this.playerCache.put(changedPlayer.asOfflinePlayer(), changedPlayer);
-        this.updatePlayer(changedPlayer, true);
-    }
-
-    // // // // // // // // // // // // /// // // // // // // //
-
-    public void loadPlayer(OfflinePlayer player) {
-        String sql = "SELECT * FROM `levels_player` ";
-        sql += "WHERE `player_uuid` = ?;";
-
-        database.queryAsync(sql, new Object[]{player.getUniqueId().toString()}, resultSet -> {
-            if (resultSet.next()) {
-                PlayerController.get().joinCallback(
-                        player,
-                        resultSet.getInt("level"),
-                        resultSet.getInt("experience"),
-                        resultSet.getInt("money"),
-                        gson.fromJson(resultSet.getString("unlocked_rewards"), new TypeToken<ArrayList<Integer>>() {}.getType()),
-                        true);
-            } else {
-                PlayerController.get().joinCallback(player, 0, 0, 0, new ArrayList<>(), false);
-            }
-        });
-    }
-
-    public void insertPlayer(ElytraPlayer player, boolean async) {
+    public void insertPlayer(ElytraPlayer player) {
         String sql = "INSERT INTO `levels_player` ";
         sql += "(`player_uuid`, `level`, `experience`, `money`, `unlocked_rewards`) ";
         sql += "VALUES (?, ?, ?, ?, ?);";
@@ -151,10 +191,11 @@ public class SQLStorage {
                 player.getMoney(),
                 gson.toJson(player.getUnlockedRewards())
         };
-        executeUpdate(player, sql, toSet, async);
+
+        database.updateAsync(sql, toSet, integer -> player.setInDatabase(true));
     }
 
-    public void updatePlayer(ElytraPlayer player, boolean async) {
+    public void updatePlayer(ElytraPlayer player) {
         String sql = "UPDATE `levels_player` SET ";
         sql += "`level` = `level` + ?, `experience` = `experience` + ?, `money` = `money` + ?, `unlocked_rewards` = ? ";
         sql += "WHERE `player_uuid` = ?;";
@@ -176,21 +217,8 @@ public class SQLStorage {
                 gson.toJson(player.getUnlockedRewards()),
                 player.getUUID().toString()
         };
-        executeUpdate(player, sql, toSet, async);
-    }
 
-    private void executeUpdate(ElytraPlayer player, String sql, Object[] toSet, boolean async) {
-        if (async)
-            database.updateAsync(sql, toSet, integer -> player.setInDatabase(true));
-        else {
-            try {
-                database.update(sql, toSet);
-                player.setInDatabase(true);
-            } catch (SQLException e) {
-                Main.get().getLogger().log(Level.SEVERE, "There was an error when saving a player's data to the Duels SQL table! See this error:");
-                e.printStackTrace();
-            }
-        }
+        database.updateAsync(sql, toSet, integer -> player.setInDatabase(true));
     }
 
     public static SQLStorage get() {
@@ -198,5 +226,10 @@ public class SQLStorage {
             instance = new SQLStorage();
         }
         return instance;
+    }
+
+    public void shutdown() {
+        PlayerController.get().getPlayers().forEach(ElytraPlayer::update);
+        database.close();
     }
 }
