@@ -2,6 +2,7 @@ package com.elytraforce.elytracore.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import com.elytraforce.aUtils.ALogger;
 import com.elytraforce.elytracore.Main;
 import com.elytraforce.elytracore.player.ElytraPlayer;
 import com.elytraforce.elytracore.player.PlayerController;
@@ -27,7 +28,7 @@ public class BalanceCommand extends BaseCommand{
     @CommandCompletion("@players @players")
     @Description("Lists your or others balances")
     public static void onBalance(Player player, @Optional String player2) {
-    	ElytraPlayer p = PlayerController.get().getElytraPlayer(Bukkit.getPlayer(player2));
+    	ElytraPlayer p = PlayerController.get().getElytraPlayer(player);
 
     	if (player2 == null) {
             MessageUtils.balanceMessage(p,p);
@@ -35,6 +36,9 @@ public class BalanceCommand extends BaseCommand{
     	    Player p2 = Bukkit.getPlayer(player2);
             if (p2 == null) {
                 SQLStorage.get().getIDFromUsername(player2).thenAccept(accept -> {
+                    if (accept == null) {
+                        MessageUtils.invalidTarget(p,player2); return;}
+
                     SQLStorage.get().getOrDefaultPlayer(accept, true).thenAccept(p3 -> {
                         MessageUtils.balanceMessage(p,p3);
                     });

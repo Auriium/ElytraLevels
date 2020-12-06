@@ -104,17 +104,6 @@ public class RedisController{
         }.runTaskAsynchronously(Main.get());
     }*/
 
-    /*public static class DataChangeListener extends JedisPubSub {
-        @Override
-        public void onMessage(String channel, final String msg) {
-            ALogger.logInfo("Loading player via jedispubsub complete message!");
-            ElytraPlayer target = PlayerController.get().getElytraPlayer(UUID.fromString(msg));
-            if (target != null) {
-                SQLStorage.get().adjustPlayerAfterRedis(target);
-            }
-        }
-    }*/
-
     public static class CommandListener extends JedisPubSub {
         @Override
         public void onMessage(String channel, final String msg) {

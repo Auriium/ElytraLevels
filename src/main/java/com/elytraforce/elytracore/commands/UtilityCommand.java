@@ -75,7 +75,7 @@ public class UtilityCommand extends BaseCommand{
 
 				UtilityController.get().teleportHere(send,point, target);
 			} catch (NullPointerException e) {
-				MessageUtils.invalidTarget(send,t + "/" + t2);
+				MessageUtils.invalidTarget(send,t);
 			}
     }
     
@@ -102,7 +102,7 @@ public class UtilityCommand extends BaseCommand{
 
 			UtilityController.get().teleportHere(send,point, target);
 		} catch (NullPointerException e) {
-			MessageUtils.invalidTarget(send,t + "/" + t2);
+			MessageUtils.invalidTarget(send,t);
 		}
     	
     }

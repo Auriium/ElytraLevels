@@ -11,6 +11,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -67,6 +68,10 @@ public class ElytraPlayer {
     public void setDisplayedTitleTask(BukkitTask task) { this.displayedTitleTask = task; }
 
     public ArrayList<Delta> getChanges() { return this.queuedChanges; }
+
+    public String getFormattedBalance() {
+		return String.format("%,d", this.getFormattedBalance());
+	}
     
     @Override
     public boolean equals(Object toCompare) {
@@ -143,6 +148,10 @@ public class ElytraPlayer {
 	public String getPercent() {
 		int percent = (int)((this.getExperience() * 100.0f) / this.getRequiredXPToNextLevel());
 		return percent + "%";
+	}
+
+	public int getPercentNum() {
+    	return (int) ((this.getExperience() * 100.0f) / this.getRequiredXPToNextLevel());
 	}
 	
 	public boolean canLevelUp() {

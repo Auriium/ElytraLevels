@@ -84,11 +84,10 @@ public class Main extends JavaPlugin {
                 for (ElytraPlayer player : PlayerController.get().getPlayers()) {
                     try {
                         player.asBukkitPlayer().setLevel(player.getLevel());
-                        player.asBukkitPlayer().setExp(0);
+                        player.asBukkitPlayer().setExp((float)player.getPercentNum()/100);
                     } catch (NullPointerException e) {
                         ALogger.logError("The Main Class has an error regarding setting level and xp (NPE)");
                         ALogger.logError(e.toString());
-                        
                     }
 
                 }

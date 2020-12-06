@@ -42,7 +42,7 @@ public class GUIController {
     		lore.add(AChat.colorString(""));
     		lore.add(AChat.colorString("&bYour level &7» &b" + target.getLevel()));
     		
-    		return new AItemBuilder(Material.LEGACY_SKULL_ITEM, (short) 3).setHead(p.getName()).setLore(lore).setDisplayName(AChat.colorString("&9&lPLAYER STATISTICS")).build();
+    		return new AItemBuilder(Material.LEGACY_SKULL_ITEM, (short) 3).setHead(target.getName()).setLore(lore).setDisplayName(AChat.colorString("&9&lPLAYER STATISTICS")).build();
     	}).clickHandler((p, c) -> {
     		//row, collum
     	}).build());
@@ -50,7 +50,7 @@ public class GUIController {
     	menu.getSlot(5, 2).setSettings(SlotSettings.builder().itemTemplate(p -> {
 			ArrayList<String> lore = new ArrayList<>();
     		lore.add(AChat.colorString(""));
-    		lore.add(AChat.colorString("&bYour balance &7» &e" + PlaceholderAPI.setPlaceholders(target.asBukkitPlayer(), "%vault_eco_balance_commas% ⛃")));
+    		lore.add(AChat.colorString("&bYour balance &7» &e" + target.getFormattedBalance() +" ⛃"));
     		if (RewardController.get().hasRewards(target)) {
     			lore.add(AChat.colorString(""));
     			lore.add(AChat.colorString("&e&lYou have rewards!&7 Do /rewards to claim them!"));

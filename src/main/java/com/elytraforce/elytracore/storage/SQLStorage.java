@@ -8,6 +8,7 @@ import com.elytraforce.elytracore.player.redis.enums.ValueEnum;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dev.magicmq.rappu.Database;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -96,8 +97,8 @@ public class SQLStorage {
             };
         }
 
-        String sql = "SELECT * FROM `levels_player` ";
-        sql += "WHERE `player_uuid` = ?;";
+        String sql = "SELECT * FROM `player_combined_info` ";
+        sql += "WHERE `id` = ?;";
 
         database.queryAsync(sql, new Object[]{player.toString()},resultSet -> {
             int level;
@@ -105,6 +106,12 @@ public class SQLStorage {
             int money;
             ArrayList<Integer> rewards;
             boolean inDatabase;
+            String nick;
+            boolean pms;
+            boolean discord_out;
+            boolean discord_in;
+            ChatColor color;
+            String name;
 
             if (resultSet.next()) {
                 level = resultSet.getInt("level");
@@ -112,55 +119,33 @@ public class SQLStorage {
                 money = resultSet.getInt("money");
                 rewards = gson.fromJson(resultSet.getString("unlocked_rewards"), new TypeToken<ArrayList<Integer>>() {}.getType());
                 inDatabase = true;
+                nick = resultSet.getString("nickname");
+                pms = resultSet.getBoolean("pms");
+                discord_out = resultSet.getBoolean("discord_out");
+                discord_in = resultSet.getBoolean("discord_in");
+                color = ChatColor.valueOf(resultSet.getString("chat_color"));
+                name = resultSet.getString("name");
             } else {
                 level = 0;
                 exp = 0;
                 money = 0;
                 rewards = new ArrayList<>();
                 inDatabase = false;
+                nick = null;
+                pms = true;
+                discord_in = true;
+                discord_out = true;
+                color = ChatColor.WHITE;
+                name = Bukkit.getOfflinePlayer(player).getName();
             }
 
-            String sql2 = "SELECT * FROM `player_info` ";
-            sql2 += "WHERE `id` = ?;";
+            ElytraPlayer player1 = new ElytraPlayer(player,level,exp,money,rewards,inDatabase,nick,discord_in,discord_out,pms,color,name);
 
+            if (cached) {
+                cache.add(player1);
+            }
 
-            database.queryAsync(sql2, new Object[]{player.toString()},rs -> {
-                String nick;
-                boolean pms;
-                boolean discord_out;
-                boolean discord_in;
-                ChatColor color;
-
-                if (rs.next()) {
-                    nick = rs.getString("nickname");
-                    pms = rs.getBoolean("pms");
-                    discord_out = rs.getBoolean("discord_out");
-                    discord_in = rs.getBoolean("discord_in");
-                    color = ChatColor.valueOf(rs.getString("chat_color"));
-                } else {
-                    nick = null;
-                    pms = true;
-                    discord_in = true;
-                    discord_out = true;
-                    color = ChatColor.WHITE;
-                }
-
-                String sql3 = "SELECT name FROM player_login WHERE id = ? ORDER BY time DESC LIMIT 1;";
-                database.queryAsync(sql3,new Object[]{player.toString()},rs1 -> {
-                    String name;
-                    if (rs.next()) {
-                        name = rs.getString("name");
-                    } else {
-                        name = "";
-                    }
-                    ElytraPlayer player1 = new ElytraPlayer(player,level,exp,money,rewards,inDatabase,nick,discord_in,discord_out,pms,color,name);
-                    if (cached) {
-                        cache.add(player1);
-                    }
-
-                    future.complete(player1);
-                });
-            });
+            future.complete(player1);
         });
         return future;
     }

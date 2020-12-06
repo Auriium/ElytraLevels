@@ -81,7 +81,7 @@ public class PlayerController {
             }
         }
         int oldMoney = player.getMoney();
-        if (sendMessage) { MessageUtils.addMoneyMessage(player, amount); }
+        if (sendMessage) { MessageUtils.addMoneyMessage(null,player, amount); }
 
         player.addChange(new Delta(player.getUUID(),amount, DeltaEnum.INCREASE, ValueEnum.MONEY));
 
@@ -102,7 +102,7 @@ public class PlayerController {
             }
         }
         int oldMoney = player.getMoney();
-        if (sendMessage) {MessageUtils.removeMoneyMessage(player, amount); }
+        if (sendMessage) {MessageUtils.removeMoneyMessage(null,player, amount); }
 
         player.addChange(new Delta(player.getUUID(),Math.min(player.getMoney(),Math.abs(amount)), DeltaEnum.DECREASE, ValueEnum.MONEY));
 
@@ -150,12 +150,12 @@ public class PlayerController {
         int newLevel = player.getLevel();
 
         if (newLevel == config.maxLevel) {
-            MessageUtils.maxLevelMessage(player);
+            MessageUtils.maxLevelMessage(null,player);
             TitleUtils.sendTitle(player, AChat.colorString("&9&lLEVEL UP!"), AChat.colorString("&7" + oldLevel + " -> &e" + newLevel));
             return;
         }
 
-        if (sendMessage) { MessageUtils.addLevelMessage(player); }
+        if (sendMessage) { MessageUtils.addLevelMessage(null,player); }
         if (title) {TitleUtils.sendTitle(player, AChat.colorString("&9&lLEVEL UP!"), AChat.colorString("&7" + oldLevel + " -> &e" + newLevel)); }
 
         Bukkit.getPluginManager().callEvent(new LevelEvent(player, oldLevel, newLevel, ChangeEnum.INCREASE));
@@ -181,12 +181,12 @@ public class PlayerController {
         int newLevel = player.getLevel();
 
         if (newLevel == config.maxLevel) {
-            MessageUtils.maxLevelMessage(player);
+            MessageUtils.maxLevelMessage(null, player);
             TitleUtils.sendTitle(player, AChat.colorString("&9&lLEVEL DOWN!"), AChat.colorString("&7" + oldLevel + " -> &e" + newLevel));
             return;
         }
 
-        if (sendMessage) { MessageUtils.removeLevelMessage(player); }
+        if (sendMessage) { MessageUtils.removeLevelMessage(null, player); }
         if (title) {TitleUtils.sendTitle(player, AChat.colorString("&9&lLEVEL DOWN!"), AChat.colorString("&7" + oldLevel + " -> &e" + newLevel)); }
 
         Bukkit.getPluginManager().callEvent(new LevelEvent(player, oldLevel, newLevel, ChangeEnum.DECREASE));
@@ -229,7 +229,7 @@ public class PlayerController {
         }
         int oldXP = player.getExperience();
         if (player.isDonator()) {amount = (int) (amount * 1.2); }
-        if (sendMessage) { MessageUtils.addXPMessage(player, amount); }
+        if (sendMessage) { MessageUtils.addXPMessage(null,player, amount); }
 
         if (title) {
             if (player.isDisplayingTitle()) {
@@ -277,7 +277,7 @@ public class PlayerController {
         }
         int oldXP = player.getExperience();
 
-        if (sendMessage) { MessageUtils.removeXPMessage(player, amount); }
+        if (sendMessage) { MessageUtils.removeXPMessage(null,player, amount); }
 
         player.addChange(new Delta(player.getUUID(),Math.min(player.getExperience(),Math.abs(amount)), DeltaEnum.DECREASE, ValueEnum.XP));
 
