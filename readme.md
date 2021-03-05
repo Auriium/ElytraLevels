@@ -1,3 +1,6 @@
+# Deprecated
+- This minigame is no longer an accurate representation of my code. The server it is for is dead and the code has been deprecated and open-sourced.
+
 # ElytraLevels (ElytraCore)
 An advanced SQL supported level tracking system and utility framework for the
 elytraforce network.
